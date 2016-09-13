@@ -39,8 +39,6 @@ var _error = function(msg){
 
 // Helpers End
 // -----------
-  
-var zmd = {};
 
 var block = {
   heading: /^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/,
@@ -59,6 +57,24 @@ var block = {
   def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
   fence: /^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]*?)\s*\1 *(?:\n+|$)/
 };
+  
+var zmd = function(content, options, callback){
+  
+  // 第一部：词法解析
+  var lexer = new Lexer(content, options);
+  
+
+  
+}
+
+function Lexer(content, options){
+  this.tokens = [];
+  this.block = block;
+}
+
+Lexer.prototype.parse = function(){
+  
+}
 
 zmd.block = block;
 

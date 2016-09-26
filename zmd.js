@@ -7,7 +7,7 @@
 // -------
 // Helpers
 
-// extend on object
+// extend an object
 var _extend = function( dest, source ){
   for( var name in source ){
     dest[name] = source[name];
@@ -60,9 +60,37 @@ var block = {
   
 var zmd = function(content, options, callback){
   
-  // 第一部：词法解析
+  if(!content){
+    _error('Need content');
+  }
+
+  if()
+
+  options = _extend({
+    gfm: true,
+    tables: true,
+    breaks: false,
+    pedantic: false,
+    sanitize: false,
+    sanitizer: null,
+    mangle: true,
+    smartLists: false,
+    taskList: false,
+    silent: false,
+    highlight: null,
+    langPrefix: 'lang-',
+    smartypants: false,
+    headerPrefix: '',
+    xhtml: false
+  }, options || {});
+
+
+
+  // 第一步：词法解析
   var lexer = new Lexer(content, options);
   
+
+
 
   
 }
@@ -73,7 +101,7 @@ function Lexer(content, options){
 }
 
 Lexer.prototype.parse = function(){
-  
+
 }
 
 zmd.block = block;

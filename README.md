@@ -6,6 +6,10 @@
 
 近期由于公司项目调整，无暇构建与实现zmd代码，暂时搁置之。具体开启时间未知。*2016.9.25 by xovel*
 
+## 弃坑
+
+因公司技术部门调整，已经无暇继续zmd.js的研发。接下来的时间要跟韩国技术人员共同研发软件产品。2016年10月15日。~~希望还有机会可以回来~~
+
 ## 目的
 
 参照[marked](https://github.com/chjj/marked)和[remarkable](https://github.com/jonschlinkert/remarkable)的原理实现的一个简单的markdown编译工具。

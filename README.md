@@ -10,7 +10,7 @@
 
 计划加入的额外功能：自定义div、脚注、公式。
 
-新增一个参考repo：<https://github.com/showdownjs/showdown.js>
+新增一个参考repo：<https://github.com/showdownjs/showdown>
 
 ## 暂时搁置
 

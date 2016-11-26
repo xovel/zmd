@@ -131,3 +131,45 @@ marked速度快的地方就体现这对这一块的处理上面。在块级模�
 ----
 
 > 有个问题：标题在解析的时候生成的ID中不带中文了，中文全部变成了短杠`-`。
+
+来看看`marked`中关于标题的具体实现函数：
+
+```js
+Renderer.prototype.heading = function(text, level, raw) {
+  return '<h'
+    + level
+    + ' id="'
+    + this.options.headerPrefix
+    + raw.toLowerCase().replace(/[^\w]+/g, '-')
+    + '">'
+    + text
+    + '</h'
+    + level
+    + '>\n';
+};
+```
+
+造成中文丢失的核心代码是这一句：`raw.toLowerCase().replace(/[^\w]+/g, '-')`
+
+`/[^\w]+/g`这个正则表达式匹配的是字母开头的东西，诸如符号和中文这些字符全部会替换成短杠`-`。
+
+仔细看了一下在用的hexo博客中，对`Renderer`做了特殊处理，改变了其行为，具体代码如下：
+
+```js
+// Add id attribute to headings
+Renderer.prototype.heading = function(text, level) {
+  var id = anchorId(stripHTML(text));
+  var headingId = this._headingId;
+
+  // Add a number after id if repeated
+  if (headingId[id]) {
+    id += '-' + headingId[id]++;
+  } else {
+    headingId[id] = 1;
+  }
+  // add headerlink
+  return '<h' + level + ' id="' + id + '"><a href="#' + id + '" class="headerlink" title="' + stripHTML(text) + '"></a>' + text + '</h' + level + '>';
+};
+```
+
+> 该文件位置在：`...\node_modules\hexo-renderer-marked\lib\renderer.js`

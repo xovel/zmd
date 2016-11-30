@@ -176,4 +176,17 @@ Renderer.prototype.heading = function(text, level) {
 
 以上的代码中，在生成标题标签的ID的时候有一个重复判定的操作。`var id = anchorId(stripHTML(text));`这一句代码是生成标题ID的代码，如果文章内有多个重名的标题，那么就需要在后面添加一个额外的标识来区别这些标题，以使得每个标题的ID是唯一的。
 
+----
+
+表格的处理：
+
+markdown语法的本身是不支持表格的，但是诸多markdown的解析工具中，都对表格添加了支持，其语法基本一般如下：
+
+```markdown
+a|b|c
+--|--|--
+A|B|C
+D|E|F
+```
+
 

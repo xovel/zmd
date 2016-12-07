@@ -2,6 +2,8 @@
 
 怎么的，假装自己是markdown编译工具不行吗？
 
+> 已入坑PHP，`zmd`又被搁置了。
+
 ## 目的
 
 参照[marked](https://github.com/chjj/marked)和[remarkable](https://github.com/jonschlinkert/remarkable)的原理实现的一个简单的markdown编译工具。

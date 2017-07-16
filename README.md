@@ -1,12 +1,8 @@
 # zmd
 
-怎么的，假装自己是 `markdown` 编译工具。
+怎么的，假装自己是 `markdown` 编译工具不行吗？
 
-## 目的
-
-参照 [marked](https://github.com/chjj/marked) 和 [remarkable](https://github.com/jonschlinkert/remarkable) 的原理实现的一个简单的 markdown 编译工具。
-
-## 重生
+## 综述
 
 拟进行实现的块级功能包括：表格、块引用、段落、列表、代码块、水平线、定义列表。
 
@@ -14,7 +10,15 @@
 
 计划加入的额外功能：自定义 div、脚注、公式。
 
-> 新增一个参考 repo：<https://github.com/showdownjs/showdown>
+## 参考项目
+
+- [marked](https://github.com/chjj/marked)
+- [remarkable](https://github.com/jonschlinkert/remarkable)
+- [showdown](https://github.com/showdownjs/showdown)
+- [markdown-it](https://github.com/markdown-it/markdown-it)
+- [snarkdown](https://github.com/developit/snarkdown)
+
+最后一条是新出的，原理简单粗暴，跟 zmd 的最初设计思路一致。
 
 ## `zmd` 的处理流程
 
@@ -42,13 +46,13 @@
 
 `marked` 的源码分析，这里不做详细说明，提一下其核心原理：
 
-首先，`marked` 通过正则表达式对输入的字符串进行循环判断，对块状模块（如_表格_，_代码块_，_段落_，_列表_，_块引用_，_分隔符_等等）进行**块状分析**。
+首先，`marked` 通过正则表达式对输入的字符串进行循环判断，对块状模块（如*表格*，*代码块*，*段落*，*列表*，*块引用*，*分隔符*等等）进行**块状分析**。
 
-然后，依次对这些块状模块进行解析。涉及到复杂的块状模块，比如_表格_，_列表_，再进行一次块状分析。
+然后，依次对这些块状模块进行解析。涉及到复杂的块状模块，比如*表格*，*列表*，再进行一次块状分析。
 
 块状分析完毕之后，依次对这些分析好的模块进行**行内分析**。
 
-行内分析的方式跟块状分析类似，行内模块有：_链接_，_图片_，_行内代码_，_加粗_，_斜体_，_删除线_等等。
+行内分析的方式跟块状分析类似，行内模块有：*链接*，*图片*，*行内代码*，*加粗*，*斜体*，*删除线*等等。
 
 行内分析完毕之后，开始执行编译成 HTML 代码的工作。
 
@@ -96,7 +100,7 @@ marked 速度快的地方就体现这对这一块的处理上面。在块级模�
 
 ### HTML 转码
 
-行内代码和代码块的部分需要进行HTML编码变换，以支持特殊字符如 `<`、`>` 等。
+行内代码和代码块的部分需要进行 HTML 编码变换，以支持特殊字符如 `<`、`>` 等。
 
 ### 尚未解决的一些问题
 
@@ -118,7 +122,7 @@ marked 速度快的地方就体现这对这一块的处理上面。在块级模�
 
 ## 各个 markdown 解析工具速度的比较
 
-总的来说，顺序是：`marked` > `remarkable` > `markdownit` > `showdown`。
+总的来说，顺序是：`marked` > `remarkable` > `markdown-it` > `showdown`。
 
 ----
 

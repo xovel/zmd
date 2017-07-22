@@ -1,45 +1,48 @@
 /*!
- * zmd.js
- * Just a markdown parser for fun.
+ * zmd.js v1.0.1
+ * Just a markdown parser
+ * @author: xovel
+ * @license: MIT
  */
-+function(window, document, undefined){
++function (window, document, undefined) {
 
 // -------
 // Helpers
 
 // extend an object
-var _extend = function( dest, source ){
-  for( var name in source ){
+function _extend(dest, source) {
+  for (var name in source) {
     dest[name] = source[name];
   }
   return dest;
 }
 
 // traversal for an array or an object
-var _each = function(obj, fn){
+function _each(obj, fn) {
   
   var value, i = 0, length = obj.length;
   
-  if( length === undefined ){
-    for( i in obj ){
-      if( false === fn.call( obj[ i ], i, obj[ i ] ) ) break;
+  if (length === undefined) {
+    for (i in obj) {
+      if (false === fn.call(obj[ i ], i, obj[ i ])) break;
     }
   } else {
-    for ( ; i < length; i++ ) {
-      if( false === fn.call( obj[ i ], i, obj[ i ] ) ) break;
+    for (; i < length; i++) {
+      if (false === fn.call(obj[ i ], i, obj[ i ])) break;
     }
   }
   
   return obj;
 }
 
-var _error = function(msg){
+function _error(msg) {
   throw new Error(msg);
 }
 
 // Helpers End
 // -----------
 
+// Block grammer
 var block = {
   heading: /^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/,
   lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
@@ -58,13 +61,11 @@ var block = {
   fence: /^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]*?)\s*\1 *(?:\n+|$)/
 };
   
-var zmd = function(content, options, callback){
+var zmd = function (content, options, callback) {
   
-  if(!content){
+  if (!content) {
     _error('Need content');
   }
-
-  if()
 
   options = _extend({
     gfm: true,
@@ -83,8 +84,6 @@ var zmd = function(content, options, callback){
     headerPrefix: '',
     xhtml: false
   }, options || {});
-
-
 
   // 第一步：词法解析
   var lexer = new Lexer(content, options);

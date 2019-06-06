@@ -4,43 +4,126 @@
  * @author: xovel
  * @license: MIT
  */
-+function (window, document, undefined) {
+;(function (root, factory) {
+  if (typeof module === 'object' && typeof module.exports === 'object') {
+    module.exports = factory()
+  } else if (typeof define === 'function' && define.amd) {
+    define('zmd', [], factory)
+  } else if (typeof exports === 'object') {
+    exports['zmd'] = factory()
+  } else {
+    root['zmd'] = factory()
+  }
+})(this, function () {
 
 // -------
 // Helpers
 
+var hasOwn = Object.prototype.hasOwnProperty
+
 // extend an object
 function _extend(dest, source) {
-  for (var name in source) {
-    dest[name] = source[name];
+  var ret = {}
+  for (var i = 0; i < arguments.length; i++) {
+    var current = arguments[i]
+    for (var key in current) {
+      if (hasOwn.call(current, key)) {
+        ret[key] = current[key]
+      }
+    }
   }
-  return dest;
+  return ret
 }
 
 // traversal for an array or an object
 function _each(obj, fn) {
-
-  var value, i = 0, length = obj.length;
+  var i = 0
+  var length = obj.length
 
   if (length === undefined) {
     for (i in obj) {
-      if (false === fn.call(obj[ i ], i, obj[ i ])) break;
+      if (false === fn.call(obj[i], obj[i], i)) break
     }
   } else {
     for (; i < length; i++) {
-      if (false === fn.call(obj[ i ], i, obj[ i ])) break;
+
     }
   }
-
-  return obj;
+  return obj
 }
 
 function _error(msg) {
-  throw new Error(msg);
+  throw new Error(msg)
 }
 
 // Helpers End
 // -----------
+
+// ----------------
+// Global variables
+
+// header slugs
+var slugs = {}
+function getSlug(value) {
+  var id = value.toLowerCase().trim().replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, '')
+  .replace(/\s/g, '-')
+  if (slugs[id]) {
+    id += '-' + slugs[id]++
+  } else {
+    slugs[id] = 1
+  }
+  return id
+}
+
+// include `image src`, `link href` and `footnote defination`
+var refs = {}
+function getRef(text, value) {
+  var key = text.toLowerCase()
+  if (!refs[key]) {
+    refs[key] = value
+  }
+  return refs[key]
+}
+
+// Block rules
+var commonRe = {
+  // space: /\u0020/,
+  // // whitespace: /\s+/,
+  // // whitespace: /[ \t\n\v\f\r]+/,
+  // whitespace: /[\u0020\u0009\u000a\u000b\u000c\u000d]+/, // is a space (U+0020), tab (U+0009), newline (U+000A), line tabulation (U+000B), form feed (U+000C), or carriage return (U+000D).
+  punctuation: /[!"#$%&'()*+,\-./\u0021-\u002f:;<=>?@\u003a-\u0040\[\\\]^_\u005b-\u0060{|}~\u007b-\u007e]/, // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F), :, ;, <, =, >, ?, @ (U+003A–0040), [, \, ], ^, _, ` (U+005B–0060), {, |, }, or ~ (U+007B–007E).
+  tagname: /[a-zA-Z][\w-]*/, // A tag name consists of an ASCII letter followed by zero or more ASCII letters, digits, or hyphens (-).
+  attribute: /\s+[a-zA-Z:_][\w_.:-]*(?:\s*=\s*([^\s"'=<>`]+|'[^']*'|"[^"]*"))?/,
+  opentag: /<tagname(?:attribute)*?\s*\/?>/,
+  closingtag: /<\/tagname\s*>/,
+  comment: /<!--(?!-?>)[\s\S]*?[^-]-->/,
+  processing: /<\?[\s\S]*?\?>/,
+  declaration: /<![A-Z]+\s+[^>]+>/,
+  cdata: /<!\[CDATA\[[\s\S]+?\]\]>/,
+  tag: /address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul/,
+  label: /\[((?!\s*\])(?:\\[\[\]]|[^\[\]])+)\]/,
+  destination: /<([^\n<>]*)>|((?!<)(?:\\[()]|\([^)\s]*\)|[^()\s])+)/,
+  // title: /"((?:\\"|[^"])*)"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\(((?:[^()]|(?:\([^)]*\)))+)\)/,
+  title: /"((?:(?:(?:\\"|[^"])*)|[^"\n]*(?:\n[^"\n]+)*\n?)+)"|'((?:(?:(?:\\'|[^'])*)|[^'\n]*(?:\n[^'\n]+)*\n?)+)'|\(((?:[^()]|(?:\([^)]*\)))+)\)/,
+  delimiter: / *\|?((?: *:?-+:? *)+\|)\|? *\n/,
+  row: / {0,3}\|?/,
+}
+var blockRules = {
+  hr: /^ {0,3}([-*_])( *\1){2,} *(?:\n+|$)/,
+  heading: /^ {0,3}(#{1,6}) +([^\n]*?) *#* *(?:\n+|$)/,
+  // setext heading
+  sheading: /^( {0,3}\S[^\n]+(?:\n[^\n]+)*)\n {0,3}(=+|-+) *(?:\n+|$)/,
+  // no multiline
+  // sheading: /^( {0,3}\S[^\n]+)\n {0,3}(=+|-+) *(?:\n+|$)/,
+  code: /^( {4}[^\n]+\n*)+/,
+  fence: /^ {0,3}([~`])\1{2,}([^`\n]*)\n([\s\S]*?)(?: {0,3}\1{3,} *(?:\n+|$)|$)/,
+  html: /^ {0,3}(?:<(script|pre|style)[^>\n]*>[\s\S]*?(?:<\/\1>[^\n]*(?:\n+|$)|$)|(?:<!--[\s\S]*?-->|<\?[\s\S]*?\?>|<![\s\S]*?>|<!\[CDATA\[[\s\S]*?\]\]>)(?:[^\n]*\n+|$)|<\/?(tag)(?: +|\n|\/?)>[\s\S]*?(?:\n{2,}|$)|(?:<(?!script|pre|style)(?:tagname)(?:attribute)*?\s*\/?>|closingtag)[\s\S]*?(?:\n{2,}|$))+/i,
+  ref: /^ {0,3}(?:label): *\n? *(?:destination) *\n? *(?:\s(?:title))? *(?:\n+|$)/,
+  paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}>|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
+  newline: /^\n+/,
+  text: /^[^\n]+/,
+  table: /^(row)+(?:delimiter)(?:(row)*\n*|$)/,
+}
 
 // Block grammer
 var block = {
@@ -170,6 +253,9 @@ zmd.lex = function(src){
   return zmd
 }
 
-window.zmd = zmd;
+zmd.getSlug = getSlug
+zmd.getRef = getRef
 
-}(window, document);
+return zmd
+
+})

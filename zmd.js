@@ -26,9 +26,11 @@ function _extend(dest, source) {
   var ret = {}
   for (var i = 0; i < arguments.length; i++) {
     var current = arguments[i]
-    for (var key in current) {
-      if (hasOwn.call(current, key)) {
-        ret[key] = current[key]
+    if (current) {
+      for (var key in current) {
+        if (hasOwn.call(current, key)) {
+          ret[key] = current[key]
+        }
       }
     }
   }
@@ -86,7 +88,7 @@ function _escape(content, entity) {
 }
 
 function _unescape(content) {
-  return html.replace(/&(#(?:\d+)|(?:#x[0-9a-f]+)|(?:\w+));?/ig, function(_, n) {
+  return content.replace(/&(#(?:\d+)|(?:#x[0-9a-f]+)|(?:\w+));?/ig, function(_, n) {
     n = n.toLowerCase()
     if (n === 'colon') return ':'
     if (n.charAt(0) === '#') {
@@ -112,7 +114,7 @@ function Slugger() {
 }
 
 Slugger.prototype.get = function (value) {
-  var id = value.toLowerCase().trim()
+  var id = _unescape(_trim(value)).toLowerCase()
     .replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, '')
     // .replace(/[【】｛｝（），。？：‘’“”～！、《》￥…—]/g, '-')
     .replace(/\s/g, '-')
@@ -122,18 +124,6 @@ Slugger.prototype.get = function (value) {
     this.slugs[id] = 1
   }
   return id
-}
-
-function Refs() {
-  this.refs = Object.create(null)
-}
-
-Refs.prototype.get = function (text, value) {
-  var key = text.toLowerCase()
-  if (!this.refs[key]) {
-    this.refs[key] = value
-  }
-  return this.refs[key]
 }
 
 var commonRe = {
@@ -176,7 +166,7 @@ var blockRe = {
   hr: /^ {0,3}([-*_])( *\1){2,} *(?:\n+|$)/,
   heading: /^ {0,3}(#{1,6}) +([^\n]*?) *#* *(?:\n+|$)/,
   // setext heading
-  sheading: /^((?:[^\n]*[^ \n][^\n]*\n)+) {0,3}(=+|-+) *(?:\n+|$)/,
+  sheading: /^( {0,3}[^ \n]+(?:\n[^\n]+)*)\n {0,3}(=+|-+) *(?:\n+|$)/,
   code: /^( {4}[^\n]+\n*)+/,
   fence: /^ {0,3}(([~`])\2{2,})([^`\n]*)\n([\s\S]*?)(?: {0,3}\1\2* *(?:\n+|$)|$)/,
   html: /^ {0,3}(?:<(script|pre|style)[^>\n]*>[\s\S]*?(?:<\/\1>[^\n]*(?:\n+|$)|$)|(?:<!--[\s\S]*?-->|processing|<![\s\S]*?>|cdata)(?:[^\n]*\n+|$)|<\/?(tag)(?: +|\n|\/?)>[\s\S]*?(?:\n{2,}|$)|(?:<(?!script|pre|style)(?:tagname)(?:attribute)*?\s*\/?>|closingtag)[\s\S]*?(?:\n{2,}|$))+/i,
@@ -447,7 +437,7 @@ Lexer.prototype.parse = function (src, top) {
         type: 'fence',
         lang: match[1],
         lines: getHLines(match[2], cap),
-        text: cap
+        text: cap.replace(/\n$/, '')
       })
       continue
     }
@@ -456,7 +446,7 @@ Lexer.prototype.parse = function (src, top) {
     if (cap = this.rules.table.exec(src)) {
       item = {
         type: 'table',
-        header: splitTableRow(cap[1].replace(/^ *\|?|\|? *$/g, '')),
+        header: splitTableRow(cap[1]),
         align: cap[2].replace(/^ *\|?|\|? *$/g, '').split(/ *\| */),
         cells: cap[3] ? cap[3].replace(/\n+$/, '').split('\n') : []
       }
@@ -501,6 +491,26 @@ Lexer.prototype.parse = function (src, top) {
       })
     }
 
+    // hr
+    if (cap = this.rules.hr.exec(src)) {
+      src = src.substring(cap[0].length)
+      this.tokens.push({
+        type: 'hr'
+      })
+      continue
+    }
+
+    // heading
+    if (cap = this.rules.heading.exec(src)) {
+      src = src.substring(cap[0].length)
+      this.tokens.push({
+        type: 'heading',
+        level: cap[1].length,
+        text: cap[2]
+      })
+      continue
+    }
+
     // blockquote
     if (cap = this.rules.blockquote.exec(src)) {
       src = src.substring(cap[0].length)
@@ -528,6 +538,7 @@ Lexer.prototype.parse = function (src, top) {
           type: 'blockquote_close'
         })
       }
+      continue
     }
 
     // list
@@ -619,26 +630,6 @@ Lexer.prototype.parse = function (src, top) {
       continue
     }
 
-    // hr
-    if (cap = this.rules.hr.exec(src)) {
-      src = src.substring(cap[0].length)
-      this.tokens.push({
-        type: 'hr'
-      })
-      continue
-    }
-
-    // heading
-    if (cap = this.rules.heading.exec(src)) {
-      src = src.substring(cap[0].length)
-      this.tokens.push({
-        type: 'heading',
-        level: cap[1].length,
-        text: cap[2]
-      })
-      continue
-    }
-
     // html
     if (cap = this.rules.html.exec(src)) {
       src = src.substring(cap[0].length)
@@ -664,6 +655,7 @@ Lexer.prototype.parse = function (src, top) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'formula',
+        raw: cap[0],
         text: cap[2]
       })
       continue
@@ -759,11 +751,11 @@ function getHLines(text, code) {
 }
 
 function splitTableRow(text, limit) {
-  text = text.replace(/\\\|/g, '\t').split(/ *\| */)
+  text = text.replace(/^ *\|?|\|? *$/g, '').replace(/\\\|/g, '\t').split(/ *\| */)
   var result = []
   var length = limit || text.length
   for (var i = 0; i < length; i++) {
-    result.push(text[i] ? text[i].replace(/\t/g, '|') : '')
+    result.push(text[i] ? _trim(text[i].replace(/\t/g, '|')) : '')
   }
   return result
 }
@@ -863,7 +855,7 @@ Renderer.prototype.table = function (header, body) {
     + '</table>\n'
 }
 
-Renderer.prototype.tablecell = function (content, tag, align) {
+Renderer.prototype.tablecell = function (tag, content, align) {
   return '<'
     + tag
     + (align ? ' align="' + align + '"' : '')
@@ -896,25 +888,14 @@ Renderer.prototype.list = function (content, start) {
   return '<' + tag + order + '>\n' + content + '</' + tag + '>\n'
 }
 
-var blockTags = [
+// blockTags
+_each([
   'li',
   'dl',
   'dt',
   'dd',
   'p'
-]
-
-var inlineTags = [
-  'strong',
-  'em',
-  'ins',
-  'mark',
-  'del',
-  'sub',
-  'sup'
-]
-
-_each(blockTags, function (name) {
+], function (name) {
   Renderer.prototype[name] = function (content) {
     return '<' + name + '>' + content + '</' + name + '>\n'
   }
@@ -925,8 +906,18 @@ Renderer.prototype.blockquote = function(content) {
 }
 
 Renderer.prototype.paragraph = Renderer.prototype.p
+Renderer.prototype.img = Renderer.prototype.image
 
-_each(inlineTags, function (name) {
+// inlineTags
+_each([
+  'strong',
+  'em',
+  'ins',
+  'mark',
+  'del',
+  'sub',
+  'sup'
+], function (name) {
   Renderer.prototype[name] = function (text) {
     return '<' + name + '>' + text + '</' + name + '>'
   }
@@ -953,15 +944,26 @@ Renderer.prototype.image = function (src, alt, title) {
     + alt
     + '"'
     + (title ? ' title="' + title + '"' : '')
-    + (this.options.xhtml ? '/>' : '>')
+    + (this.options.xhtml ? ' />' : '>')
+}
+
+Renderer.prototype.checkbox = function(checked) {
+  return '<input '
+    + (checked ? 'checked="" ' : '')
+    + 'disabled="" type="checkbox"'
+    + (this.options.xhtml ? ' /' : '')
+    + '> '
 }
 
 function InlineLexer(options, refs, fnrefs) {
   this.options = options || zmd.defaults
   this.rules = inlineRe
-  this.refs = refs
+
+  this.refs = refs || Object.create(null)
+  if (!fnrefs) fnrefs = Object.create(null)
   fnrefs.__n = []
   this.fnrefs = fnrefs
+
   this.renderer = new Renderer(this.options)
 }
 
@@ -1232,24 +1234,200 @@ function Parser(options) {
   this.options = options || zmd.defaults
   this.renderer = new Renderer(this.options)
   this.slugger = new Slugger()
-  this.refs = new Refs()
 }
 
-Parser.parse = function (src, options) {
+Parser.parse = function (tokens, options) {
   var parser = new Parser(options)
-  return parser.parse(src)
+  return parser.parse(tokens)
 }
 
-Parser.prototype.parse = function (src) {
+Parser.prototype.parse = function (tokens) {
+  this.compiler = new InlineLexer(this.options, tokens.refs, tokens.fnrefs)
 
+  this.tokens = tokens.slice().reverse()
+
+  var out = ''
+
+  while (this.next()) {
+    out += this.compile()
+  }
+
+  return out
+}
+
+Parser.prototype.next = function () {
+  this.token = this.tokens.pop()
+  return this.token
+}
+
+Parser.prototype.peek = function () {
+  return this.tokens[this.tokens.length - 1] || {}
+}
+
+Parser.prototype.compile = function () {
+  var token = this.token
+  var type = token.type
+  var text = token.text
+  var id
+  var slug
+  var header
+  var body
+  var cell
+  var row
+  var i
+  var j
+  var dl
+
+  var renderer = this.renderer
+  var compiler = this.compiler
+
+  var next = this.peek().type
+
+  switch (type) {
+    case 'hr':
+      return renderer.hr()
+    case 'heading':
+      if (this.options.headerIds) {
+        id = this.slugger.get(text)
+        slug = ' id="' + id + '"'
+      } else {
+        slug = ''
+      }
+      return renderer.heading(
+        compiler.compile(text),
+        token.level,
+        slug
+      )
+    case 'code':
+      return renderer.code(text)
+    case 'fence':
+      return renderer.fence(text, token.lang, token.lines)
+    case 'table':
+      body = ''
+      cell = ''
+      for (i = 0; i < token.header.length; i++) {
+        cell += renderer.tablecell(
+          'th',
+          compiler.compile(token.header[i]),
+          token.align[i]
+        )
+      }
+
+      header = renderer.tablerow(cell)
+
+      for (i = 0; i < token.cells.length; i++) {
+        row = token.cells[i]
+        cell = ''
+        for (j = 0; j < row.length; j++) {
+          cell += renderer.tablecell(
+            'td',
+            compiler.compile(row[j]),
+            token.align[j]
+          )
+        }
+
+        body += renderer.tablerow(cell)
+      }
+
+      return renderer.table(header, body)
+    case 'deflist':
+      dl = renderDl(token.dt, token.dd)
+
+      if (next === type) {
+        token = this.next()
+        dl += renderDl(token.dt, token.dd)
+      }
+
+      function renderDl(dt, dd) {
+        var out = renderer.dt(compiler.compile(dt))
+        for (i = 0; i < dd.length; i++) {
+          out += renderer.dd(compiler.compile(_trim(dd[i])))
+        }
+        return out
+      }
+
+      return renderer.dl(dl)
+    case 'blockquote_open':
+      body = ''
+      j = 1
+      while (this.peek().type === type) {
+        this.next()
+        j++
+      }
+      while (this.next().type !== 'blockquote_close') {
+        body += this.compile()
+      }
+      while (this.peek().type && this.peek().type === 'blockquote_close') {
+        this.next()
+      }
+
+      for (i = 0; i < j; i++) {
+        body = renderer.blockquote(body)
+      }
+
+      return body
+    case 'div_open':
+      body = ''
+      while (this.next().type !== 'div_close') {
+        body += this.compile()
+      }
+      return renderer.div(body, _escape(token.kls))
+    case 'list_open':
+      body = ''
+      while (this.next().type !== 'list_close') {
+        body += this.compile()
+      }
+      return renderer.list(body, token.start)
+    case 'item_open':
+      body = ''
+      if (token.task) {
+        body += renderer.checkbox(token.checked)
+      }
+      while (this.next().type !== 'item_close') {
+        body += !token.loose && this.token.type === 'text' ?
+          this.parseText() :
+          this.compile()
+      }
+      return renderer.li(body)
+    case 'formula':
+      return renderer.formula(token.raw)
+    case 'html':
+      return renderer.html(text)
+    case 'paragraph':
+      return renderer.paragraph(compiler.compile(text))
+    case 'text':
+      return renderer.paragraph(this.parseText())
+
+    default:
+      _error('Unknown type:' + type)
+  }
+}
+
+Parser.prototype.parseText = function() {
+  var text = this.token.text
+  while (this.peek().type === 'text') {
+    text += '\n' + this.next().text
+  }
+  return this.compiler.compile(text)
 }
 
 function zmd(content, options) {
   if (!content) {
     return ''
   }
-
   options = _extend({}, zmd.defaults, options)
+  try {
+    return Parser.parse(Lexer.lex(content, options), options)
+  } catch (error) {
+    error.message += '\nPlease report this to https://github.com/xovel/zmd.';
+    if (options.silent) {
+      return '<p>An error occurred:</p><pre>'
+        + _escape(error.message + '', true)
+        + '</pre>';
+    }
+    throw error;
+  }
+
 }
 
 zmd.defaults = {
@@ -1260,9 +1438,6 @@ zmd.defaults = {
   highlight: null,
   xhtml: false
 }
-
-zmd.block = blockRe
-zmd.inline = inlineRe
 
 zmd.Lexer = Lexer
 zmd.InlineLexer = InlineLexer

@@ -641,7 +641,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // footnote
-    if (cap = this.rules.footnote.exec(src)) {
+    if (this.options.footnote && (cap = this.rules.footnote.exec(src))) {
       src = src.substring(cap[0].length)
       text = _trim(cap[1]).toLowerCase().replace(/\s+/g, ' ')
       this.tokens.fnrefs[text] = {
@@ -825,17 +825,17 @@ Renderer.prototype.html = function (html) {
 }
 
 Renderer.prototype.footnote = function (footnotes) {
-  var result = '<hr class="footnote-sep"' + (this.options.xhtml ? '/' : '') + '>\n'
+  var result = '<hr class="footnote-sep"' + (this.options.xhtml ? ' /' : '') + '>\n'
   result += '<ol class="footnote-list">'
   for (var i = 0; i < footnotes.length; i++) {
     var index = i + 1
-    result += '<li id="fn"'
+    result += '<li id="fn'
       + index
-      + ' class="footnote-item"><p>'
+      + '" class="footnote-item"><p>'
       + footnotes[i]
-      + '<a class="footnote-backref" href="#fnref"'
+      + '<a class="footnote-backref" href="#fnref'
       + index
-      + '>↩</a></p></li>'
+      + '">↩</a></p></li>'
   }
   result += '</ol>'
   return result
@@ -1082,14 +1082,17 @@ InlineLexer.prototype.compile = function (src) {
     }
 
     // footnote
-    if (cap = this.rules.footnote.exec(src)) {
+    if (this.options.footnote && (cap = this.rules.footnote.exec(src))) {
       text = _trim(cap[1]).toLowerCase().replace(/\s+/g, ' ')
 
       link = this.fnrefs[text]
 
       if (link) {
-        this.fnrefs.__n.push(this.compile(link.text))
-        out += '<a href="#fn1" id="fnref1">[1]</a>'.replace(/1/g, this.fnrefs.__n.length)
+        if (!link.index) {
+          this.fnrefs.__n.push(this.compile(link.text))
+          link.index = this.fnrefs.__n.length
+        }
+        out += '<a href="#fn1" id="fnref1">[1]</a>'.replace(/1/g, link.index)
         src = src.substring(cap[0].length)
         continue
       }
@@ -1250,6 +1253,10 @@ Parser.prototype.parse = function (tokens) {
 
   while (this.next()) {
     out += this.compile()
+  }
+
+  if (this.options.footnote && this.compiler.fnrefs.__n.length > 0) {
+    out += this.renderer.footnote(this.compiler.fnrefs.__n)
   }
 
   return out
@@ -1434,7 +1441,8 @@ zmd.defaults = {
   langPrefix: 'lang-',
   headerIds: true,
   headerPrefix: '',
-  formula: true,
+  formula: false,
+  footnote: true,
   highlight: null,
   xhtml: false
 }

@@ -164,7 +164,7 @@ var commonRe = {
 var blockRe = {
   // Leaf blocks
   hr: /^ {0,3}([-*_])( *\1){2,} *(?:\n+|$)/,
-  heading: /^ {0,3}(#{1,6}) +([^\n]*?) *#* *(?:\n+|$)/,
+  heading: /^ {0,3}(#{1,6}) +([^\n]*?)( +#* *)?(?:\n+|$)/,
   // setext heading
   sheading: /^( {0,3}[^ \n]+(?:\n[^\n]+)*)\n {0,3}(=+|-+) *(?:\n+|$)/,
   code: /^( {4}[^\n]+\n*)+/,
@@ -1038,7 +1038,7 @@ InlineLexer.prototype.compile = function (src) {
     // escape
     if (cap = this.rules.escape.exec(src)) {
       src = src.substring(cap[0].length)
-      out += escape(cap[1])
+      out += _escape(cap[1])
       continue
     }
 

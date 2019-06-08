@@ -11,3 +11,4 @@ rules:
   no-control-regex: 0
   no-cond-assign: 0
   no-console: 0
+  no-extra-semi: 0

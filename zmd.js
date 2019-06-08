@@ -1424,13 +1424,13 @@ function zmd(content, options) {
   try {
     return Parser.parse(Lexer.lex(content, options), options)
   } catch (error) {
-    error.message += '\nPlease report this to https://github.com/xovel/zmd.';
+    error.message += '\nPlease report this to https://github.com/xovel/zmd.'
     if (options.silent) {
       return '<p>An error occurred:</p><pre>'
         + _escape(error.message + '', true)
-        + '</pre>';
+        + '</pre>'
     }
-    throw error;
+    throw error
   }
 
 }

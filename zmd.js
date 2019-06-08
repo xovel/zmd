@@ -98,11 +98,14 @@ function _unescape(content) {
   })
 }
 
+function _trim(text) {
+  return String.prototype.trim ?
+    String.prototype.trim.call(text) :
+    text.replace(/^\s+|\s+$/g, '')
+}
+
 // Helpers End
 // -----------
-
-// ----------------
-// Global variables
 
 function Slugger() {
   this.slugs = Object.create(null)
@@ -150,7 +153,7 @@ var commonRe = {
   cdata: /<!\[CDATA\[[\s\S]+?\]\]>/,
   tag: /address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul/,
 
-  label: /\[((?!\s*\])(?:\\[\[\]]|[^\[\]])+)\]/,
+  label: /\[((?!\s*\])(?:\\[\[\]]|[^\[\]])+| *)\]/,
   // label: /\[((?!\s*\])(?:\\[\[\]]|[^\[\]]|\[[^\[\]]*\])+)\]/,
   destination: /<([^\n<>]*)>|((?!<)(?:\\[()]|\([^)\s]*\)|[^()\s])+)/,
   // title: /"((?:\\"|[^"])*)"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\(((?:[^()]|(?:\([^)]*\)))+)\)/,
@@ -162,7 +165,7 @@ var commonRe = {
   marker: /[*+-]|\d{1,9}[.)]/,
 
   scheme: /[a-zA-Z][a-zA-Z0-9+.-]{1,31}/,
-  uri: /scheme:[\s\x00-\x1f<>]*/,
+  uri: /scheme:[^\s\x00-\x1f<>]*/,
   // https://html.spec.whatwg.org/multipage/input.html#e-mail-state-(type%3Demail)
   email: /[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*/,
   autoemail: /[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/
@@ -180,7 +183,7 @@ var blockRe = {
 
   ref: /^ {0,3}(?:label): *\n? *(?:destination) *\n? *(?:\s(?:title))? *(?:\n+|$)/,
   // footnote: /^ {0,3}(?:label): ?([\S\s]+?)(?=(?:label)|\n{2,}|$)/,
-  footnote: /^ {0,3}(?:label): *([^ \n][^n]*(?:\n|$))/,
+  footnote: /^ {0,3}(?:label): *([^ \n][^\n]*(?:\n|$))/,
 
   paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}(>|(`{3}|~{3})([^`\n]*)\n)|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
   newline: /^\n+/,
@@ -212,14 +215,14 @@ var inlineRe = {
   strong: /^__([^\s_])__(?!_)|^\*\*([^\s*])\*\*(?!\*)|^__([^\s][\s\S]*?[^\s])__(?!_)|^\*\*([^\s][\s\S]*?[^\s])\*\*(?!\*)/,
   em: /^_([^\s_])_(?!_)|^\*([^\s*<\[])\*(?!\*)|^_([^\s<][\s\S]*?[^\s_])_(?!_|[^\spunctuation])|^_([^\s_<][\s\S]*?[^\s])_(?!_|[^\spunctuation])|^\*([^\s<"][\s\S]*?[^\s\*])\*(?!\*|[^\spunctuation])|^\*([^\s*"<\[][\s\S]*?[^\s])\*(?!\*)/,
 
-  del: /^~~[^~]*?~~/,
-  ins: /^\+\+[^+]*?\+\+/,
-  mark: /^==[^=]*?==/,
-  sub: /^~[^ ~\n]~/,
-  sup: /^\^[^ \^\n]\^/,
-  formula: /^\$[^\n\$]\$/,
+  del: /^~~([\s\S]*?)~~/,
+  ins: /^\+\+([\s\S]*?)\+\+/,
+  mark: /^==([\s\S]*?)==/,
+  sub: /^~([^~\n]+)~/,
+  sup: /^\^([^\^\n]+)\^/,
+  formula: /^\$([^\$\n]+?)\$/,
 
-  link: /^!?(?:label)\(\s*(?:destination)(?:\s+(title))?\s*\)/,
+  link: /^!?(?:label)\(\s*(?:destination)(?:\s+(?:title))?\s*\)/,
   reflink: /^!?(?:label)\[(?!\s*\])((?:\\[\[\]]|[^\[\]])+)\]/,
   nolink: /^!?(?:label)(?:\[\s*\])?/,
   footnote: /^(?:label)(?!\[)/,
@@ -260,6 +263,7 @@ blockRe.html = _regex(
 blockRe.ref = _regex(
   blockRe.ref,
   ['label', commonRe.label],
+  ['| *', ''],
   ['destination', commonRe.destination],
   ['title', commonRe.title]
 )
@@ -300,6 +304,7 @@ blockRe.item = _regex(
 blockRe.footnote = _regex(
   blockRe.footnote,
   ['label', commonRe.label],
+  ['| *', ''],
   ['\\[', '\\[\\^'],
   ['label', commonRe.label]
 )
@@ -308,14 +313,19 @@ inlineRe.escape = _regex(
   inlineRe.escape,
   ['punctuation', commonRe.punctuation]
 )
+inlineRe._escape = _regex(
+  /\\(punctuation)/g,
+  ['punctuation', commonRe.punctuation]
+)
 inlineRe.autolink = _regex(
   inlineRe.autolink,
   ['uri', commonRe.uri],
-  ['email', commonRe.email]
+  ['email', commonRe.email],
+  ['@', '(@)']
 )
 inlineRe.autourl = _regex(
   inlineRe.autourl,
-  ['email', commonRe.email]
+  ['email', commonRe.autoemail]
 )
 inlineRe.strong = _regex(
   inlineRe.strong,
@@ -333,11 +343,13 @@ inlineRe.reflink = _regex(
 )
 inlineRe.nolink = _regex(
   inlineRe.nolink,
-  ['label', commonRe.label]
+  ['label', commonRe.label],
+  ['| *', '']
 )
 inlineRe.footnote = _regex(
   inlineRe.footnote,
   ['label', commonRe.label],
+  ['| *', ''],
   ['\\[', '\\[\\^']
 )
 inlineRe.html = _regex(
@@ -352,10 +364,9 @@ inlineRe.html = _regex(
 
 function Lexer(options){
   this.tokens = []
-  this.tokens.footnote = []
   this.tokens.fnrefs = Object.create(null) // {}
   this.tokens.refs = Object.create(null) // {}
-  this.options = options
+  this.options = options || zmd.defaults
   this.rules = blockRe
 }
 
@@ -385,13 +396,12 @@ Lexer.prototype.parse = function (src, top) {
   var i
   var j
   var n
-  var bqCount
-  var bqText
+  var count
+  var text
   var loose
   var next
   var prefix
   var listOpen
-  var listText
   var listItems
   var listType
 
@@ -498,22 +508,22 @@ Lexer.prototype.parse = function (src, top) {
         type: 'blockquote_open'
       })
 
-      bqText = cap[0].replace(/^ *> ?/gm, '')
+      text = cap[0].replace(/^ *> ?/gm, '')
 
       // laziness
-      bqCount = 1
-      while (/^ {0,3}>/.test(bqText)) {
-        bqCount++
+      count = 1
+      while (/^ {0,3}>/.test(text)) {
+        count++
         this.tokens.push({
           type: 'blockquote_open'
         })
-        bqText = bqText.replace(/^ *> ?/gm, '')
+        text = text.replace(/^ *> ?/gm, '')
       }
 
       // recurse
-      this.parse(bqText, top)
+      this.parse(text, top)
 
-      for (i = 0; i < bqCount; i++) {
+      for (i = 0; i < count; i++) {
         this.tokens.push({
           type: 'blockquote_close'
         })
@@ -537,13 +547,13 @@ Lexer.prototype.parse = function (src, top) {
       listType = []
 
       for (i = 0; i < n; i++) {
-        listText = cap[i]
-        prefix = listText.length
-        listText = listText.replace(blockRe.bullet, function (_, bullet) {
+        text = cap[i]
+        prefix = text.length
+        text = text.replace(blockRe.bullet, function (_, bullet) {
           listType[i] = bullet[bullet.length - 1]
           return ''
         })
-        prefix -= listText.length
+        prefix -= text.length
 
         // Changing the bullet or ordered list delimiter starts a new list
         if (
@@ -566,9 +576,9 @@ Lexer.prototype.parse = function (src, top) {
           next = false
         }
         // loose or tight
-        loose = next || /\n\n(?!\s*$)/.test(listText)
+        loose = next || /\n\n(?!\s*$)/.test(text)
         if (i !== n - 1) {
-          next = listText.charAt(listText.length - 1) === '\n'
+          next = text.charAt(text.length - 1) === '\n'
           if (!loose) loose = next
         }
 
@@ -578,19 +588,19 @@ Lexer.prototype.parse = function (src, top) {
 
         item = {
           type: 'item_open',
-          task: /^\[[ x]\]/i.test(listText)
+          task: /^\[[ x]\]/i.test(text)
         }
 
         if (item.task) {
-          item.checked = listText[1] !== ' '
-          listText = listText.replace(/^\[[ x]\] +/i, '')
+          item.checked = text[1] !== ' '
+          text = text.replace(/^\[[ x]\] +/i, '')
         }
 
         listItems.push(item)
         this.tokens.push(item)
 
         // recurse
-        this.parse(listText.replace(new RegExp('^ {2,' + prefix + '}', 'gm'), ''), false)
+        this.parse(text.replace(new RegExp('^ {2,' + prefix + '}', 'gm'), ''), false)
 
         this.tokens.push({
           type: 'item_close'
@@ -642,11 +652,10 @@ Lexer.prototype.parse = function (src, top) {
     // footnote
     if (cap = this.rules.footnote.exec(src)) {
       src = src.substring(cap[0].length)
-      this.tokens.push({
-        type: 'footnote',
-        name: cap[1],
-        text: cap[2]
-      })
+      text = _trim(cap[1]).toLowerCase().replace(/\s+/g, ' ')
+      this.tokens.fnrefs[text] = {
+        text: _trim(cap[2])
+      }
       continue
     }
 
@@ -663,12 +672,11 @@ Lexer.prototype.parse = function (src, top) {
     // ref
     if (top && (cap = this.rules.ref.exec(src))) {
       src = src.substring(cap[0].length)
-      if (cap[3]) cap[3] = cap[3].substring(1, cap[3].length - 1)
-      tag = cap[1].toLowerCase().replace(/\s+/g, ' ')
-      if (!this.tokens.refs[tag]) {
-        this.tokens.refs[tag] = {
-          href: cap[2],
-          title: cap[3]
+      item = _trim(cap[1]).toLowerCase().replace(/\s+/g, ' ')
+      if (!this.tokens.refs[item]) {
+        this.tokens.refs[item] = {
+          href: _trim(cap[2] || cap[3] || ''),
+          title: _trim(cap[4] || cap[5] || cap[6] || '')
         }
       }
       continue
@@ -761,7 +769,7 @@ function splitTableRow(text, limit) {
 }
 
 function Renderer(options) {
-  this.options = options
+  this.options = options || zmd.defaults
 }
 
 Renderer.prototype.hr = function () {
@@ -772,10 +780,10 @@ Renderer.prototype.br = function () {
   return this.options.xhtml ? '<br/>\n' : '<br>\n'
 }
 
-Renderer.prototype.heading = function (text, level, raw, slugger) {
+Renderer.prototype.heading = function (text, level, slug) {
   return '<h'
     + level
-    + (this.options.headerIds ? this.options.headerPrefix + slugger.get(raw) : '')
+    + slug
     + '>'
     + text
     + '</h'
@@ -906,12 +914,11 @@ var inlineTags = [
   'sup'
 ]
 
-for (var i = 0; i < blockTags.length; i++) {
-  var name = blockTags[i]
+_each(blockTags, function (name) {
   Renderer.prototype[name] = function (content) {
     return '<' + name + '>' + content + '</' + name + '>\n'
   }
-}
+})
 
 Renderer.prototype.blockquote = function(content) {
   return '<blockquote>\n' + content + '</blockquote>\n'
@@ -919,12 +926,11 @@ Renderer.prototype.blockquote = function(content) {
 
 Renderer.prototype.paragraph = Renderer.prototype.p
 
-for (var i = 0; i < inlineTags.length; i++) {
-  var name = inlineTags[i]
+_each(inlineTags, function (name) {
   Renderer.prototype[name] = function (text) {
     return '<' + name + '>' + text + '</' + name + '>'
   }
-}
+})
 
 Renderer.prototype.codespan = function(text) {
   return '<code>' + text + '</code>'
@@ -932,7 +938,7 @@ Renderer.prototype.codespan = function(text) {
 
 Renderer.prototype.link = function (href, text, title) {
   return '<a href="'
-    + _escape(href)
+    + _escape(href, true)
     + '"'
     + (title ? ' title="' + title + '"' : '')
     + '>'
@@ -940,107 +946,330 @@ Renderer.prototype.link = function (href, text, title) {
     + '</a>'
 }
 
-Renderer.prototype.image = function (src, text, title) {
+Renderer.prototype.image = function (src, alt, title) {
   return '<img src="'
     + src
     + '" alt="'
-    + text
+    + alt
     + '"'
     + (title ? ' title="' + title + '"' : '')
     + (this.options.xhtml ? '/>' : '>')
 }
 
-function Parser(options) {
-
+function InlineLexer(options, refs, fnrefs) {
+  this.options = options || zmd.defaults
+  this.rules = inlineRe
+  this.refs = refs
+  fnrefs.__n = []
+  this.fnrefs = fnrefs
+  this.renderer = new Renderer(this.options)
 }
 
+InlineLexer.rules = inlineRe
 
-var zmd = function (content, options, callback) {
+InlineLexer.prototype.escape = function (text) {
+  return text.replace(this.rules._escape, '$1')
+}
 
-  if (!content) {
-    _error('Need content');
+InlineLexer.prototype.mangle = function (text) {
+  var out = ''
+  var ch
+  for (var i = 0; i < text.length; i++) {
+    ch = text.charCodeAt(i)
+    if (Math.random() > 0.5) {
+      ch = 'x' + ch.toString(16)
+    }
+    out += '&#' + ch + ';'
   }
-
-  options = _extend({
-    gfm: true,
-    tables: true,
-    breaks: false,
-    pedantic: false,
-    sanitize: false,
-    sanitizer: null,
-    mangle: true,
-    smartLists: false,
-    taskList: false,
-    silent: false,
-    highlight: null,
-    langPrefix: 'lang-',
-    smartypants: false,
-    headerPrefix: '',
-    xhtml: false
-  }, options || {});
-
-  // 第一步：词法解析
-  var lexer = new Lexer(content, options);
-
-
-
-
-
+  return out
 }
 
+InlineLexer.prototype.smartypants = function(text) {
+  return text
+    // em-dashes
+    .replace(/---/g, '\u2014')
+    // en-dashes
+    .replace(/--/g, '\u2013')
+    // opening singles
+    .replace(/(^|[-\u2014/(\[{"\s])'/g, '$1\u2018')
+    // closing singles & apostrophes
+    .replace(/'/g, '\u2019')
+    // opening doubles
+    .replace(/(^|[-\u2014/(\[{\u2018\s])"/g, '$1\u201c')
+    // closing doubles
+    .replace(/"/g, '\u201d')
+    // ellipses
+    .replace(/\.{3}/g, '\u2026')
+}
 
+InlineLexer.prototype.link = function (image, text, href, title) {
 
+  href = this.escape(href)
+  title = _escape(this.escape(title))
 
-zmd.tokens = [];
+  if (image) {
+    // image
+    return this.renderer.image(
+      href,
+      _escape(text, true),
+      title
+    )
+  } else {
+    return this.renderer.link(
+      href,
+      this.compile(text),
+      title
+    )
+  }
+}
 
-zmd.lex = function(src){
-  src = src
-    .replace(/\r\n|\r/g, '\n')
-    .replace(/\t/g, '    ')
-    .replace(/\u00a0/g, ' ')
-    .replace(/\u2424/g, '\n');
+InlineLexer.compile = function (text, options, refs, fnrefs) {
+  var compiler = new InlineLexer(options, refs, fnrefs)
+  return compiler.compile(text)
+}
 
-  src = src.replace(/^ +$/gm, '');
+InlineLexer.prototype.compile = function (src) {
+  var out = ''
+  var link
+  var text
+  var href
+  var title
+  var cap
 
-  var temp;
+  while (src) {
+    // escape
+    if (cap = this.rules.escape.exec(src)) {
+      src = src.substring(cap[0].length)
+      out += escape(cap[1])
+      continue
+    }
 
-  while(src){
+    // html tag
+    if (cap = this.rules.html.exec(src)) {
+      if (this.inLink && /^<\/a *>/i.test(cap[0])) {
+        this.inLink = false
+      } else if (!this.inLink && /^<a /i.test(cap[0])) {
+        this.inLink = true
+      }
 
-    if(temp = zmd.block.newline.exec(src)){
-      src = src.substring(temp[0].length);
-      if(temp[0].length > 1){
-        zmd.tokens.push({
-          type: 'space'
-        });
+      if (this.inRawBlock && /^<\/(pre|code|kbd|script|math)(\s|>)/i.test(cap[0])) {
+        this.inRawBlock = false
+      } else if (!this.inRawBlock && /^<(pre|code|kbd|script|math)(\s|>)/i.test(cap[0])) {
+        this.inRawBlock = true
+      }
+
+      src = src.substring(cap[0].length)
+      out += cap[0]
+
+      continue
+    }
+
+    // link
+    if (cap = this.rules.link.exec(src)) {
+      src = src.substring(cap[0].length)
+      this.inLink = true
+
+      text = _trim(cap[1] || '')
+      link = _trim(cap[2] || cap[3])
+      title = _trim(cap[4] || cap[5] || cap[6] || '')
+
+      out += this.link(cap[0][0] === '!', text, link, title)
+
+      this.inLink = false
+      continue
+    }
+
+    // footnote
+    if (cap = this.rules.footnote.exec(src)) {
+      text = _trim(cap[1]).toLowerCase().replace(/\s+/g, ' ')
+
+      link = this.fnrefs[text]
+
+      if (link) {
+        this.fnrefs.__n.push(this.compile(link.text))
+        out += '<a href="#fn1" id="fnref1">[1]</a>'.replace(/1/g, this.fnrefs.__n.length)
+        src = src.substring(cap[0].length)
+        continue
+      }
+    }
+
+    // reflink, nolink
+    if ((cap = this.rules.reflink.exec(src)) || (cap = this.rules.nolink.exec(src))) {
+      text = _trim(cap[1])
+      link = _trim(cap[2] || cap[1]).toLowerCase().replace(/\s+/g, ' ')
+
+      link = this.refs[link]
+
+      if (link) {
+        this.inLink = true
+        out += this.link(cap[0][0] === '!', text, link.href, link.title)
+        this.inLink = false
+
+        src = src.substring(cap[0].length)
+        continue
       }
     }
 
     // code
-    if (temp = zmd.block.code.exec(src)) {
-      src = src.substring(temp[0].length);
-      temp = temp[0].replace(/^ {4}/gm, '');
-      zmd.tokens.push({
-        type: 'code',
-        text: temp
-      });
-      continue;
+    if (cap = this.rules.code.exec(src)) {
+      src = src.substring(cap[0].length)
+      text = cap[2]
+      // No stripping occurs if the code span contains only spaces
+      if (!/^ *$/.test(text)) {
+        // The stripping only happens if the space is on both sides of the string
+        text = text.replace(/^( +)([\s\S]*?)\1$/, '$2')
+      }
+      out += this.renderer.codespan(_escape(text))
+      continue
     }
 
-    break;
+    // strong
+    if (cap = this.rules.strong.exec(src)) {
+      src = src.substring(cap[0].length)
+      out += this.renderer.strong(this.compile(cap[4] || cap[3] || cap[2] || cap[1]))
+      continue
+    }
 
+    // em
+    if (cap = this.rules.em.exec(src)) {
+      src = src.substring(cap[0].length)
+      out += this.renderer.em(this.compile(cap[6] || cap[5] || cap[4] || cap[3] || cap[2] || cap[1]))
+      continue
+    }
+
+    // br
+    if (cap = this.rules.br.exec(src)) {
+      src = src.substring(cap[0].length)
+      out += this.renderer.br()
+      continue
+    }
+
+    // del
+    if (cap = this.rules.del.exec(src)) {
+      src = src.substring(cap[0].length)
+      out += this.renderer.del(this.compile(cap[1]))
+      continue
+    }
+
+    // mark
+    if (cap = this.rules.mark.exec(src)) {
+      src = src.substring(cap[0].length)
+      out += this.renderer.mark(this.compile(cap[1]))
+      continue
+    }
+
+    // ins
+    if (cap = this.rules.ins.exec(src)) {
+      src = src.substring(cap[0].length)
+      out += this.renderer.ins(this.compile(cap[1]))
+      continue
+    }
+
+    // autolink
+    if (cap = this.rules.autolink.exec(src)) {
+      src = src.substring(cap[0].length)
+      if (cap[2] === '@') {
+        text = _escape(this.options.mangle ? this.mangle(cap[1]) : cap[1], true)
+        href = 'mailto:' + text
+      } else {
+        text = _escape(cap[1], true)
+        href = text
+      }
+      out += this.renderer.link(href, text)
+      continue
+    }
+
+    // formula
+    if (this.options.formula && (cap = this.rules.formula.exec(src))) {
+      src = src.substring(cap[0].length)
+      out += this.renderer.inlineFormula(_escape(cap[1], true))
+      continue
+    }
+
+    // autourl
+    if (!this.inLink && this.options.autourl && (cap = this.rules.url.exec(src))) {
+      if (cap[2] === '@') {
+        text = _escape(cap[1], true)
+        href = 'mailto:' + text
+      } else {
+        text = cap[0]
+        text = _escape(text, true)
+        if (text[0] === 'w') {
+          href = 'http://' + text
+        } else {
+          href = text
+        }
+      }
+      out += this.renderer.link(href, text)
+      src = src.substring(cap[0].length)
+      continue
+    }
+
+    // text
+    if (cap = this.rules.text.exec(src)) {
+      src = src.substring(cap[0].length)
+      if (this.inRawBlock) {
+        out += this.renderer.text(cap[0])
+      } else {
+        text = _escape(cap[0], true)
+        if (this.options.smartypants) {
+          text = this.smartypants(text)
+        }
+        out += this.renderer.text(text)
+      }
+      continue
+    }
+
+    break
   }
 
-  return zmd
+  return out
 }
 
-zmd.getSlug = getSlug
-zmd.getRef = getRef
+function Parser(options) {
+  this.tokens = []
+  this.token = null
+  this.options = options || zmd.defaults
+  this.renderer = new Renderer(this.options)
+  this.slugger = new Slugger()
+  this.refs = new Refs()
+}
 
-zmd.commonRe = commonRe
-zmd.blockRe = blockRe
-zmd.inlineRe = inlineRe
+Parser.parse = function (src, options) {
+  var parser = new Parser(options)
+  return parser.parse(src)
+}
+
+Parser.prototype.parse = function (src) {
+
+}
+
+function zmd(content, options) {
+  if (!content) {
+    return ''
+  }
+
+  options = _extend({}, zmd.defaults, options)
+}
+
+zmd.defaults = {
+  langPrefix: 'lang-',
+  headerIds: true,
+  headerPrefix: '',
+  formula: true,
+  highlight: null,
+  xhtml: false
+}
+
+zmd.block = blockRe
+zmd.inline = inlineRe
 
 zmd.Lexer = Lexer
+zmd.InlineLexer = InlineLexer
+zmd.Parser = Parser
+zmd.Renderer = Renderer
+
+zmd.parse = zmd
 
 return zmd
 

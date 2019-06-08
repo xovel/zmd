@@ -651,7 +651,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // formula
-    if (cap = this.rules.formula.exec(src)) {
+    if (this.options.formula && (cap = this.rules.formula.exec(src))) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'formula',
@@ -760,19 +760,19 @@ function splitTableRow(text, limit) {
   return result
 }
 
-function Render(options) {
+function Renderer(options) {
   this.options = options
 }
 
-Render.prototype.hr = function () {
+Renderer.prototype.hr = function () {
   return this.options.xhtml ? '<hr/>\n' : '<hr>\n'
 }
 
-Render.prototype.br = function () {
+Renderer.prototype.br = function () {
   return this.options.xhtml ? '<br/>\n' : '<br>\n'
 }
 
-Render.prototype.heading = function (text, level, raw, slugger) {
+Renderer.prototype.heading = function (text, level, raw, slugger) {
   return '<h'
     + level
     + (this.options.headerIds ? this.options.headerPrefix + slugger.get(raw) : '')
@@ -783,11 +783,11 @@ Render.prototype.heading = function (text, level, raw, slugger) {
     + '>\n'
 }
 
-Render.prototype.code = function (code) {
+Renderer.prototype.code = function (code) {
   return '<pre><code>' + _escape(code) + '</code></pre>'
 }
 
-Render.prototype.fence = function (code, lang) {
+Renderer.prototype.fence = function (code, lang, hLines) {
   var escaped
   if (this.options.highlight) {
     var out = this.options.highlight(code, lang)
@@ -797,19 +797,34 @@ Render.prototype.fence = function (code, lang) {
     }
   }
 
-  return '<pre><code class="'
+  var out = '<pre><code class="'
     + this.options.langPrefix
     + _escape(lang, true)
     + '">'
     + (escaped ? code : _escape(code))
     + '</code></pre>\n'
+
+
+  if (hLines && hLines.length > 0) {
+    var wrap = ''
+    wrap = '<div class="code-hl">\n'
+    for (var i = 0; i < hLines.length; i++) {
+      wrap += '<div class="code-hl-item" style="top:"'
+      wrap += ((hLines - 1) * 20 + 16)
+      wrap += 'px"></div>\n'
+    }
+
+    out = wrap + out + '</div>'
+  }
+
+  return out
 }
 
-Render.prototype.html = function (html) {
+Renderer.prototype.html = function (html) {
   return html
 }
 
-Render.prototype.footnote = function (footnotes) {
+Renderer.prototype.footnote = function (footnotes) {
   var result = '<hr class="footnote-sep"' + (this.options.xhtml ? '/' : '') + '>\n'
   result += '<ol class="footnote-list">'
   for (var i = 0; i < footnotes.length; i++) {
@@ -826,11 +841,11 @@ Render.prototype.footnote = function (footnotes) {
   return result
 }
 
-Render.prototype.text = function (text) {
+Renderer.prototype.text = function (text) {
   return text
 }
 
-Render.prototype.table = function (header, body) {
+Renderer.prototype.table = function (header, body) {
   if (body) body = '<tbody>' + body + '</tbody>'
   return '<table>\n'
     + '<thead>\n'
@@ -840,7 +855,7 @@ Render.prototype.table = function (header, body) {
     + '</table>\n'
 }
 
-Render.prototype.tablecell = function (content, tag, align) {
+Renderer.prototype.tablecell = function (content, tag, align) {
   return '<'
     + tag
     + (align ? ' align="' + align + '"' : '')
@@ -851,23 +866,23 @@ Render.prototype.tablecell = function (content, tag, align) {
     + '>\n'
 }
 
-Render.prototype.tablerow = function(content) {
+Renderer.prototype.tablerow = function(content) {
   return '<tr>\n' + content + '</tr>\n'
 }
 
-Render.prototype.formula = function (content) {
+Renderer.prototype.formula = function (content) {
   return '<div class="formula">\n' + content + '</div>\n'
 }
 
-Render.prototype.inlineFormula = function (text) {
-  return '<span class="formula">\n' + text + '</span>\n'
+Renderer.prototype.inlineFormula = function (text) {
+  return '<span class="formula">' + text + '</span>'
 }
 
-Render.prototype.div = function (content, kls) {
+Renderer.prototype.div = function (content, kls) {
   return '<div class="' + kls + '">\n' + content + '</div>\n'
 }
 
-Render.prototype.list = function (content, start) {
+Renderer.prototype.list = function (content, start) {
   var tag = start > 0 ? 'ol' : 'ul'
   var order = start > 1 ? (' start="' + start +'"') : ''
   return '<' + tag + order + '>\n' + content + '</' + tag + '>\n'
@@ -893,29 +908,29 @@ var inlineTags = [
 
 for (var i = 0; i < blockTags.length; i++) {
   var name = blockTags[i]
-  Render.prototype[name] = function (content) {
+  Renderer.prototype[name] = function (content) {
     return '<' + name + '>' + content + '</' + name + '>\n'
   }
 }
 
-Render.prototype.blockquote = function(content) {
+Renderer.prototype.blockquote = function(content) {
   return '<blockquote>\n' + content + '</blockquote>\n'
 }
 
-Render.prototype.paragraph = Render.prototype.p
+Renderer.prototype.paragraph = Renderer.prototype.p
 
 for (var i = 0; i < inlineTags.length; i++) {
   var name = inlineTags[i]
-  Render.prototype[name] = function (text) {
+  Renderer.prototype[name] = function (text) {
     return '<' + name + '>' + text + '</' + name + '>'
   }
 }
 
-Render.prototype.codespan = function(text) {
+Renderer.prototype.codespan = function(text) {
   return '<code>' + text + '</code>'
 }
 
-Render.prototype.link = function (href, text, title) {
+Renderer.prototype.link = function (href, text, title) {
   return '<a href="'
     + _escape(href)
     + '"'
@@ -925,7 +940,7 @@ Render.prototype.link = function (href, text, title) {
     + '</a>'
 }
 
-Render.prototype.image = function (src, text, title) {
+Renderer.prototype.image = function (src, text, title) {
   return '<img src="'
     + src
     + '" alt="'

@@ -2,3 +2,6 @@
 /build
 
 package-lock.json
+
+/temp
+/test

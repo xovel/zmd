@@ -58,7 +58,7 @@ function _error(msg) {
   throw new Error(msg)
 }
 
-function _regex(input/*,  ...replacers */) {
+function _regex(input/* ,  ...replacers */) {
   var source = input.source || input
   var flags = input.flags || ''
 
@@ -78,7 +78,7 @@ var escapeReplacement = {
   '<': '&lt;',
   '>': '&gt;',
   '"': '&quot;',
-  "'": '&#39;'
+  "'": '&#39;' // eslint-disable-line quotes
 }
 
 function _escape(content, entity) {
@@ -88,7 +88,7 @@ function _escape(content, entity) {
 }
 
 function _unescape(content) {
-  return content.replace(/&(#(?:\d+)|(?:#x[0-9a-f]+)|(?:\w+));?/ig, function(_, n) {
+  return content.replace(/&(#(?:\d+)|(?:#x[0-9a-f]+)|(?:\w+));?/ig, function (_, n) {
     n = n.toLowerCase()
     if (n === 'colon') return ':'
     if (n.charAt(0) === '#') {
@@ -131,7 +131,7 @@ var commonRe = {
   // // whitespace: /\s+/,
   // // whitespace: /[ \t\n\v\f\r]+/,
   // whitespace: /[\u0020\u0009\u000a\u000b\u000c\u000d]+/, // is a space (U+0020), tab (U+0009), newline (U+000A), line tabulation (U+000B), form feed (U+000C), or carriage return (U+000D).
-  punctuation: /[!"#$%&'()*+,\-./\u0021-\u002f:;<=>?@\u003a-\u0040\[\\\]^_`\u005b-\u0060{|}~\u007b-\u007e]/, // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F), :, ;, <, =, >, ?, @ (U+003A–0040), [, \, ], ^, _, ` (U+005B–0060), {, |, }, or ~ (U+007B–007E).
+  punctuation: /[!"#$%&'()*+,\-./\u0021-\u002f:;<=>?@\u003a-\u0040[\\\]^_`\u005b-\u0060{|}~\u007b-\u007e]/, // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F), :, ;, <, =, >, ?, @ (U+003A–0040), [, \, ], ^, _, ` (U+005B–0060), {, |, }, or ~ (U+007B–007E).
 
   tagname: /[a-zA-Z][\w-]*/, // A tag name consists of an ASCII letter followed by zero or more ASCII letters, digits, or hyphens (-).
   attribute: /\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*([^\s"'=<>`]+|'[^']*'|"[^"]*"))?/,
@@ -143,7 +143,7 @@ var commonRe = {
   cdata: /<!\[CDATA\[[\s\S]+?\]\]>/,
   tag: /address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul/,
 
-  label: /\[((?!\s*\])(?:\\[\[\]]|[^\[\]])+| *)\]/,
+  label: /\[((?!\s*\])(?:\\[[\]]|[^[\]])+| *)\]/,
   // label: /\[((?!\s*\])(?:\\[\[\]]|[^\[\]]|\[[^\[\]]*\])+)\]/,
   destination: /<([^\n<>]*)>|((?!<)(?:\\[()]|\([^)\s]*\)|[^()\s])+)/,
   // title: /"((?:\\"|[^"])*)"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\(((?:[^()]|(?:\([^)]*\)))+)\)/,
@@ -157,7 +157,7 @@ var commonRe = {
   scheme: /[a-zA-Z][a-zA-Z0-9+.-]{1,31}/,
   uri: /scheme:[^\s\x00-\x1f<>]*/,
   // https://html.spec.whatwg.org/multipage/input.html#e-mail-state-(type%3Demail)
-  email: /[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*/,
+  email: /[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*/,
   autoemail: /[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/
 }
 
@@ -203,24 +203,24 @@ var inlineRe = {
   autourl: /^((?:(?:ht|f)tps?:\/\/|www\.)(?:[\w-]+\.?)+[^\s<]*|email)/i,
 
   strong: /^__([^\s_])__(?!_)|^\*\*([^\s*])\*\*(?!\*)|^__([^\s][\s\S]*?[^\s])__(?!_)|^\*\*([^\s][\s\S]*?[^\s])\*\*(?!\*)/,
-  em: /^_([^\s_])_(?!_)|^\*([^\s*<\[])\*(?!\*)|^_([^\s<][\s\S]*?[^\s_])_(?!_|[^\spunctuation])|^_([^\s_<][\s\S]*?[^\s])_(?!_|[^\spunctuation])|^\*([^\s<"][\s\S]*?[^\s\*])\*(?!\*|[^\spunctuation])|^\*([^\s*"<\[][\s\S]*?[^\s])\*(?!\*)/,
+  em: /^_([^\s_])_(?!_)|^\*([^\s*<[])\*(?!\*)|^_([^\s<][\s\S]*?[^\s_])_(?!_|[^\spunctuation])|^_([^\s_<][\s\S]*?[^\s])_(?!_|[^\spunctuation])|^\*([^\s<"][\s\S]*?[^\s*])\*(?!\*|[^\spunctuation])|^\*([^\s*"<[][\s\S]*?[^\s])\*(?!\*)/,
 
   del: /^~~([\s\S]*?)~~/,
   ins: /^\+\+([\s\S]*?)\+\+/,
   mark: /^==([\s\S]*?)==/,
   sub: /^~([^~\n]+)~/,
-  sup: /^\^([^\^\n]+)\^/,
-  formula: /^\$([^\$\n]+?)\$/,
+  sup: /^\^([^^\n]+)\^/,
+  formula: /^\$([^$\n]+?)\$/,
 
   link: /^!?(?:label)\(\s*(?:destination)(?:\s+(?:title))?\s*\)/,
-  reflink: /^!?(?:label)\[(?!\s*\])((?:\\[\[\]]|[^\[\]])+)\]/,
+  reflink: /^!?(?:label)\[(?!\s*\])((?:\\[[\]]|[^[\]])+)\]/,
   nolink: /^!?(?:label)(?:\[\s*\])?/,
   footnote: /^(?:label)(?!\[)/,
 
   html: /^(opentag|closingtag|comment|processing|declaration|cdata)/,
 
   // text: /^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<!\[`*^]|\b_|$)|[^ ](?= {2,}\n))|(?= {2,}\n))/,
-  text: /^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<!\[`*~^]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@))|(?= {2,}\n|[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@))/
+  text: /^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<![`*~^]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+/=?_`{|}~-](?=[a-zA-Z0-9.!#$%&'*+/=?_`{|}~-]+@))|(?= {2,}\n|[a-zA-Z0-9.!#$%&'*+/=?_`{|}~-]+@))/
 }
 
 commonRe.opentag = _regex(
@@ -352,7 +352,7 @@ inlineRe.html = _regex(
   ['cdata', commonRe.cdata]
 )
 
-function Lexer(options){
+function Lexer(options) {
   this.tokens = []
   this.tokens.fnrefs = Object.create(null) // {}
   this.tokens.refs = Object.create(null) // {}
@@ -733,16 +733,16 @@ function getHLines(text, code) {
   var ret = []
   if (text) {
     var lines = code.split('\n').length
-    str.split(',').map(function (item) {
-      if (item.indexOf('-') !== -1) {
-        var nn = item.split('-')
-        for (var i = +nn[0]; i <= +nn[1] && i <= lines; i++) {
-          ret.push(i)
-        }
-      } else {
+    _each(text.split(','), function (item) {
+      if (item.indexOf('-') === -1) {
         var n = +item
         if (n && n <= lines) {
           ret.push(n)
+        }
+      } else {
+        var nn = item.split('-')
+        for (var i = +nn[0]; i <= +nn[1] && i <= lines; i++) {
+          ret.push(i)
         }
       }
     })
@@ -789,15 +789,16 @@ Renderer.prototype.code = function (code) {
 
 Renderer.prototype.fence = function (code, lang, hLines) {
   var escaped
+  var out
   if (this.options.highlight) {
-    var out = this.options.highlight(code, lang)
+    out = this.options.highlight(code, lang)
     if (out && out !== code) {
       code = out
       escaped = true
     }
   }
 
-  var out = '<pre><code class="'
+  out = '<pre><code class="'
     + this.options.langPrefix
     + _escape(lang, true)
     + '">'
@@ -866,7 +867,7 @@ Renderer.prototype.tablecell = function (tag, content, align) {
     + '>\n'
 }
 
-Renderer.prototype.tablerow = function(content) {
+Renderer.prototype.tablerow = function (content) {
   return '<tr>\n' + content + '</tr>\n'
 }
 
@@ -884,7 +885,7 @@ Renderer.prototype.div = function (content, kls) {
 
 Renderer.prototype.list = function (content, start) {
   var tag = start > 0 ? 'ol' : 'ul'
-  var order = start > 1 ? (' start="' + start +'"') : ''
+  var order = start > 1 ? (' start="' + start + '"') : ''
   return '<' + tag + order + '>\n' + content + '</' + tag + '>\n'
 }
 
@@ -901,7 +902,7 @@ _each([
   }
 })
 
-Renderer.prototype.blockquote = function(content) {
+Renderer.prototype.blockquote = function (content) {
   return '<blockquote>\n' + content + '</blockquote>\n'
 }
 
@@ -923,7 +924,7 @@ _each([
   }
 })
 
-Renderer.prototype.codespan = function(text) {
+Renderer.prototype.codespan = function (text) {
   return '<code>' + text + '</code>'
 }
 
@@ -947,7 +948,7 @@ Renderer.prototype.image = function (src, alt, title) {
     + (this.options.xhtml ? ' />' : '>')
 }
 
-Renderer.prototype.checkbox = function(checked) {
+Renderer.prototype.checkbox = function (checked) {
   return '<input '
     + (checked ? 'checked="" ' : '')
     + 'disabled="" type="checkbox"'
@@ -986,18 +987,18 @@ InlineLexer.prototype.mangle = function (text) {
   return out
 }
 
-InlineLexer.prototype.smartypants = function(text) {
+InlineLexer.prototype.smartypants = function (text) {
   return text
     // em-dashes
     .replace(/---/g, '\u2014')
     // en-dashes
     .replace(/--/g, '\u2013')
     // opening singles
-    .replace(/(^|[-\u2014/(\[{"\s])'/g, '$1\u2018')
+    .replace(/(^|[-\u2014/([{"\s])'/g, '$1\u2018')
     // closing singles & apostrophes
     .replace(/'/g, '\u2019')
     // opening doubles
-    .replace(/(^|[-\u2014/(\[{\u2018\s])"/g, '$1\u201c')
+    .replace(/(^|[-\u2014/([{\u2018\s])"/g, '$1\u201c')
     // closing doubles
     .replace(/"/g, '\u201d')
     // ellipses
@@ -1009,20 +1010,15 @@ InlineLexer.prototype.link = function (image, text, href, title) {
   href = this.escape(href)
   title = _escape(this.escape(title))
 
-  if (image) {
-    // image
-    return this.renderer.image(
-      href,
-      _escape(text, true),
-      title
-    )
-  } else {
-    return this.renderer.link(
-      href,
-      this.compile(text),
-      title
-    )
-  }
+  return image ? this.renderer.image(
+    href,
+    _escape(text, true),
+    title
+  ) : this.renderer.link(
+    href,
+    this.compile(text),
+    title
+  )
 }
 
 InlineLexer.compile = function (text, options, refs, fnrefs) {
@@ -1225,7 +1221,9 @@ InlineLexer.prototype.compile = function (src) {
       continue
     }
 
-    break
+    if (src) {
+      _error('Unrecognized byte:' + src.charCodeAt(0))
+    }
   }
 
   return out
@@ -1288,6 +1286,14 @@ Parser.prototype.compile = function () {
   var renderer = this.renderer
   var compiler = this.compiler
 
+  function renderDl(dt, dd) {
+    var out = renderer.dt(compiler.compile(dt))
+    for (i = 0; i < dd.length; i++) {
+      out += renderer.dd(compiler.compile(_trim(dd[i])))
+    }
+    return out
+  }
+
   var next = this.peek().type
 
   switch (type) {
@@ -1343,14 +1349,6 @@ Parser.prototype.compile = function () {
       if (next === type) {
         token = this.next()
         dl += renderDl(token.dt, token.dd)
-      }
-
-      function renderDl(dt, dd) {
-        var out = renderer.dt(compiler.compile(dt))
-        for (i = 0; i < dd.length; i++) {
-          out += renderer.dd(compiler.compile(_trim(dd[i])))
-        }
-        return out
       }
 
       return renderer.dl(dl)
@@ -1410,7 +1408,7 @@ Parser.prototype.compile = function () {
   }
 }
 
-Parser.prototype.parseText = function() {
+Parser.prototype.parseText = function () {
   var text = this.token.text
   while (this.peek().type === 'text') {
     text += '\n' + this.next().text

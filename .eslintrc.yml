@@ -1,6 +1,13 @@
 extends:
   - zob
 
+env:
+  amd: true
+
 rules:
-  semi: 2
+  semi: 0
+  indent: 0
+  complexity: 0
+  no-control-regex: 0
+  no-cond-assign: 0
   no-console: 0

@@ -164,7 +164,7 @@ var commonRe = {
 var blockRe = {
   // Leaf blocks
   hr: /^ {0,3}([-*_])( *\1){2,} *(?:\n+|$)/,
-  heading: /^ {0,3}(#{1,6}) +([^\n]*?)( +#* *)?(?:\n+|$)/,
+  heading: /^ {0,3}(#{1,6}) +([^\n]*?)(?: +#* *)?(?:\n+|$)/,
   // setext heading
   sheading: /^( {0,3}[^ \n]+(?:\n[^\n]+)*)\n {0,3}(=+|-+) *(?:\n+|$)/,
   code: /^( {4}[^\n]+\n*)+/,
@@ -810,8 +810,8 @@ Renderer.prototype.fence = function (code, lang, hLines) {
     var wrap = ''
     wrap = '<div class="code-hl">\n'
     for (var i = 0; i < hLines.length; i++) {
-      wrap += '<div class="code-hl-item" style="top:"'
-      wrap += ((hLines - 1) * 20 + 16)
+      wrap += '<div class="code-hl-item" style="top:'
+      wrap += ((hLines[i] - 1) * 20 + 16)
       wrap += 'px"></div>\n'
     }
 

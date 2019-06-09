@@ -109,29 +109,12 @@ function _trim(text) {
 // Helpers End
 // -----------
 
-function Slugger() {
-  this.slugs = Object.create(null)
-}
-
-Slugger.prototype.get = function (value) {
-  var id = _unescape(_trim(value)).toLowerCase()
-    .replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, '')
-    // .replace(/[【】｛｝（），。？：‘’“”～！、《》￥…—]/g, '-')
-    .replace(/\s/g, '-')
-  if (this.slugs[id]) {
-    id += '-' + this.slugs[id]++
-  } else {
-    this.slugs[id] = 1
-  }
-  return id
-}
-
 var commonRe = {
   // space: /\u0020/,
   // // whitespace: /\s+/,
   // // whitespace: /[ \t\n\v\f\r]+/,
   // whitespace: /[\u0020\u0009\u000a\u000b\u000c\u000d]+/, // is a space (U+0020), tab (U+0009), newline (U+000A), line tabulation (U+000B), form feed (U+000C), or carriage return (U+000D).
-  punctuation: /[!"#$%&'()*+,\-./\u0021-\u002f:;<=>?@\u003a-\u0040[\\\]^_`\u005b-\u0060{|}~\u007b-\u007e]/, // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F), :, ;, <, =, >, ?, @ (U+003A–0040), [, \, ], ^, _, ` (U+005B–0060), {, |, }, or ~ (U+007B–007E).
+  punctuation: /[!"#$%&'()*+,\-./\u0021-\u002f:;<=>?@\u003a-\u0040[\\\]^_`\u005b-\u0060{|}~\u007b-\u007e]/g, // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F), :, ;, <, =, >, ?, @ (U+003A–0040), [, \, ], ^, _, ` (U+005B–0060), {, |, }, or ~ (U+007B–007E).
 
   tagname: /[a-zA-Z][\w-]*/, // A tag name consists of an ASCII letter followed by zero or more ASCII letters, digits, or hyphens (-).
   attribute: /\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*([^\s"'=<>`]+|'[^']*'|"[^"]*"))?/,
@@ -225,7 +208,7 @@ var inlineRe = {
   html: /^(<tagname(?:attribute)*? *\/?>|closingtag|comment|processing|declaration|cdata)/,
 
   // text: /^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<!\[`*^]|\b_|$)|[^ ](?= {2,}\n))|(?= {2,}\n))/,
-  text: /^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<![`*~^]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+/=?_`{|}~-](?=[a-zA-Z0-9.!#$%&'*+/=?_`{|}~-]+@))|(?= {2,}\n|[a-zA-Z0-9.!#$%&'*+/=?_`{|}~-]+@))/
+  text: /^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<![`*~^$]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+/=?_`{|}~-](?=[a-zA-Z0-9.!#$%&'*+/=?_`{|}~-]+@))|(?= {2,}\n|[a-zA-Z0-9.!#$%&'*+/=?_`{|}~-]+@))/
 }
 
 commonRe.opentag = _regex(
@@ -355,6 +338,23 @@ inlineRe.html = _regex(
   ['declaration', commonRe.declaration],
   ['cdata', commonRe.cdata]
 )
+
+function Slugger() {
+  this.slugs = Object.create(null)
+}
+
+Slugger.prototype.get = function (value) {
+  var id = _unescape(_trim(value)).toLowerCase()
+    .replace(commonRe.punctuation, '')
+    // .replace(/[【】｛｝（），。？：‘’“”～！、《》￥…—]/g, '-')
+    .replace(/\s/g, '-')
+  if (this.slugs[id]) {
+    id += '-' + this.slugs[id]++
+  } else {
+    this.slugs[id] = 1
+  }
+  return id
+}
 
 function Lexer(options) {
   this.tokens = []
@@ -1200,7 +1200,7 @@ InlineLexer.prototype.compile = function (src) {
     // formula
     if (this.options.formula && (cap = this.rules.formula.exec(src))) {
       src = src.substring(cap[0].length)
-      out += this.renderer.inlineFormula(_escape(cap[1], true))
+      out += this.renderer.inlineFormula(_escape(cap[0], true))
       continue
     }
 

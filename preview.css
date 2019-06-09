@@ -539,3 +539,28 @@ pre {
   height: 20px; width: 100%;
   background-color: rgba(0, 0, 0, .1);
 }
+
+/* diy div */
+.diy {
+  border-radius: 3px;
+  padding: 0.75em 1em;
+  background-color: #f8f8f8;
+}
+.diy :last-child {
+  margin-bottom: 0;
+}
+.diy.tip {
+  background-color: #eaf8ff;
+  color: #4e7182;
+}
+.diy.warning {
+  background-color: #fdf5d8;
+  color: #716b53;
+}
+.diy.todo {
+  background-color: #fbddcd;
+  color: #907a6e;
+}
+.diy.success {
+  background-color: #42b983;
+}

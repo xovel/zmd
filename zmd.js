@@ -1205,7 +1205,7 @@ InlineLexer.prototype.compile = function (src) {
     }
 
     // autourl
-    if (!this.inLink && this.options.autourl && (cap = this.rules.url.exec(src))) {
+    if (!this.inLink && this.options.autourl && (cap = this.rules.autourl.exec(src))) {
       if (cap[2] === '@') {
         text = _escape(cap[1], true)
         href = 'mailto:' + text
@@ -1458,7 +1458,8 @@ zmd.defaults = {
   formula: false,
   footnote: true,
   highlight: null,
-  xhtml: false
+  xhtml: false,
+  autourl: false
 }
 
 zmd.Lexer = Lexer

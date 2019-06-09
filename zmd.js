@@ -114,7 +114,11 @@ var commonRe = {
   // // whitespace: /\s+/,
   // // whitespace: /[ \t\n\v\f\r]+/,
   // whitespace: /[\u0020\u0009\u000a\u000b\u000c\u000d]+/, // is a space (U+0020), tab (U+0009), newline (U+000A), line tabulation (U+000B), form feed (U+000C), or carriage return (U+000D).
-  punctuation: /[!"#$%&'()*+,\-./\u0021-\u002f:;<=>?@\u003a-\u0040[\\\]^_`\u005b-\u0060{|}~\u007b-\u007e]/g, // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F), :, ;, <, =, >, ?, @ (U+003A–0040), [, \, ], ^, _, ` (U+005B–0060), {, |, }, or ~ (U+007B–007E).
+  punctuation: /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g,
+  // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F)
+  // :, ;, <, =, >, ?, @ (U+003A–0040)
+  // [, \, ], ^, _, ` (U+005B–0060)
+  // {, |, }, or ~ (U+007B–007E)
 
   tagname: /[a-zA-Z][\w-]*/, // A tag name consists of an ASCII letter followed by zero or more ASCII letters, digits, or hyphens (-).
   attribute: /\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*([^\s"'=<>`]+|'[^']*'|"[^"]*"))?/,

@@ -168,7 +168,6 @@ var blockRe = {
   text: /^[^\n]+/,
   table: /^([^\n]+)\n(delimiter) *\n((?:[^\n]+\n)*|$)/,
 
-  formula: /^ {0,3}(\${2,})([\s\S]*?) {0,3}\1 *(?:\n+|$)/,
   deflist: /^ {0,3}([^ \n][^\n]*)\n((?::[^\n]+(?:\n+|$))+)/,
   // deflist2: /^ {0,3}:[^\n]+\n( {2,}[^\n]+(?:\n|$))+/,
 
@@ -198,7 +197,6 @@ var inlineRe = {
   mark: /^==([\s\S]+?)==/,
   sub: /^~([^~\n]+)~/,
   sup: /^\^([^^\n]+)\^/,
-  formula: /^\$([^$\n]+?)\$/,
 
   link: /^!?(?:label)\(\s*(?:destination)(?:\s+(?:title))?\s*\)/,
   reflink: /^!?(?:label)\[(?!\s*\])((?:\\[[\]]|[^[\]])+)\]/,
@@ -654,17 +652,6 @@ Lexer.prototype.parse = function (src, top) {
       continue
     }
 
-    // formula
-    if (this.options.formula && (cap = this.rules.formula.exec(src))) {
-      src = src.substring(cap[0].length)
-      this.tokens.push({
-        type: 'formula',
-        raw: cap[0],
-        text: cap[2]
-      })
-      continue
-    }
-
     // ref
     if (top && (cap = this.rules.ref.exec(src))) {
       src = src.substring(cap[0].length)
@@ -872,14 +859,6 @@ Renderer.prototype.tablecell = function (tag, content, align) {
 
 Renderer.prototype.tablerow = function (content) {
   return '<tr>\n' + content + '</tr>\n'
-}
-
-Renderer.prototype.formula = function (content) {
-  return '<div class="formula">\n' + content + '</div>\n'
-}
-
-Renderer.prototype.inlineFormula = function (text) {
-  return '<span class="formula">' + text + '</span>'
 }
 
 Renderer.prototype.div = function (content, kls) {
@@ -1197,13 +1176,6 @@ InlineLexer.prototype.compile = function (src) {
       continue
     }
 
-    // formula
-    if (this.options.formula && (cap = this.rules.formula.exec(src))) {
-      src = src.substring(cap[0].length)
-      out += this.renderer.inlineFormula(_escape(cap[0], true))
-      continue
-    }
-
     // autourl
     if (!this.inLink && this.options.autourl && (cap = this.rules.autourl.exec(src))) {
       if (cap[2] === '@') {
@@ -1398,8 +1370,6 @@ Parser.prototype.compile = function () {
           this.compile()
       }
       return renderer.li(body)
-    case 'formula':
-      return renderer.formula(token.raw)
     case 'html':
       return renderer.html(text)
     case 'paragraph':
@@ -1442,7 +1412,6 @@ zmd.defaults = {
   langPrefix: 'lang-',
   headerIds: true,
   headerPrefix: '',
-  formula: false,
   footnote: true,
   highlight: null,
   xhtml: false,

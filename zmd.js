@@ -482,11 +482,11 @@ Lexer.prototype.parse = function (src, top) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'div_open',
-        kls: cap[2] || ''
+        kls: _trim(cap[2] || '')
       })
 
       // recurse
-      this.parse(cap[0], top)
+      this.parse(cap[3], top)
 
       this.tokens.push({
         type: 'div_close'
@@ -862,7 +862,7 @@ Renderer.prototype.tablerow = function (content) {
 }
 
 Renderer.prototype.div = function (content, kls) {
-  return '<div class="' + kls + '">\n' + content + '</div>\n'
+  return '<div class="' + (this.options.divClass || '') + ' ' + kls + '">\n' + content + '</div>\n'
 }
 
 Renderer.prototype.list = function (content, start) {
@@ -1415,7 +1415,8 @@ zmd.defaults = {
   footnote: true,
   highlight: null,
   xhtml: false,
-  autourl: false
+  autourl: false,
+  divClass: 'diy'
 }
 
 zmd.Lexer = Lexer

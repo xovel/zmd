@@ -102,19 +102,40 @@ function handleInputChange() {
 function parseMarkdown() {
   var startTime = Date.now()
   var value = $markdown.value
-  var lexed = zmd.Lexer.lex(value, zmdOptions)
-  var parsed = zmd.Parser.parse(lexed, zmdOptions)
 
-  var endTime = Date.now()
-  setResponseTime(endTime - startTime)
-
+  var lexed
+  var parsed
   var list = []
-  for (var i = 0; i < lexed.length; i++) {
-    var line = []
-    for (var j in lexed[i]) {
-      line.push(j + ': ' + jsonString(lexed[i][j]))
+
+  try {
+    lexed = zmd.Lexer.lex(value, zmdOptions)
+    parsed = zmd.Parser.parse(lexed, zmdOptions)
+    setResponseTime(Date.now() - startTime)
+
+    for (var i = 0; i < lexed.length; i++) {
+      var line = []
+      for (var j in lexed[i]) {
+        line.push(j + ': ' + jsonString(lexed[i][j]))
+      }
+      list.push('{' + line.join(', ') + '}')
     }
-    list.push('{' + line.join(', ') + '}')
+
+    $preview.classList.remove('error')
+    $html.classList.remove('error')
+    $lexer.classList.remove('error')
+  } catch(e) {
+    var msg = e.stack || e.message
+    parsed = msg
+    list = [msg]
+    $responseTime.textContent = '-'
+    $active.style.display = 'none'
+    $active = $html
+    $active.style.display = ''
+    $outputType.value = 'html'
+
+    $preview.classList.add('error')
+    $html.classList.add('error')
+    $lexer.classList.add('error')
   }
 
   var scrollPercent = getScrollPercent()

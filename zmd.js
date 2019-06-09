@@ -1169,6 +1169,20 @@ InlineLexer.prototype.compile = function (src) {
       continue
     }
 
+    // sup
+    if (cap = this.rules.sup.exec(src)) {
+      src = src.substring(cap[0].length)
+      out += this.renderer.sup(this.compile(cap[1]))
+      continue
+    }
+
+    // sub
+    if (cap = this.rules.sub.exec(src)) {
+      src = src.substring(cap[0].length)
+      out += this.renderer.sub(this.compile(cap[1]))
+      continue
+    }
+
     // autolink
     if (cap = this.rules.autolink.exec(src)) {
       src = src.substring(cap[0].length)

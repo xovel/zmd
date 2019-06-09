@@ -1371,23 +1371,10 @@ Parser.prototype.compile = function () {
       return renderer.dl(dl)
     case 'blockquote_open':
       body = ''
-      j = 1
-      while (this.peek().type === type) {
-        this.next()
-        j++
-      }
       while (this.next().type !== 'blockquote_close') {
         body += this.compile()
       }
-      while (this.peek().type && this.peek().type === 'blockquote_close') {
-        this.next()
-      }
-
-      for (i = 0; i < j; i++) {
-        body = renderer.blockquote(body)
-      }
-
-      return body
+      return renderer.blockquote(body)
     case 'div_open':
       body = ''
       while (this.next().type !== 'div_close') {

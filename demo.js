@@ -20,12 +20,37 @@ var $lexer = $('lexer')
 
 var $active = $preview
 
-var search = searchToObject()
+var search = urlParams()
+
+function urlParams() {
+  var result = {}
+  var values = location.search.slice(1).split('&')
+  for (var i = 0; i < values.length; i++) {
+    var v = values[i].split('=')
+    result[v[0].trim().toLowerCase()] = v.slice(1).join('=')
+  }
+  return result
+}
+
+function encode(text) {
+  return encodeURIComponent(text)
+}
+
+function decode(text) {
+  return decodeURIComponent(text)
+}
+
+on($permalink, 'click', updateLink)
+
+function updateLink() {
+  var href = '?text=' + encode($markdown.value) + '&options=' + encode($options.value)
+  history.replaceState('', document.title, href)
+}
 
 if ('text' in search) {
   try {
     $markdown.value = decode(search.text)
-  } catch(e) {
+  } catch (e) {
 
   }
 }
@@ -39,7 +64,7 @@ if (search.options) {
     var options = decode(search.options)
     options = JSON.parse(options)
     setOptions(options)
-  } catch(e) {
+  } catch (e) {
 
   }
 } else {
@@ -100,19 +125,19 @@ function parseMarkdown() {
 var handleMarkdownInput = throttle(parseMarkdown, 300)
 
 function setResponseTime(ms) {
-  var amount = ms;
-  var suffix = 'ms';
+  var amount = ms
+  var suffix = 'ms'
   if (ms > 1000 * 60 * 60) {
-    amount = 'Too Long';
-    suffix = '';
+    amount = 'Too Long'
+    suffix = ''
   } else if (ms > 1000 * 60) {
-    amount = '>' + Math.floor(ms / (1000 * 60));
-    suffix = 'm';
+    amount = '>' + Math.floor(ms / (1000 * 60))
+    suffix = 'm'
   } else if (ms > 1000) {
-    amount = '>' + Math.floor(ms / 1000);
-    suffix = 's';
+    amount = '>' + Math.floor(ms / 1000)
+    suffix = 's'
   }
-  $responseTime.textContent = amount + suffix;
+  $responseTime.textContent = amount + suffix
 }
 
 function getScrollPercent() {
@@ -142,7 +167,7 @@ function parseOptions() {
     $options.classList.remove('error')
 
     handleMarkdownInput()
-  } catch(e) {
+  } catch (e) {
     $options.classList.add('error')
   }
 }
@@ -187,24 +212,6 @@ $lexer.style.display = 'none'
 $markdown.style.display = ''
 $preview.style.display = ''
 
-function searchToObject() {
-  // modified from https://stackoverflow.com/a/7090123/806777
-  var pairs = location.search.slice(1).split('&');
-  var obj = {};
-
-  for (var i = 0; i < pairs.length; i++) {
-    if (pairs[i] === '') {
-      continue;
-    }
-
-    var pair = pairs[i].split('=');
-
-    obj[decodeURIComponent(pair.shift())] = decodeURIComponent(pair.join('='));
-  }
-
-  return obj;
-}
-
 function jsonString(input) {
   var output = (input + '')
     .replace(/\n/g, '\\n')
@@ -214,21 +221,6 @@ function jsonString(input) {
     .replace(/[\\"']/g, '\\$&')
     .replace(/\u0000/g, '\\0')
   return '"' + output + '"'
-}
-
-function encode(text) {
-  return encodeURIComponent(btoa(text))
-}
-
-function decode(text) {
-  return atob(decodeURIComponent(text))
-}
-
-on($permalink, 'click', updateLink)
-
-function updateLink() {
-  var href = '?text=' + encode($markdown.value) + '&options=' + encode($options.value)
-  history.replaceState('', document.title, href)
 }
 
 function setParsed(parsed, lexed) {
@@ -245,42 +237,42 @@ function setParsed(parsed, lexed) {
 // but if you'd like to disable the execution on the leading edge, pass
 // `{leading: false}`. To disable execution on the trailing edge, ditto.
 function throttle(func, wait, options) {
-  var timeout, context, args, result;
-  var previous = 0;
-  if (!options) options = {};
+  var timeout, context, args, result
+  var previous = 0
+  if (!options) options = {}
 
-  var later = function() {
-    previous = options.leading === false ? 0 : Date.now();
-    timeout = null;
-    result = func.apply(context, args);
-    if (!timeout) context = args = null;
-  };
+  var later = function () {
+    previous = options.leading === false ? 0 : Date.now()
+    timeout = null
+    result = func.apply(context, args)
+    if (!timeout) context = args = null
+  }
 
-  var throttled = function() {
-    var now = Date.now();
-    if (!previous && options.leading === false) previous = now;
-    var remaining = wait - (now - previous);
-    context = this;
-    args = arguments;
+  var throttled = function () {
+    var now = Date.now()
+    if (!previous && options.leading === false) previous = now
+    var remaining = wait - (now - previous)
+    context = this
+    args = arguments
     if (remaining <= 0 || remaining > wait) {
       if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
+        clearTimeout(timeout)
+        timeout = null
       }
-      previous = now;
-      result = func.apply(context, args);
-      if (!timeout) context = args = null;
+      previous = now
+      result = func.apply(context, args)
+      if (!timeout) context = args = null
     } else if (!timeout && options.trailing !== false) {
-      timeout = setTimeout(later, remaining);
+      timeout = setTimeout(later, remaining)
     }
-    return result;
-  };
+    return result
+  }
 
-  throttled.cancel = function() {
-    clearTimeout(timeout);
-    previous = 0;
-    timeout = context = args = null;
-  };
+  throttled.cancel = function () {
+    clearTimeout(timeout)
+    previous = 0
+    timeout = context = args = null
+  }
 
-  return throttled;
+  return throttled
 };

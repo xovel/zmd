@@ -570,6 +570,7 @@ Lexer.prototype.parse = function (src, top) {
         text = cap[i]
         prefix = text.length
         text = text.replace(blockRe.bullet, function (_, bullet) {
+          listType.bullet = bullet
           listType[i] = bullet[bullet.length - 1]
           return ''
         })
@@ -589,9 +590,12 @@ Lexer.prototype.parse = function (src, top) {
           this.tokens.push({
             type: 'list_close'
           })
-          this.tokens.push({
-            type: 'list_open'
-          })
+          listOpen = {
+            type: 'list_open',
+            start: parseInt(listType.bullet, 10) || 0,
+            loose: false
+          }
+          this.tokens.push(listOpen)
           listItems = []
           next = false
         }

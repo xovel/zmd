@@ -1,0 +1,541 @@
+/**
+ * https://github.com/primer/primer/tree/master/modules/primer-base
+ * https://github.com/primer/primer/tree/master/modules/primer-markdown
+ * https://github.com/primer/primer/tree/master/modules/primer-support
+ */
+ * {
+  box-sizing: border-box;
+}
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 14px;
+  line-height: 1.5;
+  color: #24292e;
+  background-color: #fff;
+}
+a {
+  color: #0366d6;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+td,
+th {
+  padding: 0;
+}
+button {
+  cursor: pointer;
+  border-radius: 0;
+}
+details summary {
+  cursor: pointer;
+}
+details:not([open]) > *:not(summary) {
+  display: none !important;
+}
+small {
+  font-size: 90%;
+}
+b,
+strong {
+  font-weight: 600;
+}
+blockquote {
+  margin: 0;
+}
+ul,
+ol {
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+ol ol,
+ul ol {
+  list-style-type: lower-roman;
+}
+ul ul ol,
+ul ol ol,
+ol ul ol,
+ol ol ol {
+  list-style-type: lower-alpha;
+}
+dd {
+  margin-left: 0;
+}
+tt,
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+.octicon {
+  vertical-align: text-bottom;
+}
+.md-github {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+.md-github::before {
+  display: table;
+  content: "";
+}
+.md-github::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+.md-github > *:first-child {
+  margin-top: 0 !important;
+}
+.md-github > *:last-child {
+  margin-bottom: 0 !important;
+}
+.md-github a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+.md-github .absent {
+  color: #cb2431;
+}
+.md-github .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+.md-github .anchor:focus {
+  outline: none;
+}
+.md-github p,
+.md-github blockquote,
+.md-github ul,
+.md-github ol,
+.md-github dl,
+.md-github table,
+.md-github pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+.md-github hr {
+  height: 0.25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #e1e4e8;
+  border: 0;
+}
+.md-github blockquote {
+  padding: 0 1em;
+  color: #6a737d;
+  border-left: 0.25em solid #dfe2e5;
+}
+.md-github blockquote > :first-child {
+  margin-top: 0;
+}
+.md-github blockquote > :last-child {
+  margin-bottom: 0;
+}
+.md-github kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #444d56;
+  vertical-align: middle;
+  background-color: #fafbfc;
+  border: solid 1px #c6cbd1;
+  border-bottom-color: #959da5;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #959da5;
+}
+.md-github h1,
+.md-github h2,
+.md-github h3,
+.md-github h4,
+.md-github h5,
+.md-github h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.md-github h1 .octicon-link,
+.md-github h2 .octicon-link,
+.md-github h3 .octicon-link,
+.md-github h4 .octicon-link,
+.md-github h5 .octicon-link,
+.md-github h6 .octicon-link {
+  color: #1b1f23;
+  vertical-align: middle;
+  visibility: hidden;
+}
+.md-github h1:hover .anchor,
+.md-github h2:hover .anchor,
+.md-github h3:hover .anchor,
+.md-github h4:hover .anchor,
+.md-github h5:hover .anchor,
+.md-github h6:hover .anchor {
+  text-decoration: none;
+}
+.md-github h1:hover .anchor .octicon-link,
+.md-github h2:hover .anchor .octicon-link,
+.md-github h3:hover .anchor .octicon-link,
+.md-github h4:hover .anchor .octicon-link,
+.md-github h5:hover .anchor .octicon-link,
+.md-github h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+.md-github h1 tt,
+.md-github h2 tt,
+.md-github h3 tt,
+.md-github h4 tt,
+.md-github h5 tt,
+.md-github h6 tt,
+.md-github h1 code,
+.md-github h2 code,
+.md-github h3 code,
+.md-github h4 code,
+.md-github h5 code,
+.md-github h6 code {
+  font-size: inherit;
+}
+.md-github h1 {
+  padding-bottom: 0.3em;
+  font-size: 2em;
+  border-bottom: 1px solid #eaecef;
+}
+.md-github h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.5em;
+  border-bottom: 1px solid #eaecef;
+}
+.md-github h3 {
+  font-size: 1.25em;
+}
+.md-github h4 {
+  font-size: 1em;
+}
+.md-github h5 {
+  font-size: 0.875em;
+}
+.md-github h6 {
+  font-size: 0.85em;
+  color: #6a737d;
+}
+.md-github ul,
+.md-github ol {
+  padding-left: 2em;
+}
+.md-github ul.no-list,
+.md-github ol.no-list {
+  padding: 0;
+  list-style-type: none;
+}
+.md-github ul ul,
+.md-github ul ol,
+.md-github ol ol,
+.md-github ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.md-github li {
+  word-wrap: break-all;
+}
+.md-github li > p {
+  margin-top: 16px;
+}
+.md-github li + li {
+  margin-top: 0.25em;
+}
+.md-github dl {
+  padding: 0;
+}
+.md-github dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 600;
+}
+.md-github dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+.md-github table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+.md-github table th {
+  font-weight: 600;
+}
+.md-github table th,
+.md-github table td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+.md-github table tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+.md-github table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+.md-github table img {
+  background-color: transparent;
+}
+.md-github img {
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: #fff;
+}
+.md-github img[align=right] {
+  padding-left: 20px;
+}
+.md-github img[align=left] {
+  padding-right: 20px;
+}
+.md-github .emoji {
+  max-width: none;
+  vertical-align: text-top;
+  background-color: transparent;
+}
+.md-github span.frame {
+  display: block;
+  overflow: hidden;
+}
+.md-github span.frame > span {
+  display: block;
+  float: left;
+  width: auto;
+  padding: 7px;
+  margin: 13px 0 0;
+  overflow: hidden;
+  border: 1px solid #dfe2e5;
+}
+.md-github span.frame span img {
+  display: block;
+  float: left;
+}
+.md-github span.frame span span {
+  display: block;
+  padding: 5px 0 0;
+  clear: both;
+  color: #24292e;
+}
+.md-github span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+.md-github span.align-center > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+.md-github span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+.md-github span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+.md-github span.align-right > span {
+  display: block;
+  margin: 13px 0 0;
+  overflow: hidden;
+  text-align: right;
+}
+.md-github span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+.md-github span.float-left {
+  display: block;
+  float: left;
+  margin-right: 13px;
+  overflow: hidden;
+}
+.md-github span.float-left span {
+  margin: 13px 0 0;
+}
+.md-github span.float-right {
+  display: block;
+  float: right;
+  margin-left: 13px;
+  overflow: hidden;
+}
+.md-github span.float-right > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: right;
+}
+.md-github code,
+.md-github tt {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+}
+.md-github code br,
+.md-github tt br {
+  display: none;
+}
+.md-github del code {
+  text-decoration: inherit;
+}
+.md-github pre {
+  word-wrap: normal;
+}
+.md-github pre > code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+.md-github .highlight {
+  margin-bottom: 16px;
+}
+.md-github .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+.md-github .highlight pre,
+.md-github pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+}
+.md-github pre code,
+.md-github pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+.md-github .hljs-comment,
+.md-github .hljs-quote {
+  color: #998;
+  font-style: italic;
+}
+.md-github .hljs-selector-tag,
+.md-github .hljs-subst {
+  color: #333;
+  font-weight: bold;
+}
+.md-github .hljs-keyword {
+  color: #d73a49;
+}
+.md-github .hljs-literal,
+.md-github .hljs-number,
+.md-github .hljs-tag .hljs-attr,
+.md-github .hljs-template-variable,
+.md-github .hljs-variable {
+  color: #008080;
+}
+.md-github .hljs-doctag,
+.md-github .hljs-string {
+  color: #d73a49;
+}
+.md-github .hljs-section,
+.md-github .hljs-selector-id,
+.md-github .hljs-title {
+  color: #900;
+  font-weight: bold;
+}
+.md-github .hljs-subst {
+  font-weight: normal;
+}
+.md-github .hljs-class .hljs-title,
+.md-github .hljs-type {
+  color: #458;
+  font-weight: bold;
+}
+.md-github .hljs-attribute,
+.md-github .hljs-name,
+.md-github .hljs-tag {
+  color: #000080;
+  font-weight: normal;
+}
+.md-github .hljs-link,
+.md-github .hljs-regexp {
+  color: #009926;
+}
+.md-github .hljs-bullet,
+.md-github .hljs-symbol {
+  color: #990073;
+}
+.md-github .hljs-built_in,
+.md-github .hljs-builtin-name {
+  color: #0086b3;
+}
+.md-github .hljs-meta {
+  color: #999;
+  font-weight: bold;
+}
+.md-github .hljs-deletion {
+  background: #fdd;
+}
+.md-github .hljs-addition {
+  background: #dfd;
+}
+.md-github .hljs-emphasis {
+  font-style: italic;
+}
+.md-github .hljs-strong {
+  font-weight: bold;
+}
+
+/* code highlight lines */
+.code-hl {
+  position: relative;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+}
+.code-hl pre {
+  line-height: 20px;
+  background: none;
+  position: relative;
+  z-index: 2;
+}
+.code-hl-item {
+  position: absolute;
+  z-index: 1;
+  height: 20px; width: 100%;
+  background-color: rgba(0, 0, 0, .1);
+}

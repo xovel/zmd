@@ -624,6 +624,10 @@ Lexer.prototype.parse = function (src, top) {
         this.tokens.push(item)
 
         // recurse
+        if (prefix < 2) {
+          // prevent Invalid regular expression: numbers out of order in {} quantifier
+          prefix = 2
+        }
         this.parse(text.replace(new RegExp('^ {2,' + prefix + '}', 'gm'), ''), false)
 
         this.tokens.push({

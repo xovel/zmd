@@ -1319,7 +1319,7 @@ Parser.prototype.compile = function () {
     case 'heading':
       if (this.options.headerIds) {
         id = this.slugger.get(text)
-        slug = ' id="' + id + '"'
+        slug = ' id="' + (this.options.headerPrefix || '') + id + '"'
       } else {
         slug = ''
       }

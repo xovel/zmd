@@ -22,8 +22,6 @@ document.getElementById('content').innerHTML = zmd('## Hello `zmd`!')
 - 点击 `permalink` 按钮可以将当前的输入生成一个链接，便于进行分享。
 - 点击右边部分的下拉选择框可以在预览界面、HTML 文本、和块状语法分析结果的查看。
 
-> 语法分析的结果未对列表参数进行详细处理，如定义列表和表格的解析结果。
-
 ## Markdown Syntax
 
 支持大部分 GFM 语法。

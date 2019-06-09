@@ -113,11 +113,7 @@ function parseMarkdown() {
     setResponseTime(Date.now() - startTime)
 
     for (var i = 0; i < lexed.length; i++) {
-      var line = []
-      for (var j in lexed[i]) {
-        line.push(j + ': ' + jsonString(lexed[i][j]))
-      }
-      list.push('{' + line.join(', ') + '}')
+      list.push(JSON.stringify(lexed[i]))
     }
 
     $preview.classList.remove('error')
@@ -232,17 +228,6 @@ $html.style.display = 'none'
 $lexer.style.display = 'none'
 $markdown.style.display = ''
 $preview.style.display = ''
-
-function jsonString(input) {
-  var output = (input + '')
-    .replace(/\n/g, '\\n')
-    .replace(/\r/g, '\\r')
-    .replace(/\t/g, '\\t')
-    .replace(/\f/g, '\\f')
-    .replace(/[\\"']/g, '\\$&')
-    .replace(/\u0000/g, '\\0')
-  return '"' + output + '"'
-}
 
 function setParsed(parsed, lexed) {
   try {

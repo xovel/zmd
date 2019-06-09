@@ -135,6 +135,8 @@ var commonRe = {
 
   tagname: /[a-zA-Z][\w-]*/, // A tag name consists of an ASCII letter followed by zero or more ASCII letters, digits, or hyphens (-).
   attribute: /\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*([^\s"'=<>`]+|'[^']*'|"[^"]*"))?/,
+  // inline attribute
+  _attribute: / +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/,
   opentag: /<tagname(?:attribute)*?\s*\/?>/,
   closingtag: /<\/tagname\s*>/,
   comment: /<!--(?!-?>)[\s\S]*?[^-]-->/,
@@ -143,7 +145,9 @@ var commonRe = {
   cdata: /<!\[CDATA\[[\s\S]+?\]\]>/,
   tag: /address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul/,
 
-  label: /\[((?!\s*\])(?:\\[[\]]|[^[\]])+| *)\]/,
+  label: /\[((?:\[[^\[\]]*\]|\\[\[\]]?|`[^`]*`|`(?!`)|[^\[\]\\`])*?)\]/,
+  // footnote, ref
+  _label: /\[((?!\s*\])(?:\\[[\]]|[^[\]])+)\]/,
   // label: /\[((?!\s*\])(?:\\[\[\]]|[^\[\]]|\[[^\[\]]*\])+)\]/,
   destination: /<([^\n<>]*)>|((?!<)(?:\\[()]|\([^)\s]*\)|[^()\s])+)/,
   // title: /"((?:\\"|[^"])*)"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\(((?:[^()]|(?:\([^)]*\)))+)\)/,
@@ -163,13 +167,14 @@ var commonRe = {
 
 var blockRe = {
   // Leaf blocks
-  hr: /^ {0,3}([-*_])( *\1){2,} *(?:\n+|$)/,
+  hr: /^ {0,3}([*_-])(?: *\1){2,} *(?:\n+|$)/,
   heading: /^ {0,3}(#{1,6}) +([^\n]*?)(?: +#* *)?(?:\n+|$)/,
   // setext heading
-  sheading: /^( {0,3}[^ \n]+(?:\n[^\n]+)*)\n {0,3}(=+|-+) *(?:\n+|$)/,
+  sheading: /^( {0,3}[^ \n][^\n]*(?:\n[^\n]+)*?)\n {0,3}(=+|-+) *(?:\n+|$)/,
   code: /^( {4}[^\n]+\n*)+/,
   fence: /^ {0,3}(([~`])\2{2,})([^`\n]*)\n([\s\S]*?)(?: {0,3}\1\2* *(?:\n+|$)|$)/,
-  html: /^ {0,3}(?:<(script|pre|style)[^>\n]*>[\s\S]*?(?:<\/\1>[^\n]*(?:\n+|$)|$)|(?:<!--[\s\S]*?-->|processing|<![\s\S]*?>|cdata)(?:[^\n]*\n+|$)|<\/?(tag)(?: +|\n|\/?)>[\s\S]*?(?:\n{2,}|$)|(?:<(?!script|pre|style)(?:tagname)(?:attribute)*?\s*\/?>|closingtag)[\s\S]*?(?:\n{2,}|$))+/i,
+  // [^>\n]*> -> [\s>] to support linebreak
+  html: /^ {0,3}(?:<(script|pre|style)[^>\n]*>[\s\S]*?(?:<\/\1>[^\n]*\n+|$)|<!--[\s\S]*?-->|(?:processing|<![\s\S]*?>|cdata)\n*|<\/?(tag)(?: +|\n|\/?)>[\s\S]*?(?:\n{2,}|$)|(?:<(?!script|pre|style)(?:tagname)(?:attribute)*? *\/?>|<\/(?!script|pre|style)(?:tagname)\s*>)(?= *(?:\n|$))[\s\S]*?(?:\n{2,}|$))/i,
 
   ref: /^ {0,3}(?:label): *\n? *(?:destination) *\n? *(?:\s(?:title))? *(?:\n+|$)/,
   // footnote: /^ {0,3}(?:label): ?([\S\s]+?)(?=(?:label)|\n{2,}|$)/,
@@ -205,9 +210,9 @@ var inlineRe = {
   strong: /^__([^\s_])__(?!_)|^\*\*([^\s*])\*\*(?!\*)|^__([^\s][\s\S]*?[^\s])__(?!_)|^\*\*([^\s][\s\S]*?[^\s])\*\*(?!\*)/,
   em: /^_([^\s_])_(?!_)|^\*([^\s*<[])\*(?!\*)|^_([^\s<][\s\S]*?[^\s_])_(?!_|[^\spunctuation])|^_([^\s_<][\s\S]*?[^\s])_(?!_|[^\spunctuation])|^\*([^\s<"][\s\S]*?[^\s*])\*(?!\*|[^\spunctuation])|^\*([^\s*"<[][\s\S]*?[^\s])\*(?!\*)/,
 
-  del: /^~~([\s\S]*?)~~/,
-  ins: /^\+\+([\s\S]*?)\+\+/,
-  mark: /^==([\s\S]*?)==/,
+  del: /^~~([\s\S]+?)~~/,
+  ins: /^\+\+([\s\S]+?)\+\+/,
+  mark: /^==([\s\S]+?)==/,
   sub: /^~([^~\n]+)~/,
   sup: /^\^([^^\n]+)\^/,
   formula: /^\$([^$\n]+?)\$/,
@@ -217,7 +222,7 @@ var inlineRe = {
   nolink: /^!?(?:label)(?:\[\s*\])?/,
   footnote: /^(?:label)(?!\[)/,
 
-  html: /^(opentag|closingtag|comment|processing|declaration|cdata)/,
+  html: /^(<tagname(?:attribute)*? *\/?>|closingtag|comment|processing|declaration|cdata)/,
 
   // text: /^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<!\[`*^]|\b_|$)|[^ ](?= {2,}\n))|(?= {2,}\n))/,
   text: /^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<![`*~^]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+/=?_`{|}~-](?=[a-zA-Z0-9.!#$%&'*+/=?_`{|}~-]+@))|(?= {2,}\n|[a-zA-Z0-9.!#$%&'*+/=?_`{|}~-]+@))/
@@ -245,21 +250,21 @@ blockRe.html = _regex(
   blockRe.html,
   ['processing', commonRe.processing],
   ['cdata', commonRe.cdata],
-  ['tagname', commonRe.tagname],
-  ['attribute', commonRe.attribute],
+  [/tagname/g, commonRe.tagname],
+  ['attribute', commonRe._attribute],
   ['closingtag', commonRe.closingtag],
   ['tag', commonRe.tag]
 )
 blockRe.ref = _regex(
   blockRe.ref,
-  ['label', commonRe.label],
-  ['| *', ''],
+  ['label', commonRe._label],
   ['destination', commonRe.destination],
   ['title', commonRe.title]
 )
 blockRe.paragraph = _regex(
   blockRe.paragraph,
   ['hr', blockRe.hr],
+  ['\\1', '\\2'],
   ['heading', blockRe.heading],
   ['sheading', blockRe.sheading],
   ['tag', commonRe.tag]
@@ -276,7 +281,7 @@ blockRe.list = _regex(
   blockRe.list,
   [/marker/g, commonRe.marker],
   ['hr', _regex(blockRe.hr, [
-    '\\1', '\\2'
+    '\\1', '\\3'
   ], [
     ' {0,3}', ''
   ])],
@@ -293,8 +298,7 @@ blockRe.item = _regex(
 )
 blockRe.footnote = _regex(
   blockRe.footnote,
-  ['label', commonRe.label],
-  ['| *', ''],
+  ['label', commonRe._label],
   ['\\[', '\\[\\^'],
   ['label', commonRe.label]
 )
@@ -317,8 +321,8 @@ inlineRe.autourl = _regex(
   inlineRe.autourl,
   ['email', commonRe.autoemail]
 )
-inlineRe.strong = _regex(
-  inlineRe.strong,
+inlineRe.em = _regex(
+  inlineRe.em,
   [/punctuation/g, commonRe.punctuation]
 )
 inlineRe.link = _regex(
@@ -334,17 +338,17 @@ inlineRe.reflink = _regex(
 inlineRe.nolink = _regex(
   inlineRe.nolink,
   ['label', commonRe.label],
-  ['| *', '']
+  ['*?', '+?'],
 )
 inlineRe.footnote = _regex(
   inlineRe.footnote,
-  ['label', commonRe.label],
-  ['| *', ''],
+  ['label', commonRe._label],
   ['\\[', '\\[\\^']
 )
 inlineRe.html = _regex(
   inlineRe.html,
-  ['opentag', commonRe.opentag],
+  ['tagname', commonRe.tagname],
+  ['attribute', commonRe._attribute],
   ['closingtag', commonRe.closingtag],
   ['comment', commonRe.comment],
   ['processing', commonRe.processing],
@@ -635,7 +639,7 @@ Lexer.prototype.parse = function (src, top) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'html',
-        text: cap[0]
+        text: cap[0].replace(/\n+$/, '\n')
       })
       continue
     }
@@ -680,7 +684,7 @@ Lexer.prototype.parse = function (src, top) {
       this.tokens.push({
         type: 'heading',
         level: cap[2][0] === '-' ? 2 : 1,
-        text: cap[1]
+        text: _trim(cap[1])
       })
       continue
     }
@@ -705,7 +709,7 @@ Lexer.prototype.parse = function (src, top) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'paragraph',
-        text: cap[1].replace(/\n+$/, '')
+        text: cap[1].replace(/\n+$/, '').replace(/^\s+/gm, '')
       })
       continue
     }
@@ -733,14 +737,14 @@ function getHLines(text, code) {
   var ret = []
   if (text) {
     var lines = code.split('\n').length
-    _each(text.split(','), function (item) {
+    _each(text.split(/ *, */), function (item) {
       if (item.indexOf('-') === -1) {
         var n = +item
         if (n && n <= lines) {
           ret.push(n)
         }
       } else {
-        var nn = item.split('-')
+        var nn = item.split(/ *- */)
         for (var i = +nn[0]; i <= +nn[1] && i <= lines; i++) {
           ret.push(i)
         }
@@ -784,7 +788,7 @@ Renderer.prototype.heading = function (text, level, slug) {
 }
 
 Renderer.prototype.code = function (code) {
-  return '<pre><code>' + _escape(code) + '</code></pre>'
+  return '<pre><code>' + _escape(code) + '</code></pre>\n'
 }
 
 Renderer.prototype.fence = function (code, lang, hLines) {
@@ -805,13 +809,12 @@ Renderer.prototype.fence = function (code, lang, hLines) {
     + (escaped ? code : _escape(code))
     + '</code></pre>\n'
 
-
-  if (hLines && hLines.length > 0) {
+  if (this.options.highlightLine && hLines && hLines.length > 0) {
     var wrap = ''
     wrap = '<div class="code-hl">\n'
     for (var i = 0; i < hLines.length; i++) {
       wrap += '<div class="code-hl-item" style="top:'
-      wrap += ((hLines[i] - 1) * 20 + 16)
+      wrap += ((hLines[i] - 1) * (this.options.highlightHeight || 20) + (this.options.highlightOffsetTop || 16))
       wrap += 'px"></div>\n'
     }
 
@@ -1088,7 +1091,7 @@ InlineLexer.prototype.compile = function (src) {
           this.fnrefs.__n.push(this.compile(link.text))
           link.index = this.fnrefs.__n.length
         }
-        out += '<a href="#fn1" id="fnref1">[1]</a>'.replace(/1/g, link.index)
+        out += '<sup><a href="#fn1" id="fnref1">[1]</a></sup>'.replace(/1/g, link.index)
         src = src.substring(cap[0].length)
         continue
       }
@@ -1432,7 +1435,6 @@ function zmd(content, options) {
     }
     throw error
   }
-
 }
 
 zmd.defaults = {

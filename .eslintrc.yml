@@ -4,6 +4,9 @@ extends:
 env:
   amd: true
 
+globals:
+  zmd: true
+
 rules:
   semi: 0
   indent: 0

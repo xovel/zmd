@@ -401,6 +401,9 @@ Lexer.prototype.parse = function (src, top) {
     // newline
     if (cap = this.rules.newline.exec(src)) {
       src = src.substring(cap[0].length)
+      this.tokens.push({
+        type: 'newline'
+      })
     }
 
     // raw
@@ -1286,6 +1289,8 @@ Parser.prototype.compile = function () {
   var next = this.peek().type
 
   switch (type) {
+    case 'newline':
+      return ''
     case 'hr':
       return renderer.hr()
     case 'heading':

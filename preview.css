@@ -278,7 +278,7 @@ pre {
 }
 .md-github dl dd {
   padding: 0 16px;
-  margin-bottom: 16px;
+  /* margin-bottom: 16px; */
 }
 .md-github table {
   display: block;

@@ -1326,7 +1326,7 @@ Parser.prototype.compile = function () {
     case 'deflist':
       dl = renderDl(token.dt, token.dd)
 
-      if (next === type) {
+      while (this.peek().type && this.peek().type === type) {
         token = this.next()
         dl += renderDl(token.dt, token.dd)
       }

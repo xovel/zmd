@@ -20,11 +20,9 @@ var $lexer = $('lexer')
 
 var $active = $preview
 
-var search = urlParams()
-
 function urlParams() {
   var result = {}
-  var values = location.search.slice(1).split('&')
+  var values = location.hash.slice(1).split('&')
   for (var i = 0; i < values.length; i++) {
     var v = values[i].split('=')
     result[v[0].trim().toLowerCase()] = v.slice(1).join('=')
@@ -40,43 +38,66 @@ function decode(text) {
   return decodeURIComponent(text)
 }
 
-on($permalink, 'click', updateLink)
+// on($permalink, 'click', updateLink)
 
-function updateLink() {
-  var href = '?text=' + encode($markdown.value) + '&options=' + encode($options.value)
+function updateLink(href) {
+  href = href || '#text=' + encode($markdown.value) + '&options=' + encode($options.value) + '&input=' + $inputType.value + '&output=' + $outputType.value
   history.replaceState('', document.title, href)
-}
-
-if ('text' in search) {
-  try {
-    $markdown.value = decode(search.text)
-  } catch (e) {
-
-  }
+  $permalink.setAttribute('href', href)
 }
 
 on($previewIframe, 'load', parseMarkdown)
 
 var zmdOptions = zmd.defaults
 
-if (search.options) {
-  try {
-    var options = decode(search.options)
-    options = JSON.parse(options)
-    setOptions(options)
-  } catch (e) {
+window.addEventListener('hashchange', setParams)
 
+function setParams() {
+  var params = urlParams()
+
+  if (params.text) {
+    $markdown.value = decode(params.text)
   }
-} else {
-  setOptions(zmd.defaults)
+
+  var inputType = params.input === 'options' ? 'options' : 'markdown'
+  var outputType = params.output === 'lexer' ? 'lexer' : params.output === 'html' ? 'html' : 'preview'
+
+  $markdown.scrollTop = 0
+  $options.scrollTop = 0
+  $preview.scrollTop = 0
+  $html.scrollTop = 0
+  $lexer.scrollTop = 0
+
+  $inputType.value = inputType
+  $outputType.value = outputType
+
+  handleOutputChange()
+  handleInputChange()
+
+  if (params.options) {
+    try {
+      var options = decode(params.options)
+      console.log(options)
+      zmdOptions = JSON.parse(options)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  parseMarkdown()
 }
 
+setParams()
+setOptions(zmdOptions)
+
 function setOptions(options) {
-  zmdOptions = options
   $options.value = JSON.stringify(options, null, ' ')
 }
 
-on($outputType, 'change', handleOutputChange)
+on($outputType, 'change', throttle(function () {
+  handleOutputChange()
+  updateLink()
+}, 300))
 
 function handleOutputChange() {
   var value = $outputType.value
@@ -89,7 +110,10 @@ function handleOutputChange() {
   $active.style.display = ''
 }
 
-on($inputType, 'change', handleInputChange)
+on($inputType, 'change', throttle(function () {
+  handleInputChange()
+  updateLink()
+}, 300))
 
 function handleInputChange() {
   var value = $inputType.value
@@ -139,7 +163,10 @@ function parseMarkdown() {
   setScrollPercent(scrollPercent)
 }
 
-var handleMarkdownInput = throttle(parseMarkdown, 300)
+var handleMarkdownInput = throttle(function () {
+  parseMarkdown()
+  updateLink()
+}, 300)
 
 function setResponseTime(ms) {
   var amount = ms
@@ -211,23 +238,8 @@ function handleClearClick() {
 
   handleMarkdownInput()
 
-  history.replaceState('', document.title, '?')
+  updateLink('#')
 }
-
-$markdown.scrollTop = 0
-$options.scrollTop = 0
-$preview.scrollTop = 0
-$html.scrollTop = 0
-$lexer.scrollTop = 0
-
-$inputType.value = 'markdown'
-$outputType.value = 'preview'
-
-$options.style.display = 'none'
-$html.style.display = 'none'
-$lexer.style.display = 'none'
-$markdown.style.display = ''
-$preview.style.display = ''
 
 function setParsed(parsed, lexed) {
   try {

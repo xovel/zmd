@@ -19,7 +19,7 @@ document.getElementById('content').innerHTML = zmd('## Hello `zmd`!')
 - 左边部分为输入，右边部分为展示。
 - 点击 `clear` 按钮可清空输入的文本。
 - 点击 `clear` 右侧的选择框可以切换到选项设置。
-- 点击 `permalink` 按钮可以将当前的输入生成一个链接，便于进行分享。
+- `Permalink` 为当前访问链接，可以进行分享操作。
 - 点击右边部分的下拉选择框可以在预览界面、HTML 文本、和块状语法分析结果的查看。
 
 ## Markdown Syntax

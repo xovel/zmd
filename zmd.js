@@ -149,14 +149,7 @@ var commonRe = {
   uri: /scheme:[^\s\x00-\x1f<>]*/,
   // https://html.spec.whatwg.org/multipage/input.html#e-mail-state-(type%3Demail)
   email: /[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*/,
-  autoemail: /[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/,
-
-  string: /"(?:(?:[^\x00-\x1f"\\]|\\(?:[\\\/bfnrt]|u[0-9a-fA-F]{4}))*)"/,
-  number: /-?(?:0|1-9\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/,
-  array: /\[(?:\s*(?:string|number|true|false|null)\s*,)*?\s*(?:string|number|true|false|null)\s*\]/,
-  value: /string|number|true|false|null|array/,
-  // simple json object
-  json: /\{(?:\s*(?:string)\s*:\s(?:value)\s*,)*?\s*(?:string)\s*:\s(?:value)\s*\}/
+  autoemail: /[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/
 }
 
 var blockRe = {
@@ -188,11 +181,7 @@ var blockRe = {
   list: /^( {0,3})(marker) [\s\S]+?(?:\n+(?=\1?hr)|\n+(?=ref)|\n{2,}(?! )(?!\1(?:marker) )\n*|\s*$)/,
   item: /^( *)(?:marker) ?[^\n]*(?:\n(?!\1(?:marker) ?)[^\n]*)*/gm,
 
-  raw: /^ {0,3}\{(%)? *raw *\1\} *\n([\s\S]*?) {0,3}\{\1 *endraw *\1\}(?:\n+|$)/,
-
-  yaml: /^(\ufeff?(= yaml =|---)$([\s\S]*?)^(?:\2|\.\.\.)$(?:\n)?)/m,
-  // front-matter
-  frontMatter: /^(?:([+-;])\1{2} *\n([\s\S]*?)\1{3}|(json)) *(?:\n+|$)/
+  raw: /^ {0,3}\{(%)? *raw *\1\} *\n([\s\S]*?) {0,3}\{\1 *endraw *\1\}(?:\n+|$)/
 }
 
 var inlineRe = {
@@ -240,27 +229,6 @@ commonRe.delimiter = _regex(
 commonRe.uri = _regex(
   commonRe.uri,
   ['scheme', commonRe.scheme]
-)
-commonRe.array = _regex(
-  commonRe.array,
-  [/string/g, commonRe.string],
-  [/number/g, commonRe.number]
-)
-commonRe.value = _regex(
-  commonRe.value,
-  ['string', commonRe.string],
-  ['number', commonRe.number],
-  ['array', commonRe.array]
-)
-commonRe.json = _regex(
-  commonRe.json,
-  [/string/g, commonRe.string],
-  [/value/g, commonRe.value]
-)
-
-blockRe.frontMatter = _regex(
-  blockRe.frontMatter,
-  ['json', commonRe.json]
 )
 
 blockRe.html = _regex(
@@ -432,16 +400,6 @@ Lexer.prototype.parse = function (src, top) {
   var listOpen
   var listItems
   var listType
-
-  if (this.options.frontMatter && !this.fronted && (cap = this.rules.frontMatter.exec(src))) {
-    this.fronted = true
-    src = src.substring(cap[0].length)
-    this.tokens.push({
-      type: 'front-matter',
-      mode: cap[1] ? cap[1] === '+' ? 'toml' : 'yaml' : 'json',
-      text: cap[0]
-    })
-  }
 
   while (src) {
     // newline
@@ -1345,8 +1303,6 @@ Parser.prototype.compile = function () {
   switch (type) {
     case 'newline':
       return ''
-    case 'front-matter':
-      return renderer.frontMatter ? renderer.frontMatter(text, mode) : ''
     case 'hr':
       return renderer.hr()
     case 'heading':

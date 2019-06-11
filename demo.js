@@ -76,11 +76,9 @@ function setParams() {
 
   if (params.options) {
     try {
-      var options = decode(params.options)
-      console.log(options)
-      zmdOptions = JSON.parse(options)
+      zmdOptions = JSON.parse(decode(params.options))
     } catch (e) {
-      console.log(e)
+
     }
   }
 

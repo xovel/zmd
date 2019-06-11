@@ -619,7 +619,7 @@ Lexer.prototype.parse = function (src, top) {
 
         item = {
           type: 'item_open',
-          task: /^\[[ x]\]/i.test(text)
+          task: /^\[[ x]\] [^ ]/i.test(text)
         }
 
         if (item.task) {
@@ -860,9 +860,12 @@ Renderer.prototype.list = function (content, start) {
   return '<' + tag + order + '>\n' + content + '</' + tag + '>\n'
 }
 
+Renderer.prototype.li = function (content, task) {
+  return '<li' + (task ? ' class="task-list-item"' : '') + '>' + content + '</li>\n'
+}
+
 // blockTags
 _each([
-  'li',
   'dl',
   'dt',
   'dd',
@@ -1357,7 +1360,7 @@ Parser.prototype.compile = function () {
           this.parseText() :
           this.compile()
       }
-      return renderer.li(body)
+      return renderer.li(body, token.task)
     case 'html':
       return renderer.html(text)
     case 'paragraph':

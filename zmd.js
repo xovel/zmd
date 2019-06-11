@@ -159,7 +159,7 @@ var blockRe = {
   // setext heading
   sheading: /^( {0,3}[^ \n][^\n]*(?:\n[^\n]+)*?)\n {0,3}(=+|-+) *(?:\n+|$)/,
   code: /^( {4}[^\n]+\n*)+/,
-  fence: /^ {0,3}(([~`])\2{2,})([^\n]*)\n([\s\S]*?)(?: {0,3}\1\2* *(?:\n+|$)|$)/,
+  fence: /^ {0,3}(([~`])\2{2,})([^\n]*)([\s\S]*?)(?: {0,3}\1\2* *(?:\n+|$)|$)/,
   // [^>\n]*> -> [\s>] to support linebreak
   html: /^ {0,3}(?:<(script|pre|style)[^>\n]*>[\s\S]*?(?:<\/\1>[^\n]*\n+|$)|<!--[\s\S]*?-->|(?:processing|<![\s\S]*?>|cdata)\n*|<\/?(tag)(?: +|\n|\/?)>[\s\S]*?(?:\n{2,}|$)|(?:<(?!script|pre|style)(?:tagname)(?:attribute)*? *\/?>|<\/(?!script|pre|style)(?:tagname)\s*>)(?= *(?:\n|$))[\s\S]*?(?:\n{2,}|$))/i,
 
@@ -439,12 +439,12 @@ Lexer.prototype.parse = function (src, top) {
 
     // fence
     if (cap = this.rules.fence.exec(src)) {
-      text = (cap[4] || '').replace(/\n$/, '')
+      text = (cap[4] || '').replace(/^\n/, '').replace(/\n$/, '')
       // ignore blankline
       if (/^\n+$/.test(text)) text = ''
 
       // Info strings for backtick code blocks cannot contain backticks
-      if (cap[3] && (cap[2] === '~' || cap[3].indexOf('`') === -1)) {
+      if (!cap[3] || cap[2] === '~' || cap[3].indexOf('`') === -1) {
         match = _trim(cap[3] || '').split(' ')
         this.tokens.push({
           type: 'fence',

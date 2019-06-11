@@ -564,3 +564,13 @@ pre {
 .diy.success {
   background-color: #42b983;
 }
+
+/* tasklist */
+.task-list-item {
+  list-style-type: none!important;
+}
+.task-list-item-checkbox,
+.task-list-item > input[type="checkbox"] {
+  margin: 0 .2em .25em -1.6em;
+  vertical-align: middle;
+}

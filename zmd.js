@@ -159,7 +159,7 @@ var blockRe = {
   // setext heading
   sheading: /^( {0,3}[^ \n][^\n]*(?:\n[^\n]+)*?)\n {0,3}(=+|-+) *(?:\n+|$)/,
   code: /^( {4}[^\n]+\n*)+/,
-  fence: /^ {0,3}(([~`])\2{2,})([^`\n]*)\n([\s\S]*?)(?: {0,3}\1\2* *(?:\n+|$)|$)/,
+  fence: /^ {0,3}(([~`])\2{2,})([^\n]*)\n([\s\S]*?)(?: {0,3}\1\2* *(?:\n+|$)|$)/,
   // [^>\n]*> -> [\s>] to support linebreak
   html: /^ {0,3}(?:<(script|pre|style)[^>\n]*>[\s\S]*?(?:<\/\1>[^\n]*\n+|$)|<!--[\s\S]*?-->|(?:processing|<![\s\S]*?>|cdata)\n*|<\/?(tag)(?: +|\n|\/?)>[\s\S]*?(?:\n{2,}|$)|(?:<(?!script|pre|style)(?:tagname)(?:attribute)*? *\/?>|<\/(?!script|pre|style)(?:tagname)\s*>)(?= *(?:\n|$))[\s\S]*?(?:\n{2,}|$))/i,
 
@@ -167,7 +167,7 @@ var blockRe = {
   // footnote: /^ {0,3}(?:label): ?([\S\s]+?)(?=(?:label)|\n{2,}|$)/,
   footnote: /^ {0,3}(?:label): *([^ \n][^\n]*(?:\n|$))/,
 
-  paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}(>|(`{3}|~{3})([^`\n]*)\n)|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
+  paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}(>|(`{3}|~{3})([^\n]*)\n)|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
   newline: /^\n+/,
   text: /^[^\n]+/,
   table: /^([^\n]+)\n(delimiter) *\n((?:[^\n]+\n)*|$)/,
@@ -439,16 +439,23 @@ Lexer.prototype.parse = function (src, top) {
 
     // fence
     if (cap = this.rules.fence.exec(src)) {
-      src = src.substring(cap[0].length)
-      match = (cap[3] || '').match(/\s*([^\s]*)\s*(?:\{([^}]+)\})?/)
-      cap = cap[4] || ''
-      this.tokens.push({
-        type: 'fence',
-        lang: match[1],
-        lines: getHLines(match[2], cap),
-        text: cap.replace(/\n$/, '')
-      })
-      continue
+      text = (cap[4] || '').replace(/\n$/, '')
+      // ignore blankline
+      if (/^\n+$/.test(text)) text = ''
+
+      // Info strings for backtick code blocks cannot contain backticks
+      if (cap[3] && (cap[2] === '~' || cap[3].indexOf('`') === -1)) {
+        match = _trim(cap[3] || '').split(' ')
+        this.tokens.push({
+          type: 'fence',
+          lang: match[0] || '',
+          meta: match.slice(1).join(' '),
+          text: text
+        })
+
+        src = src.substring(cap[0].length)
+        continue
+      }
     }
 
     // table
@@ -735,27 +742,6 @@ Lexer.prototype.parse = function (src, top) {
   return this.tokens
 }
 
-function getHLines(text, code) {
-  var ret = []
-  if (text) {
-    var lines = code.split('\n').length
-    _each(text.split(/ *, */), function (item) {
-      if (item.indexOf('-') === -1) {
-        var n = +item
-        if (n && n <= lines) {
-          ret.push(n)
-        }
-      } else {
-        var nn = item.split(/ *- */)
-        for (var i = +nn[0]; i <= +nn[1] && i <= lines; i++) {
-          ret.push(i)
-        }
-      }
-    })
-  }
-  return ret
-}
-
 function splitTableRow(text, limit) {
   text = text.replace(/^ *\|?|\|? *$/g, '').replace(/\\\|/g, '\t').split(/ *\| */)
   var result = []
@@ -789,13 +775,13 @@ Renderer.prototype.heading = function (text, level, slug) {
     + '>\n'
 }
 
-Renderer.prototype.code = function (code) {
+Renderer.prototype.codeblock = function (code) {
   return '<pre><code>' + _escape(code) + '</code></pre>\n'
 }
 
-Renderer.prototype.fence = function (code, lang, hLines) {
-  var escaped
+Renderer.prototype.fence = function (code, lang, meta, escaped) {
   var out
+
   if (this.options.highlight) {
     out = this.options.highlight(code, lang)
     if (out && out !== code) {
@@ -810,18 +796,6 @@ Renderer.prototype.fence = function (code, lang, hLines) {
     + '">'
     + (escaped ? code : _escape(code))
     + '</code></pre>\n'
-
-  if (this.options.highlightLine && hLines && hLines.length > 0) {
-    var wrap = ''
-    wrap = '<div class="code-hl">\n'
-    for (var i = 0; i < hLines.length; i++) {
-      wrap += '<div class="code-hl-item" style="top:'
-      wrap += ((hLines[i] - 1) * (this.options.highlightHeight || 20) + (this.options.highlightOffsetTop || 16))
-      wrap += 'px"></div>\n'
-    }
-
-    out = wrap + out + '</div>'
-  }
 
   return out
 }
@@ -910,6 +884,7 @@ Renderer.prototype.img = Renderer.prototype.image
 _each([
   'strong',
   'em',
+  'code',
   'ins',
   'mark',
   'del',
@@ -920,10 +895,6 @@ _each([
     return '<' + name + '>' + text + '</' + name + '>'
   }
 })
-
-Renderer.prototype.codespan = function (text) {
-  return '<code>' + text + '</code>'
-}
 
 Renderer.prototype.link = function (href, text, title) {
   return '<a href="'
@@ -1117,7 +1088,7 @@ InlineLexer.prototype.compile = function (src) {
         // The stripping only happens if the space is on both sides of the string
         text = text.replace(/^( +)([\s\S]*?)\1$/, '$2')
       }
-      out += this.renderer.codespan(_escape(text))
+      out += this.renderer.code(_escape(text))
       continue
     }
 
@@ -1318,9 +1289,9 @@ Parser.prototype.compile = function () {
         slug
       )
     case 'code':
-      return renderer.code(text)
+      return renderer.codeblock(text)
     case 'fence':
-      return renderer.fence(text, token.lang, token.lines)
+      return renderer.fence(text, token.lang, token.meta)
     case 'table':
       body = ''
       cell = ''

@@ -192,7 +192,7 @@ var blockRe = {
 
   yaml: /^(\ufeff?(= yaml =|---)$([\s\S]*?)^(?:\2|\.\.\.)$(?:\n)?)/m,
   // front-matter
-  frontMatter: /^(?:([+-])\1{2} *\n([\s\S]*?)\1{3}|(json)) *(?:\n+|$)/
+  frontMatter: /^(?:([+-;])\1{2} *\n([\s\S]*?)\1{3}|(json)) *(?:\n+|$)/
 }
 
 var inlineRe = {
@@ -439,7 +439,7 @@ Lexer.prototype.parse = function (src, top) {
     this.tokens.push({
       type: 'front-matter',
       mode: cap[1] ? cap[1] === '+' ? 'toml' : 'yaml' : 'json',
-      text: _trim(cap[2] || cap[3] || '')
+      text: cap[0]
     })
   }
 

@@ -1279,6 +1279,8 @@ Parser.prototype.compile = function () {
       return ''
     case 'hr':
       return renderer.hr()
+    case 'raw':
+      return text
     case 'heading':
       if (this.options.headerIds) {
         id = this.slugger.get(text)

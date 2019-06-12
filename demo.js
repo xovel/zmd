@@ -81,12 +81,11 @@ function setParams() {
 
     }
   }
-
+  setOptions(zmdOptions)
   parseMarkdown()
 }
 
 setParams()
-setOptions(zmdOptions)
 
 function setOptions(options) {
   $options.value = JSON.stringify(options, null, ' ')

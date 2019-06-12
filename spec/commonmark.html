@@ -98,18 +98,19 @@ a.footnoteRef > sup {
  a.dingus { display: none; }
 }
 </style>
+<!-- <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script> -->
 <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
   $("div.example").each(function(e) {
     var t = $(this).find('code.language-markdown').text();
     $(this).find('a.dingus').click(function(f) {
-      window.open('/dingus/?text=' +
+      window.open('https://spec.commonmark.org/dingus/?text=' +
         encodeURIComponent(t.replace(/→/g,"\t")));
     });
   });
-  $("code.language-markdown").dblclick(function(e) { window.open('/dingus/?text=' +
-      encodeURIComponent($(this).text()));
+  $("code.language-markdown").dblclick(function(e) { window.open('https://spec.commonmark.org/dingus/?text=' +
+      encodeURIComponent($(this).text().replace(/→/g,"\t")));
   });
 });
 </script>
@@ -124,7 +125,7 @@ $(document).ready(function() {
 <a rel="license"
    href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative
    Commons BY-SA" style="border-width:0"
-   src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"
+   src="cc-by-sa-4.0.png"
    /></a><br/><span style="display:none"><span xmlns:dct="http://purl.org/dc/terms/"
    href="http://purl.org/dc/dcmitype/Text" property="dct:title"
    rel="dct:type">CommonMark Spec</span> by

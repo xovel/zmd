@@ -164,7 +164,7 @@ var blockRe = {
   paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}(>|(`{3}|~{3})([^\n]*)(?:\n|$))|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
   newline: /^\n+/,
   text: /^[^\n]+/,
-  table: /^([^\n]+)\n(delimiter)(?: *\n((?:(?!\n| {0,3}(?:>|`{3}|~{3}| |([_*-]) *\4{2,} *(?:\n|$)|(?:#{1,6}|[*+-]|\d{1,9}[.)])(?: |\n|$)))[^\n]*(?:\n|$))*)|$)/,
+  table: /^([^\n]+)\n(delimiter)(?: *\n((?:(?!\n| {4,}| {0,3}(?:>|`{3}|~{3}|([_*-]) *\4{2,} *(?:\n|$)|(?:#{1,6}|[*+-]|\d{1,9}[.)])(?: |\n|$)))[^\n]*(?:\n|$))*)|$)/,
 
   deflist: /^ {0,3}([^ \n][^\n]*)\n((?::[^\n]+(?:\n+|$))+)/,
   // deflist2: /^ {0,3}:[^\n]+\n( {2,}[^\n]+(?:\n|$))+/,
@@ -738,7 +738,13 @@ Lexer.prototype.parse = function (src, top) {
 }
 
 function splitTableRow(text, limit) {
-  text = text.replace(/^ *\|?|\|? *$/g, '').replace(/\\\|/g, '\t').split(/ *\| */)
+  text = text
+    // .replace(/\\\\/g, '\n')     // replace \\
+    // .replace(/\\\|/g, '\t')     // replace \|
+    // .replace(/\n/g, '\\\\')     // recover \\
+    .replace(/((?:^|[^\\])(?:\\\\)*)\\\|/g, '$1\t')
+    .replace(/^\||\|$/g, '')    // remove inital or trailing |
+    .split('|')
   var result = []
   var length = limit || text.length
   for (var i = 0; i < length; i++) {

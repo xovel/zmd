@@ -12,7 +12,7 @@
 ## Spec
 
 - [CommonMark v0.29][commonmark], [镜像](https://xovel.github.io/zmd/spec/commonmark.html)
-- [GitHub Flavored Markdown v0.29][gfm], [镜像](https://xovel.github.io/zmd/spec/gfm.html)
+- [GitHub Flavored Markdown][gfm], [镜像](https://xovel.github.io/zmd/spec/gfm.html)
 
 ## Usage
 

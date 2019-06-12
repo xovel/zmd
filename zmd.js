@@ -927,7 +927,7 @@ Renderer.prototype.checkbox = function (checked) {
     + '> '
 }
 
-function InlineLexer(options, refs, fnrefs) {
+function Compiler(options, refs, fnrefs) {
   this.options = options || zmd.defaults
   this.rules = inlineRe
 
@@ -939,13 +939,13 @@ function InlineLexer(options, refs, fnrefs) {
   this.renderer = new Renderer(this.options)
 }
 
-InlineLexer.rules = inlineRe
+Compiler.rules = inlineRe
 
-InlineLexer.prototype.escape = function (text) {
+Compiler.prototype.escape = function (text) {
   return text.replace(this.rules._escape, '$1')
 }
 
-InlineLexer.prototype.mangle = function (text) {
+Compiler.prototype.mangle = function (text) {
   var out = ''
   var ch
   for (var i = 0; i < text.length; i++) {
@@ -958,7 +958,7 @@ InlineLexer.prototype.mangle = function (text) {
   return out
 }
 
-InlineLexer.prototype.smartypants = function (text) {
+Compiler.prototype.smartypants = function (text) {
   return text
     // em-dashes
     .replace(/---/g, '\u2014')
@@ -976,7 +976,7 @@ InlineLexer.prototype.smartypants = function (text) {
     .replace(/\.{3}/g, '\u2026')
 }
 
-InlineLexer.prototype.link = function (image, text, href, title) {
+Compiler.prototype.link = function (image, text, href, title) {
 
   href = this.escape(href)
   title = _escape(this.escape(title))
@@ -992,12 +992,12 @@ InlineLexer.prototype.link = function (image, text, href, title) {
   )
 }
 
-InlineLexer.compile = function (text, options, refs, fnrefs) {
-  var compiler = new InlineLexer(options, refs, fnrefs)
+Compiler.compile = function (text, options, refs, fnrefs) {
+  var compiler = new Compiler(options, refs, fnrefs)
   return compiler.compile(text)
 }
 
-InlineLexer.prototype.compile = function (src) {
+Compiler.prototype.compile = function (src) {
   var out = ''
   var link
   var text
@@ -1221,7 +1221,7 @@ Parser.parse = function (tokens, options) {
 }
 
 Parser.prototype.parse = function (tokens) {
-  this.compiler = new InlineLexer(this.options, tokens.refs, tokens.fnrefs)
+  this.compiler = new Compiler(this.options, tokens.refs, tokens.fnrefs)
 
   this.tokens = tokens.slice().reverse()
 
@@ -1411,7 +1411,7 @@ zmd.defaults = {
 }
 
 zmd.Lexer = Lexer
-zmd.InlineLexer = InlineLexer
+zmd.Compiler = Compiler
 zmd.Parser = Parser
 zmd.Renderer = Renderer
 

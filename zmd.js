@@ -792,10 +792,9 @@ Renderer.prototype.fence = function (code, lang, meta, escaped) {
     }
   }
 
-  out = '<pre><code class="'
-    + this.options.langPrefix
-    + _escape(lang, true)
-    + '">'
+  out = '<pre><code'
+    + (lang ? ' class="' + this.options.langPrefix + _escape(lang, true) + '"' : '')
+    + '>'
     + (escaped ? code : _escape(code))
     + '</code></pre>\n'
 

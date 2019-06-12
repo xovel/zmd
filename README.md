@@ -4,7 +4,15 @@
 
 ## Overview
 
-进行 `markdown` 编译，直接对标 [GitHub Flavored Markdown](https://github.github.com/gfm/)。
+尝试进行 `markdown` 编译，直接对标 [GitHub Flavored Markdown][gfm]。
+
+[gfm]: https://github.github.com/gfm/
+[commonmark]: https://spec.commonmark.org/0.29/
+
+## Spec
+
+- [CommonMark v0.29][commonmark], [镜像](https://xovel.github.io/zmd/spec/commonmark.html)
+- [GitHub Flavored Markdown v0.29][gfm], [镜像](https://xovel.github.io/zmd/spec/gfm.html)
 
 ## Usage
 
@@ -22,11 +30,7 @@ document.getElementById('content').innerHTML = zmd('## Hello `zmd`!')
 - `Permalink` 为当前访问链接，可以进行分享操作。
 - 点击右边部分的下拉选择框可以在预览界面、HTML 文本、和块状语法分析结果的查看。
 
-## Markdown Syntax
-
-支持大部分 GFM 语法。
-
-另外加入了部分扩展语法：
+## Markdown Extend Syntax
 
 ### raw 文本
 
@@ -51,7 +55,6 @@ document.getElementById('content').innerHTML = zmd('## Hello `zmd`!')
 定义内容与开头冒号之间的空格将被忽略。
 
 有多个定义标题的，写在一起即可。
-
 
 ```
 我是标题
@@ -99,15 +102,18 @@ document.getElementById('content').innerHTML = zmd('## Hello `zmd`!')
 
 GFM 语法中的自动链接增强语法默认不开启。另外 HTML 代码块支持度不够理想，不建议在编写 `markdown` 的时候过度依赖此特性。可以通过 raw 语法进行替代。
 
+## Special Thanks
+
+特别感谢 `marked` 项目，当前版本的 `zmd` 的核心参考。编译流程基本保持跟 `marked` 一致。
+
 ## 参考项目
 
 - [marked](https://github.com/markedjs/marked)
+- [commonmark.js](https://github.com/commonmark/commonmark.js)
 - [remarkable](https://github.com/jonschlinkert/remarkable)
 - [showdown](https://github.com/showdownjs/showdown)
 - [markdown-it](https://github.com/markdown-it/markdown-it)
 - [snarkdown](https://github.com/developit/snarkdown)
-
-强烈感谢 `marked` 项目，`zmd` 核心参考项目。编译流程基本保持跟 `marked` 一致。
 
 ## TODO
 

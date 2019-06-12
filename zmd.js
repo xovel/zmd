@@ -16,9 +16,6 @@
   }
 })(this, function () {
 
-// -------
-// Helpers
-
 var hasOwn = Object.prototype.hasOwnProperty
 
 // extend an object
@@ -106,9 +103,6 @@ function _trim(text) {
     text.replace(/^\s+|\s+$/g, '')
 }
 
-// Helpers End
-// -----------
-
 var commonRe = {
   // space: /\u0020/,
   // // whitespace: /\s+/,
@@ -155,7 +149,7 @@ var commonRe = {
 var blockRe = {
   // Leaf blocks
   hr: /^ {0,3}([*_-])(?: *\1){2,} *(?:\n+|$)/,
-  heading: /^ {0,3}(#{1,6}) +([^\n]*?)(?: +#* *)?(?:\n+|$)/,
+  heading: /^ {0,3}(#{1,6})(?: ([^\n]*?)(?: #* *)?)?(?:\n+|$)/,
   // setext heading
   sheading: /^( {0,3}[^ \n][^\n]*(?:\n[^\n]+)*?)\n {0,3}(=+|-+) *(?:\n+|$)/,
   code: /^( {4}[^\n]+\n*)+/,
@@ -170,7 +164,7 @@ var blockRe = {
   paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}(>|(`{3}|~{3})([^\n]*)(?:\n|$))|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
   newline: /^\n+/,
   text: /^[^\n]+/,
-  table: /^([^\n]+)\n(delimiter) *\n((?:[^\n]+\n)*|$)/,
+  table: /^([^\n]+)\n(delimiter)(?: *\n((?:(?!\n| {0,3}(?:>|`{3}|~{3}| |([_*-]) *\4{2,} *(?:\n|$)|(?:#{1,6}|[*+-]|\d{1,9}[.)])(?: |\n|$)))[^\n]*(?:\n|$))*)|$)/,
 
   deflist: /^ {0,3}([^ \n][^\n]*)\n((?::[^\n]+(?:\n+|$))+)/,
   // deflist2: /^ {0,3}:[^\n]+\n( {2,}[^\n]+(?:\n|$))+/,
@@ -348,7 +342,6 @@ function Slugger() {
 Slugger.prototype.get = function (value) {
   var id = _unescape(_trim(value)).toLowerCase()
     .replace(commonRe.punctuation, '')
-    // .replace(/[【】｛｝（），。？：‘’“”～！、《》￥…—]/g, '-')
     .replace(/\s/g, '-')
   if (this.slugs[id]) {
     id += '-' + this.slugs[id]++
@@ -524,7 +517,7 @@ Lexer.prototype.parse = function (src, top) {
       this.tokens.push({
         type: 'heading',
         level: cap[1].length,
-        text: cap[2]
+        text: cap[2] ? _trim(cap[2]) : ''
       })
       continue
     }
@@ -1284,17 +1277,20 @@ Parser.prototype.compile = function () {
     case 'raw':
       return renderer.raw(text)
     case 'heading':
-      if (this.options.headerIds) {
-        id = this.slugger.get(text)
-        slug = ' id="' + (this.options.headerPrefix || '') + id + '"'
-      } else {
-        slug = ''
+      if (text) {
+        if (this.options.headerIds) {
+          id = this.slugger.get(text)
+          slug = ' id="' + (this.options.headerPrefix || '') + id + '"'
+        } else {
+          slug = ''
+        }
+        return renderer.heading(
+          compiler.compile(text),
+          token.level,
+          slug
+        )
       }
-      return renderer.heading(
-        compiler.compile(text),
-        token.level,
-        slug
-      )
+      return renderer.heading('', token.level, '')
     case 'code':
       return renderer.codeblock(text)
     case 'fence':
@@ -1414,6 +1410,7 @@ zmd.defaults = {
   divClass: 'diy'
 }
 
+zmd.Slugger = Slugger
 zmd.Lexer = Lexer
 zmd.Compiler = Compiler
 zmd.Parser = Parser

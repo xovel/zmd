@@ -167,7 +167,7 @@ var blockRe = {
   // footnote: /^ {0,3}(?:label): ?([\S\s]+?)(?=(?:label)|\n{2,}|$)/,
   footnote: /^ {0,3}(?:label): *([^ \n][^\n]*(?:\n|$))/,
 
-  paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}(>|(`{3}|~{3})([^\n]*)\n)|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
+  paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}(>|(`{3}|~{3})([^\n]*)(?:\n|$))|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
   newline: /^\n+/,
   text: /^[^\n]+/,
   table: /^([^\n]+)\n(delimiter) *\n((?:[^\n]+\n)*|$)/,

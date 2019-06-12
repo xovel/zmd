@@ -323,7 +323,7 @@ inlineRe.reflink = _regex(
 inlineRe.nolink = _regex(
   inlineRe.nolink,
   ['label', commonRe.label],
-  ['*?', '+?'],
+  ['*?', '+?']
 )
 inlineRe.footnote = _regex(
   inlineRe.footnote,
@@ -386,6 +386,8 @@ Lexer.prototype.lex = function (src) {
 Lexer.prototype.parse = function (src, top) {
   src = src.replace(/^ +$/gm, '')
 
+  var rules = this.rules
+
   var cap
   var match
   var item
@@ -403,7 +405,7 @@ Lexer.prototype.parse = function (src, top) {
 
   while (src) {
     // newline
-    if (cap = this.rules.newline.exec(src)) {
+    if (cap = rules.newline.exec(src)) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'newline'
@@ -411,7 +413,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // raw
-    if (cap = this.rules.raw.exec(src)) {
+    if (cap = rules.raw.exec(src)) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'raw',
@@ -421,7 +423,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // code
-    if (cap = this.rules.code.exec(src)) {
+    if (cap = rules.code.exec(src)) {
       src = src.substring(cap[0].length)
       // cannot interrupt a paragraph
       var prevToken = this.tokens.slice(-1)[0]
@@ -438,7 +440,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // fence
-    if (cap = this.rules.fence.exec(src)) {
+    if (cap = rules.fence.exec(src)) {
       text = (cap[4] || '').replace(/^\n/, '').replace(/\n$/, '')
       // ignore blankline
       if (/^\n+$/.test(text)) text = ''
@@ -459,7 +461,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // table
-    if (cap = this.rules.table.exec(src)) {
+    if (cap = rules.table.exec(src)) {
       item = {
         type: 'table',
         header: splitTableRow(cap[1]),
@@ -492,7 +494,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // div
-    if (cap = this.rules.div.exec(src)) {
+    if (cap = rules.div.exec(src)) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'div_open',
@@ -508,7 +510,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // hr
-    if (cap = this.rules.hr.exec(src)) {
+    if (cap = rules.hr.exec(src)) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'hr'
@@ -517,7 +519,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // heading
-    if (cap = this.rules.heading.exec(src)) {
+    if (cap = rules.heading.exec(src)) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'heading',
@@ -528,7 +530,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // blockquote
-    if (cap = this.rules.blockquote.exec(src)) {
+    if (cap = rules.blockquote.exec(src)) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'blockquote_open'
@@ -558,7 +560,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // list
-    if (cap = this.rules.list.exec(src)) {
+    if (cap = rules.list.exec(src)) {
       src = src.substring(cap[0].length)
       listOpen = {
         type: 'list_open',
@@ -567,7 +569,7 @@ Lexer.prototype.parse = function (src, top) {
       }
       this.tokens.push(listOpen)
 
-      cap = cap[0].match(this.rules.item)
+      cap = cap[0].match(rules.item)
       n = cap.length
       listItems = []
       next = false
@@ -655,7 +657,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // html
-    if (cap = this.rules.html.exec(src)) {
+    if (cap = rules.html.exec(src)) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'html',
@@ -665,7 +667,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // footnote
-    if (this.options.footnote && (cap = this.rules.footnote.exec(src))) {
+    if (this.options.footnote && (cap = rules.footnote.exec(src))) {
       src = src.substring(cap[0].length)
       text = _trim(cap[1]).toLowerCase().replace(/\s+/g, ' ')
       this.tokens.fnrefs[text] = {
@@ -675,7 +677,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // ref
-    if (top && (cap = this.rules.ref.exec(src))) {
+    if (top && (cap = rules.ref.exec(src))) {
       src = src.substring(cap[0].length)
       item = _trim(cap[1]).toLowerCase().replace(/\s+/g, ' ')
       if (!this.tokens.refs[item]) {
@@ -688,7 +690,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // setext heading
-    if (cap = this.rules.sheading.exec(src)) {
+    if (cap = rules.sheading.exec(src)) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'heading',
@@ -699,7 +701,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // definition list
-    if (cap = this.rules.deflist.exec(src)) {
+    if (cap = rules.deflist.exec(src)) {
       src = src.substring(cap[0].length)
       item = {
         type: 'deflist',
@@ -714,7 +716,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // paragraph
-    if (top && (cap = this.rules.paragraph.exec(src))) {
+    if (top && (cap = rules.paragraph.exec(src))) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'paragraph',
@@ -724,7 +726,7 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // text
-    if (cap = this.rules.text.exec(src)) {
+    if (cap = rules.text.exec(src)) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'text',
@@ -800,10 +802,6 @@ Renderer.prototype.fence = function (code, lang, meta, escaped) {
   return out
 }
 
-Renderer.prototype.html = function (html) {
-  return html
-}
-
 Renderer.prototype.footnote = function (footnotes) {
   var result = '<hr class="footnote-sep"' + (this.options.xhtml ? ' /' : '') + '>\n'
   result += '<ol class="footnote-list">'
@@ -821,9 +819,12 @@ Renderer.prototype.footnote = function (footnotes) {
   return result
 }
 
-Renderer.prototype.text = function (text) {
-  return text
-}
+// garbage in, garbage out
+_each(['raw', 'text', 'html'], function (name) {
+  Renderer.prototype[name] = function (text) {
+    return text
+  }
+})
 
 Renderer.prototype.table = function (header, body) {
   if (body) body = '<tbody>' + body + '</tbody>'
@@ -880,9 +881,6 @@ Renderer.prototype.blockquote = function (content) {
   return '<blockquote>\n' + content + '</blockquote>\n'
 }
 
-Renderer.prototype.paragraph = Renderer.prototype.p
-Renderer.prototype.img = Renderer.prototype.image
-
 // inlineTags
 _each([
   'strong',
@@ -909,7 +907,7 @@ Renderer.prototype.link = function (href, text, title) {
     + '</a>'
 }
 
-Renderer.prototype.image = function (src, alt, title) {
+Renderer.prototype.img = function (src, alt, title) {
   return '<img src="'
     + src
     + '" alt="'
@@ -926,6 +924,10 @@ Renderer.prototype.checkbox = function (checked) {
     + (this.options.xhtml ? ' /' : '')
     + '> '
 }
+
+// alias
+Renderer.prototype.paragraph = Renderer.prototype.p
+Renderer.prototype.image = Renderer.prototype.img
 
 function Compiler(options, refs, fnrefs) {
   this.options = options || zmd.defaults
@@ -1005,16 +1007,19 @@ Compiler.prototype.compile = function (src) {
   var title
   var cap
 
+  var rules = this.rules
+  var renderer = this.renderer
+
   while (src) {
     // escape
-    if (cap = this.rules.escape.exec(src)) {
+    if (cap = rules.escape.exec(src)) {
       src = src.substring(cap[0].length)
       out += _escape(cap[1])
       continue
     }
 
     // html tag
-    if (cap = this.rules.html.exec(src)) {
+    if (cap = rules.html.exec(src)) {
       if (this.inLink && /^<\/a *>/i.test(cap[0])) {
         this.inLink = false
       } else if (!this.inLink && /^<a /i.test(cap[0])) {
@@ -1028,13 +1033,13 @@ Compiler.prototype.compile = function (src) {
       }
 
       src = src.substring(cap[0].length)
-      out += cap[0]
+      out += renderer.html(cap[0])
 
       continue
     }
 
     // link
-    if (cap = this.rules.link.exec(src)) {
+    if (cap = rules.link.exec(src)) {
       src = src.substring(cap[0].length)
       this.inLink = true
 
@@ -1049,7 +1054,7 @@ Compiler.prototype.compile = function (src) {
     }
 
     // footnote
-    if (this.options.footnote && (cap = this.rules.footnote.exec(src))) {
+    if (this.options.footnote && (cap = rules.footnote.exec(src))) {
       text = _trim(cap[1]).toLowerCase().replace(/\s+/g, ' ')
 
       link = this.fnrefs[text]
@@ -1066,7 +1071,7 @@ Compiler.prototype.compile = function (src) {
     }
 
     // reflink, nolink
-    if ((cap = this.rules.reflink.exec(src)) || (cap = this.rules.nolink.exec(src))) {
+    if ((cap = rules.reflink.exec(src)) || (cap = rules.nolink.exec(src))) {
       text = _trim(cap[1])
       link = _trim(cap[2] || cap[1]).toLowerCase().replace(/\s+/g, ' ')
 
@@ -1083,7 +1088,7 @@ Compiler.prototype.compile = function (src) {
     }
 
     // code
-    if (cap = this.rules.code.exec(src)) {
+    if (cap = rules.code.exec(src)) {
       src = src.substring(cap[0].length)
       text = cap[2]
       // No stripping occurs if the code span contains only spaces
@@ -1091,68 +1096,68 @@ Compiler.prototype.compile = function (src) {
         // The stripping only happens if the space is on both sides of the string
         text = text.replace(/^( +)([\s\S]*?)\1$/, '$2')
       }
-      out += this.renderer.code(_escape(text))
+      out += renderer.code(_escape(text))
       continue
     }
 
     // strong
-    if (cap = this.rules.strong.exec(src)) {
+    if (cap = rules.strong.exec(src)) {
       src = src.substring(cap[0].length)
-      out += this.renderer.strong(this.compile(cap[4] || cap[3] || cap[2] || cap[1]))
+      out += renderer.strong(this.compile(cap[4] || cap[3] || cap[2] || cap[1]))
       continue
     }
 
     // em
-    if (cap = this.rules.em.exec(src)) {
+    if (cap = rules.em.exec(src)) {
       src = src.substring(cap[0].length)
-      out += this.renderer.em(this.compile(cap[6] || cap[5] || cap[4] || cap[3] || cap[2] || cap[1]))
+      out += renderer.em(this.compile(cap[6] || cap[5] || cap[4] || cap[3] || cap[2] || cap[1]))
       continue
     }
 
     // br
-    if (cap = this.rules.br.exec(src)) {
+    if (cap = rules.br.exec(src)) {
       src = src.substring(cap[0].length)
-      out += this.renderer.br()
+      out += renderer.br()
       continue
     }
 
     // del
-    if (cap = this.rules.del.exec(src)) {
+    if (cap = rules.del.exec(src)) {
       src = src.substring(cap[0].length)
-      out += this.renderer.del(this.compile(cap[1]))
+      out += renderer.del(this.compile(cap[1]))
       continue
     }
 
     // mark
-    if (cap = this.rules.mark.exec(src)) {
+    if (cap = rules.mark.exec(src)) {
       src = src.substring(cap[0].length)
-      out += this.renderer.mark(this.compile(cap[1]))
+      out += renderer.mark(this.compile(cap[1]))
       continue
     }
 
     // ins
-    if (cap = this.rules.ins.exec(src)) {
+    if (cap = rules.ins.exec(src)) {
       src = src.substring(cap[0].length)
-      out += this.renderer.ins(this.compile(cap[1]))
+      out += renderer.ins(this.compile(cap[1]))
       continue
     }
 
     // sup
-    if (cap = this.rules.sup.exec(src)) {
+    if (cap = rules.sup.exec(src)) {
       src = src.substring(cap[0].length)
-      out += this.renderer.sup(this.compile(cap[1]))
+      out += renderer.sup(this.compile(cap[1]))
       continue
     }
 
     // sub
-    if (cap = this.rules.sub.exec(src)) {
+    if (cap = rules.sub.exec(src)) {
       src = src.substring(cap[0].length)
-      out += this.renderer.sub(this.compile(cap[1]))
+      out += renderer.sub(this.compile(cap[1]))
       continue
     }
 
     // autolink
-    if (cap = this.rules.autolink.exec(src)) {
+    if (cap = rules.autolink.exec(src)) {
       src = src.substring(cap[0].length)
       if (cap[2] === '@') {
         text = _escape(this.options.mangle ? this.mangle(cap[1]) : cap[1], true)
@@ -1161,12 +1166,12 @@ Compiler.prototype.compile = function (src) {
         text = _escape(cap[1], true)
         href = text
       }
-      out += this.renderer.link(href, text)
+      out += renderer.link(href, text)
       continue
     }
 
     // autourl
-    if (!this.inLink && this.options.autourl && (cap = this.rules.autourl.exec(src))) {
+    if (!this.inLink && this.options.autourl && (cap = rules.autourl.exec(src))) {
       if (cap[2] === '@') {
         text = _escape(cap[1], true)
         href = 'mailto:' + text
@@ -1179,22 +1184,22 @@ Compiler.prototype.compile = function (src) {
           href = text
         }
       }
-      out += this.renderer.link(href, text)
+      out += renderer.link(href, text)
       src = src.substring(cap[0].length)
       continue
     }
 
     // text
-    if (cap = this.rules.text.exec(src)) {
+    if (cap = rules.text.exec(src)) {
       src = src.substring(cap[0].length)
       if (this.inRawBlock) {
-        out += this.renderer.text(cap[0])
+        out += renderer.text(cap[0])
       } else {
         text = _escape(cap[0], true)
         if (this.options.smartypants) {
           text = this.smartypants(text)
         }
-        out += this.renderer.text(text)
+        out += renderer.text(text)
       }
       continue
     }
@@ -1278,7 +1283,7 @@ Parser.prototype.compile = function () {
     case 'hr':
       return renderer.hr()
     case 'raw':
-      return text
+      return renderer.raw(text)
     case 'heading':
       if (this.options.headerIds) {
         id = this.slugger.get(text)

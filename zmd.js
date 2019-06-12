@@ -1272,8 +1272,6 @@ Parser.prototype.compile = function () {
     return out
   }
 
-  var next = this.peek().type
-
   switch (type) {
     case 'newline':
       return ''

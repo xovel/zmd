@@ -936,7 +936,8 @@ function Compiler(options, refs, fnrefs) {
   fnrefs.__n = []
   this.fnrefs = fnrefs
 
-  this.renderer = new Renderer(this.options)
+  this.renderer = this.options.renderer || new Renderer()
+  this.renderer.options = this.options
 }
 
 Compiler.rules = inlineRe
@@ -1214,8 +1215,9 @@ function Parser(options) {
   this.tokens = []
   this.token = null
   this.options = options || zmd.defaults
-  this.renderer = new Renderer(this.options)
-  this.slugger = new Slugger()
+  this.slugger = this.options.slugger || new Slugger()
+  this.renderer = this.options.renderer || new Renderer()
+  this.renderer.options = this.options
 }
 
 Parser.parse = function (tokens, options) {

@@ -1,6 +1,6 @@
 {
   "name": "zmdjs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Yet another markdown parser.",
   "main": "zmd.js",
   "scripts": {

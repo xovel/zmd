@@ -14,11 +14,30 @@
 - [CommonMark v0.29][commonmark], [镜像](https://xovel.github.io/zmd/spec/commonmark.html)
 - [GitHub Flavored Markdown][gfm], [镜像](https://xovel.github.io/zmd/spec/gfm.html)
 
+## Install
+
+```
+npm i zmdjs --save
+```
+
 ## Usage
 
 ```js
-document.getElementById('content').innerHTML = zmd('## Hello `zmd`!')
+const zmd = require('zmdjs')
+const out = zmd('## Hello `zmd`!')
 ```
+
+```html
+...
+<script src="/path/to/zmd.js"></script>
+...
+<script>
+  document.getElementById('content').innerHTML = zmd('## Hello `zmd`!')
+</script>
+...
+```
+
+> 通常来说，输出的文本会有拖尾换行，在使用时可根据实际情况进行移除。
 
 ## Demo
 

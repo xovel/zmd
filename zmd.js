@@ -63,7 +63,7 @@ function _regex(input/* ,  ...replacers */) {
     var replacer = arguments[i]
     var name = replacer[0]
     var value = replacer[1]
-    value = (value.source || value).replace(/^\^/g, '')
+    value = (value.source || value).replace(/^\^/, '')
     source = source.replace(name, value)
   }
 
@@ -161,7 +161,7 @@ var blockRe = {
   // footnote: /^ {0,3}(?:label): ?([\S\s]+?)(?=(?:label)|\n{2,}|$)/,
   footnote: /^ {0,3}(?:label): *([^ \n][^\n]*(?:\n|$))/,
 
-  paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}(>|(`{3}|~{3})([^\n]*)(?:\n|$))|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
+  paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}(>|[*+-] +[^ \n]|1[.)] +[^ \n]|(`{3}|~{3})([^\n]*)(?:\n|$))|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
   newline: /^\n+/,
   text: /^[^\n]+/,
   table: /^([^\n]+)\n(delimiter)(?: *\n((?:(?!\n| {4,}| {0,3}(?:>|`{3}|~{3}|([_*-]) *\4{2,} *(?:\n|$)|(?:#{1,6}|[*+-]|\d{1,9}[.)])(?: |\n|$)))[^\n]*(?:\n|$))*)|$)/,
@@ -173,7 +173,7 @@ var blockRe = {
   div: /^ {0,3}(:{3,})([^\n]*)\n([\s\S]*?) {0,3}\1:* *(?:\n+|$)/,
   blockquote: /^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/,
   list: /^( {0,3})(marker) [\s\S]+?(?:\n+(?=\1?hr)|\n+(?=ref)|\n{2,}(?! )(?!\1(?:marker) )\n*|\s*$)/,
-  item: /^( *)(?:marker) ?[^\n]*(?:\n(?!\1(?:marker) ?)[^\n]*)*/gm,
+  item: /^( *)(?:marker) ?[^\n]*(?:\n(?!\1 ?(?:marker) ?)[^\n]*)*/gm,
 
   raw: /^ {0,3}\{(%)? *raw *\1\} *\n([\s\S]*?) {0,3}\{\1 *endraw *\1\} *(?:\n+|$)/
 }
@@ -576,7 +576,6 @@ Lexer.prototype.parse = function (src, top) {
           listType[i] = bullet[bullet.length - 1]
           return ''
         })
-        prefix -= text.length
 
         // Changing the bullet or ordered list delimiter starts a new list
         if (
@@ -601,6 +600,13 @@ Lexer.prototype.parse = function (src, top) {
           listItems = []
           next = false
         }
+
+        // TODO: Lists
+        if (~text.indexOf('\n ')) {
+          prefix -= text.length
+          text = text.replace(new RegExp('^ {1,' + prefix + '}', 'gm'), '')
+        }
+
         // loose or tight
         loose = next || /\n\n(?!\s*$)/.test(text)
         if (i !== n - 1) {
@@ -626,11 +632,7 @@ Lexer.prototype.parse = function (src, top) {
         this.tokens.push(item)
 
         // recurse
-        if (prefix < 2) {
-          // prevent Invalid regular expression: numbers out of order in {} quantifier
-          prefix = 2
-        }
-        this.parse(text.replace(new RegExp('^ {2,' + prefix + '}', 'gm'), ''), false)
+        this.parse(text, false)
 
         this.tokens.push({
           type: 'item_close'

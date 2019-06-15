@@ -760,11 +760,11 @@ function Renderer(options) {
 }
 
 Renderer.prototype.hr = function () {
-  return this.options.xhtml ? '<hr/>\n' : '<hr>\n'
+  return this.options.xhtml ? '<hr />\n' : '<hr>\n'
 }
 
 Renderer.prototype.br = function () {
-  return this.options.xhtml ? '<br/>\n' : '<br>\n'
+  return this.options.xhtml ? '<br />\n' : '<br>\n'
 }
 
 Renderer.prototype.heading = function (text, level, slug) {
@@ -1045,7 +1045,7 @@ Compiler.prototype.compile = function (src) {
       this.inLink = true
 
       text = _trim(cap[1] || '')
-      link = _trim(cap[2] || cap[3])
+      link = _trim(cap[2] || cap[3] || '')
       title = _trim(cap[4] || cap[5] || cap[6] || '')
 
       out += this.link(cap[0][0] === '!', text, link, title)

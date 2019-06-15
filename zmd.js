@@ -343,12 +343,12 @@ Slugger.prototype.get = function (value) {
   var id = _unescape(_trim(value)).toLowerCase()
     .replace(commonRe.punctuation, '')
     .replace(/\s/g, '-')
-  if (this.slugs[id]) {
-    id += '-' + this.slugs[id]++
-  } else {
-    this.slugs[id] = 1
+  var slug = id
+  while (this.slugs[slug]) {
+    slug = id + '-' + this.slugs[id]++
   }
-  return id
+  this.slugs[slug] = 1
+  return slug
 }
 
 function Lexer(options) {

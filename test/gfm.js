@@ -26,8 +26,8 @@ gfm.forEach(item => {
       headerIds: false,
       autourl: true,
       codeSuffixLine: true,
-      keepEmptyLine: true,
-      rfc3986: true
+      keepBlankLine: true,
+      encodeURI: true
     })
   } catch (error) {
     item.error = true

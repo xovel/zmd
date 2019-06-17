@@ -564,7 +564,7 @@
     "html": "<pre><code>chunk1\n\nchunk2\n\n\n\nchunk3\n</code></pre>\n",
     "example": 81,
     "section": "Indented code blocks",
-    "zzmd": "<pre><code>chunk1\n\nchunk2\n</code></pre>\n<p>chunk3</p>\n"
+    "zzmd": "<pre><code>chunk1\n\nchunk2\n\n\n\nchunk3\n</code></pre>\n"
   },
   {
     "markdown": "    chunk1\n      \n      chunk2\n",
@@ -606,7 +606,7 @@
     "html": "<pre><code>foo\n</code></pre>\n",
     "example": 87,
     "section": "Indented code blocks",
-    "zzmd": "<p>foo\n</p>\n"
+    "zzmd": "<pre><code>foo\n</code></pre>\n"
   },
   {
     "markdown": "    foo  \n",
@@ -634,7 +634,7 @@
     "html": "<p><code>foo</code></p>\n",
     "example": 91,
     "section": "Fenced code blocks",
-    "zzmd": "<p><code>\nfoo\n</code></p>\n"
+    "zzmd": "<p><code>foo</code></p>\n"
   },
   {
     "markdown": "```\naaa\n~~~\n```\n",
@@ -704,21 +704,21 @@
     "html": "<pre><code>aaa\naaa\n</code></pre>\n",
     "example": 101,
     "section": "Fenced code blocks",
-    "zzmd": "<pre><code> aaa\naaa\n</code></pre>\n"
+    "zzmd": "<pre><code>aaa\naaa\n</code></pre>\n"
   },
   {
     "markdown": "  ```\naaa\n  aaa\naaa\n  ```\n",
     "html": "<pre><code>aaa\naaa\naaa\n</code></pre>\n",
     "example": 102,
     "section": "Fenced code blocks",
-    "zzmd": "<pre><code>aaa\n  aaa\naaa\n</code></pre>\n"
+    "zzmd": "<pre><code>aaa\naaa\naaa\n</code></pre>\n"
   },
   {
     "markdown": "   ```\n   aaa\n    aaa\n  aaa\n   ```\n",
     "html": "<pre><code>aaa\n aaa\naaa\n</code></pre>\n",
     "example": 103,
     "section": "Fenced code blocks",
-    "zzmd": "<pre><code>   aaa\n    aaa\n  aaa\n</code></pre>\n"
+    "zzmd": "<pre><code>aaa\n aaa\naaa\n</code></pre>\n"
   },
   {
     "markdown": "    ```\n    aaa\n    ```\n",
@@ -746,7 +746,7 @@
     "html": "<pre><code>aaa\n    ```\n</code></pre>\n",
     "example": 107,
     "section": "Fenced code blocks",
-    "zzmd": "<pre><code>aaa\n \n</code></pre>\n"
+    "zzmd": "<pre><code>aaa\n    ```\n</code></pre>\n"
   },
   {
     "markdown": "``` ```\naaa\n",
@@ -1152,7 +1152,7 @@
     "html": "<p><a href=\"/url\" title=\"\ntitle\nline1\nline2\n\">foo</a></p>\n",
     "example": 165,
     "section": "Link reference definitions",
-    "zzmd": "<p><a href=\"/url\" title=\"title\nline1\nline2\">foo</a></p>\n"
+    "zzmd": "<p><a href=\"/url\" title=\"\ntitle\nline1\nline2\n\">foo</a></p>\n"
   },
   {
     "markdown": "[foo]: /url 'title\n\nwith blank line'\n\n[foo]\n",
@@ -1369,49 +1369,49 @@
     "html": "<p>aaa<br />\nbbb</p>\n",
     "example": 196,
     "section": "Paragraphs",
-    "zzmd": "<p>aaa<br />\nbbb     </p>\n"
+    "zzmd": "<p>aaa<br />\nbbb</p>\n"
   },
   {
     "markdown": "  \n\naaa\n  \n\n# aaa\n\n  \n",
     "html": "<p>aaa</p>\n<h1>aaa</h1>\n",
     "example": 197,
     "section": "Blank lines",
-    "zzmd": "<p></p>\n<p>aaa\n</p>\n<h1>aaa</h1>\n<p></p>\n"
+    "zzmd": "<p>aaa</p>\n<h1>aaa</h1>\n"
   },
   {
     "markdown": "| foo | bar |\n| --- | --- |\n| baz | bim |\n",
     "html": "<table>\n<thead>\n<tr>\n<th>foo</th>\n<th>bar</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>baz</td>\n<td>bim</td>\n</tr>\n</tbody>\n</table>\n",
     "example": 198,
     "section": "Tables (extension)",
-    "zzmd": "<table>\n<thead>\n<tr>\n<th>foo</th>\n<th>bar</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>baz</td>\n<td>bim</td>\n</tr>\n</tbody></table>\n"
+    "zzmd": "<table>\n<thead>\n<tr>\n<th>foo</th>\n<th>bar</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>baz</td>\n<td>bim</td>\n</tr>\n</tbody>\n</table>\n"
   },
   {
     "markdown": "| abc | defghi |\n:-: | -----------:\nbar | baz\n",
     "html": "<table>\n<thead>\n<tr>\n<th align=\"center\">abc</th>\n<th align=\"right\">defghi</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td align=\"center\">bar</td>\n<td align=\"right\">baz</td>\n</tr>\n</tbody>\n</table>\n",
     "example": 199,
     "section": "Tables (extension)",
-    "zzmd": "<table>\n<thead>\n<tr>\n<th align=\"center\">abc</th>\n<th align=\"right\">defghi</th>\n</tr>\n</thead>\n<tbody><tr>\n<td align=\"center\">bar</td>\n<td align=\"right\">baz</td>\n</tr>\n</tbody></table>\n"
+    "zzmd": "<table>\n<thead>\n<tr>\n<th align=\"center\">abc</th>\n<th align=\"right\">defghi</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td align=\"center\">bar</td>\n<td align=\"right\">baz</td>\n</tr>\n</tbody>\n</table>\n"
   },
   {
     "markdown": "| f\\|oo  |\n| ------ |\n| b `\\|` az |\n| b **\\|** im |\n",
     "html": "<table>\n<thead>\n<tr>\n<th>f|oo</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>b <code>|</code> az</td>\n</tr>\n<tr>\n<td>b <strong>|</strong> im</td>\n</tr>\n</tbody>\n</table>\n",
     "example": 200,
     "section": "Tables (extension)",
-    "zzmd": "<table>\n<thead>\n<tr>\n<th>f|oo</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>b <code>|</code> az</td>\n</tr>\n<tr>\n<td>b <strong>|</strong> im</td>\n</tr>\n</tbody></table>\n"
+    "zzmd": "<table>\n<thead>\n<tr>\n<th>f|oo</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>b <code>|</code> az</td>\n</tr>\n<tr>\n<td>b <strong>|</strong> im</td>\n</tr>\n</tbody>\n</table>\n"
   },
   {
     "markdown": "| abc | def |\n| --- | --- |\n| bar | baz |\n> bar\n",
     "html": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n</tbody>\n</table>\n<blockquote>\n<p>bar</p>\n</blockquote>\n",
     "example": 201,
     "section": "Tables (extension)",
-    "zzmd": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n</tbody></table>\n<blockquote>\n<p>bar</p>\n</blockquote>\n"
+    "zzmd": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n</tbody>\n</table>\n<blockquote>\n<p>bar</p>\n</blockquote>\n"
   },
   {
     "markdown": "| abc | def |\n| --- | --- |\n| bar | baz |\nbar\n\nbar\n",
     "html": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n<tr>\n<td>bar</td>\n<td></td>\n</tr>\n</tbody>\n</table>\n<p>bar</p>\n",
     "example": 202,
     "section": "Tables (extension)",
-    "zzmd": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n<tr>\n<td>bar</td>\n<td></td>\n</tr>\n</tbody></table>\n<p>bar</p>\n"
+    "zzmd": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n<tr>\n<td>bar</td>\n<td></td>\n</tr>\n</tbody>\n</table>\n<p>bar</p>\n"
   },
   {
     "markdown": "| abc | def |\n| --- |\n| bar |\n",
@@ -1425,7 +1425,7 @@
     "html": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>bar</td>\n<td></td>\n</tr>\n<tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n</tbody>\n</table>\n",
     "example": 204,
     "section": "Tables (extension)",
-    "zzmd": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>bar</td>\n<td></td>\n</tr>\n<tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n</tbody></table>\n"
+    "zzmd": "<table>\n<thead>\n<tr>\n<th>abc</th>\n<th>def</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>bar</td>\n<td></td>\n</tr>\n<tr>\n<td>bar</td>\n<td>baz</td>\n</tr>\n</tbody>\n</table>\n"
   },
   {
     "markdown": "| abc | def |\n| --- | --- |\n",
@@ -1523,14 +1523,14 @@
     "html": "<blockquote>\n</blockquote>\n",
     "example": 218,
     "section": "Block quotes",
-    "zzmd": "<blockquote>\n<p></p>\n</blockquote>\n"
+    "zzmd": "<blockquote>\n</blockquote>\n"
   },
   {
     "markdown": ">\n> foo\n>  \n",
     "html": "<blockquote>\n<p>foo</p>\n</blockquote>\n",
     "example": 219,
     "section": "Block quotes",
-    "zzmd": "<blockquote>\n<p>foo\n</p>\n</blockquote>\n"
+    "zzmd": "<blockquote>\n<p>foo</p>\n</blockquote>\n"
   },
   {
     "markdown": "> foo\n\n> bar\n",
@@ -1789,7 +1789,7 @@
     "html": "<ul>\n<li>foo</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>\n",
     "example": 256,
     "section": "List items",
-    "zzmd": "<h2>-\n  foo</h2>\n<pre><code>  bar\n</code></pre>\n<p>-\nbaz</p>\n"
+    "zzmd": "<h2>-\n  foo</h2>\n<pre><code>bar\n</code></pre>\n<p>-\nbaz</p>\n"
   },
   {
     "markdown": "-   \n  foo\n",
@@ -2237,7 +2237,7 @@
     "html": "<pre><code class=\"language-foo+bar\">foo\n</code></pre>\n",
     "example": 320,
     "section": "Backslash escapes",
-    "zzmd": "<pre><code class=\"language-foo\\+bar\">foo\n</code></pre>\n"
+    "zzmd": "<pre><code class=\"language-foo+bar\">foo\n</code></pre>\n"
   },
   {
     "markdown": "&nbsp; &amp; &copy; &AElig; &Dcaron;\n&frac34; &HilbertSpace; &DifferentialD;\n&ClockwiseContourIntegral; &ngE;\n",
@@ -2412,21 +2412,21 @@
     "html": "<p><code>foo bar   baz</code></p>\n",
     "example": 345,
     "section": "Code spans",
-    "zzmd": "<p><code>\nfoo\nbar  \nbaz\n</code></p>\n"
+    "zzmd": "<p><code>foo bar   baz</code></p>\n"
   },
   {
     "markdown": "``\nfoo \n``\n",
     "html": "<p><code>foo </code></p>\n",
     "example": 346,
     "section": "Code spans",
-    "zzmd": "<p><code>\nfoo \n</code></p>\n"
+    "zzmd": "<p><code>foo </code></p>\n"
   },
   {
     "markdown": "`foo   bar \nbaz`\n",
     "html": "<p><code>foo   bar  baz</code></p>\n",
     "example": 347,
     "section": "Code spans",
-    "zzmd": "<p><code>foo   bar \nbaz</code></p>\n"
+    "zzmd": "<p><code>foo   bar  baz</code></p>\n"
   },
   {
     "markdown": "`foo\\`bar`\n",
@@ -4274,7 +4274,7 @@
     "html": "<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>\n",
     "example": 611,
     "section": "Autolinks",
-    "zzmd": "<p><a href=\"http://example.com/%5C[%5C\">http://example.com/\\[\\</a></p>\n"
+    "zzmd": "<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>\n"
   },
   {
     "markdown": "<foo@bar.example.com>\n",
@@ -4624,14 +4624,14 @@
     "html": "<p><code>code   span</code></p>\n",
     "example": 661,
     "section": "Hard line breaks",
-    "zzmd": "<p><code>code  \nspan</code></p>\n"
+    "zzmd": "<p><code>code   span</code></p>\n"
   },
   {
     "markdown": "`code\\\nspan`\n",
     "html": "<p><code>code\\ span</code></p>\n",
     "example": 662,
     "section": "Hard line breaks",
-    "zzmd": "<p><code>code\\\nspan</code></p>\n"
+    "zzmd": "<p><code>code\\ span</code></p>\n"
   },
   {
     "markdown": "<a href=\"foo  \nbar\">\n",
@@ -4659,7 +4659,7 @@
     "html": "<p>foo</p>\n",
     "example": 666,
     "section": "Hard line breaks",
-    "zzmd": "<p>foo  </p>\n"
+    "zzmd": "<p>foo</p>\n"
   },
   {
     "markdown": "### foo\\\n",

@@ -377,7 +377,9 @@ Lexer.prototype.lex = function (src) {
 }
 
 Lexer.prototype.parse = function (src, top) {
-  src = src.replace(/^ +$/gm, '')
+  if (!this.options.keepEmptyLine) {
+    src = src.replace(/^ +$/gm, '')
+  }
 
   var rules = this.rules
 

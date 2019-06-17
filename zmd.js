@@ -403,7 +403,8 @@ Lexer.prototype.parse = function (src, top) {
     if (cap = rules.newline.exec(src)) {
       src = src.substring(cap[0].length)
       this.tokens.push({
-        type: 'newline'
+        type: 'newline',
+        lines: cap[0].split('\n').length - 1
       })
     }
 

@@ -1,10 +1,13 @@
 {
   "name": "zmdjs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Yet another markdown parser.",
   "main": "zmd.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run test:slug && npm run test:gfm && npm run test:diff",
+    "test:slug": "mocha test/slug",
+    "test:gfm": "node test/gfm",
+    "test:diff": "node test/diff",
     "dev": "http-server -p 2000 -s",
     "prepublishOnly": "uglifyjs zmd.js --compress --mangle --comments --output zmd.min.js"
   },

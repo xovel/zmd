@@ -196,7 +196,7 @@ var inlineRe = {
   sub: /^~([^~\n]+)~/,
   sup: /^\^([^^\n]+)\^/,
 
-  link: /^!?(?:label)\(\s*(?:destination)(?:\s+(?:title))?\s*\)/,
+  link: /^!?(?:label)\(\s*(?:(?:destination)(?:\s+(?:title))?)?\s*\)/,
   reflink: /^!?(?:label)\[(?!\s*\])((?:\\[[\]]|[^[\]])+)\]/,
   nolink: /^!?(?:label)(?:\[\s*\])?/,
   footnote: /^(?:label)(?!\[)/,

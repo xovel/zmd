@@ -1,7 +1,7 @@
 {
   "name": "zmdjs",
   "version": "0.2.0",
-  "description": "Yet another markdown parser.",
+  "description": "Just a markdown parser",
   "main": "zmd.js",
   "scripts": {
     "test": "npm run test:slug && npm run test:gfm && npm run test:diff",
@@ -15,7 +15,14 @@
     "type": "git",
     "url": "git+https://github.com/xovel/zmd.git"
   },
-  "keywords": [],
+  "keywords": [
+    "markdown",
+    "markup",
+    "zmd",
+    "regular expression",
+    "lexer",
+    "html"
+  ],
   "author": {
     "name": "xovel",
     "email": "xovel@foxmail.com"
@@ -24,5 +31,12 @@
   "bugs": {
     "url": "https://github.com/xovel/zmd/issues"
   },
-  "homepage": "https://github.com/xovel/zmd#readme"
+  "homepage": "https://github.com/xovel/zmd#readme",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-zob": "^0.0.4",
+    "http-server": "^0.10.0",
+    "mocha": "^6.1.4",
+    "uglify-js": "^2.7.5"
+  }
 }

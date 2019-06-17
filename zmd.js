@@ -98,9 +98,9 @@ function _unescape(content) {
 }
 
 function _trim(text) {
-  return String.prototype.trim ?
+  return text ? String.prototype.trim ?
     String.prototype.trim.call(text) :
-    text.replace(/^\s+|\s+$/g, '')
+    text.replace(/^\s+|\s+$/g, '') : ''
 }
 
 var commonRe = {
@@ -440,7 +440,7 @@ Lexer.prototype.parse = function (src, top) {
 
       // Info strings for backtick code blocks cannot contain backticks
       if (!cap[3] || cap[2] === '~' || cap[3].indexOf('`') === -1) {
-        match = _trim(cap[3] || '').split(' ')
+        match = _trim(cap[3]).split(' ')
         this.tokens.push({
           type: 'fence',
           lang: match[0] || '',
@@ -491,7 +491,7 @@ Lexer.prototype.parse = function (src, top) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'div_open',
-        kls: _trim(cap[2] || '')
+        kls: _trim(cap[2])
       })
 
       // recurse
@@ -677,8 +677,8 @@ Lexer.prototype.parse = function (src, top) {
       item = _trim(cap[1]).toLowerCase().replace(/\s+/g, ' ')
       if (!this.tokens.refs[item]) {
         this.tokens.refs[item] = {
-          href: _trim(cap[2] || cap[3] || ''),
-          title: _trim(cap[4] || cap[5] || cap[6] || '')
+          href: _trim(cap[2] || cap[3]),
+          title: _trim(cap[4] || cap[5] || cap[6])
         }
       }
       continue
@@ -1044,9 +1044,9 @@ Compiler.prototype.compile = function (src) {
       src = src.substring(cap[0].length)
       this.inLink = true
 
-      text = _trim(cap[1] || '')
-      link = _trim(cap[2] || cap[3] || '')
-      title = _trim(cap[4] || cap[5] || cap[6] || '')
+      text = _trim(cap[1])
+      link = _trim(cap[2] || cap[3])
+      title = _trim(cap[4] || cap[5] || cap[6])
 
       out += this.link(cap[0][0] === '!', text, link, title)
 

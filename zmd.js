@@ -152,8 +152,8 @@ var blockRe = {
   heading: /^ {0,3}(#{1,6})(?: ([^\n]*?)(?: #* *)?)?(?:\n+|$)/,
   // setext heading
   sheading: /^( {0,3}[^ \n][^\n]*(?:\n[^\n]+)*?)\n {0,3}(=+|-+) *(?:\n+|$)/,
-  code: /^( {4}[^\n]+\n*)+/,
-  fence: /^ {0,3}(([~`])\2{2,})([^\n]*)([\s\S]*?)(?: {0,3}\1\2* *(?:\n+|$)|$)/,
+  code: /^ {4}[^\n]*((?: {4}[^\n]*| {0,3})(?:\n|$))+/,
+  fence: /^( {0,3})(([~`])\3{2,})([^\n]*)([\s\S]*?)(\n {0,3}\2\3* *(?:\n+|$)|$)/,
   // [^>\n]*> -> [\s>] to support linebreak
   html: /^ {0,3}(?:<(script|pre|style)[^>\n]*>[\s\S]*?(?:<\/\1>[^\n]*\n+|$)|<!--[\s\S]*?-->|(?:processing|<![\s\S]*?>|cdata)\n*|<\/?(tag)(?: +|\n|\/?)>[\s\S]*?(?:\n{2,}|$)|(?:<(?!script|pre|style)(?:tagname)(?:attribute)*? *\/?>|<\/(?!script|pre|style)(?:tagname)\s*>)(?= *(?:\n|$))[\s\S]*?(?:\n{2,}|$))/i,
 
@@ -162,7 +162,7 @@ var blockRe = {
   footnote: /^ {0,3}(?:label): *([^ \n][^\n]*(?:\n|$))/,
 
   paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}(>|[*+-] +[^ \n]|1[.)] +[^ \n]|(`{3}|~{3})([^\n]*)(?:\n|$))|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
-  newline: /^\n+/,
+  newline: /^(?: *\n)+/,
   text: /^[^\n]+/,
   table: /^([^\n]+)\n(delimiter)(?: *\n((?:(?!\n| {4,}| {0,3}(?:>|`{3}|~{3}|([_*-]) *\4{2,} *(?:\n|$)|(?:#{1,6}|[*+-]|\d{1,9}[.)])(?: |\n|$)))[^\n]*(?:\n|$))*)|$)/,
 
@@ -377,7 +377,7 @@ Lexer.prototype.lex = function (src) {
 }
 
 Lexer.prototype.parse = function (src, top) {
-  if (!this.options.keepEmptyLine) {
+  if (this.options.ignoreBlankLine) {
     src = src.replace(/^ +$/gm, '')
   }
 
@@ -426,9 +426,14 @@ Lexer.prototype.parse = function (src, top) {
         prevToken.text += '\n' + cap[0].replace(/\s+$/, '')
         // cap[0].trimEnd()
       } else {
+        text = cap[0].replace(/^ {0,4}/gm, '').replace(/^\n+/, '').replace(/\n+$/, '\n')
+        // ignore empty line
+        if (/^\n+$/.test(text)) {
+          text = ''
+        }
         this.tokens.push({
           type: 'code',
-          text: cap[0].replace(/^ {4}/gm, '').replace(/\n+$/, '')
+          text: text
         })
       }
       continue
@@ -436,16 +441,36 @@ Lexer.prototype.parse = function (src, top) {
 
     // fence
     if (cap = rules.fence.exec(src)) {
-      text = (cap[4] || '').replace(/^\n/, '').replace(/\n$/, '')
-      // ignore blankline
-      if (/^\n+$/.test(text)) text = ''
+      text = cap[5] ? cap[5].replace(/^\n/, '') : ''
+
+      if (cap[6]) {
+        text += '\n'
+      }
+
+      // ignore empty line
+      if (/^\n+$/.test(text)) {
+        text = ''
+      } else if (cap[1]) {
+        text = text.replace(cap[1].length === 1 ? /^ /gm : new RegExp('^ {1,' + cap[1].length + '}', 'gm'), '')
+        // switch (cap[1].length) {
+        //   case 1:
+        //     text = text.replace(/^ /gm, '')
+        //     break;
+        //   case 2:
+        //     text = text.replace(/^ {2}/gm, '')
+        //     break;
+        //   default:
+        //     text = text.replace(/^ {3}/gm, '')
+        //     break;
+        // }
+      }
 
       // Info strings for backtick code blocks cannot contain backticks
-      if (!cap[3] || cap[2] === '~' || cap[3].indexOf('`') === -1) {
-        match = _trim(cap[3]).split(' ')
+      if (!cap[4] || cap[3] === '~' || cap[4].indexOf('`') === -1) {
+        match = _trim(cap[4]).split(' ')
         this.tokens.push({
           type: 'fence',
-          lang: match[0] || '',
+          lang: match[0] ? match[0].replace(inlineRe._escape, '$1') : '',
           meta: match.slice(1).join(' '),
           text: text
         })
@@ -680,7 +705,7 @@ Lexer.prototype.parse = function (src, top) {
       if (!this.tokens.refs[item]) {
         this.tokens.refs[item] = {
           href: _trim(cap[2] || cap[3]),
-          title: _trim(cap[4] || cap[5] || cap[6])
+          title: cap[4] || cap[5] || cap[6] || ''
         }
       }
       continue
@@ -717,7 +742,7 @@ Lexer.prototype.parse = function (src, top) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'paragraph',
-        text: cap[1].replace(/\n+$/, '').replace(/^\s+/gm, '')
+        text: cap[1].replace(/\s+$/, '').replace(/^\s+/gm, '')
       })
       continue
     }
@@ -772,7 +797,7 @@ Renderer.prototype.br = function () {
 Renderer.prototype.heading = function (text, level, slug) {
   return '<h'
     + level
-    + slug
+    + (slug ? ' id="' + slug + '"' : '')
     + '>'
     + text
     + '</h'
@@ -781,7 +806,6 @@ Renderer.prototype.heading = function (text, level, slug) {
 }
 
 Renderer.prototype.codeblock = function (code) {
-  if (this.options.codeSuffixLine && code) code = code + '\n'
   return '<pre><code>' + _escape(code) + '</code></pre>\n'
 }
 
@@ -794,8 +818,6 @@ Renderer.prototype.fence = function (code, lang, meta, escaped) {
       code = out
       escaped = true
     }
-  } else if (this.options.codeSuffixLine && code) {
-    code = code + '\n'
   }
 
   out = '<pre><code'
@@ -832,7 +854,7 @@ _each(['raw', 'text', 'html'], function (name) {
 })
 
 Renderer.prototype.table = function (header, body) {
-  if (body) body = '<tbody>' + body + '</tbody>'
+  if (body) body = '<tbody>\n' + body + '</tbody>\n'
   return '<table>\n'
     + '<thead>\n'
     + header
@@ -911,7 +933,7 @@ Renderer.prototype.link = function (href, text, title) {
     href = encodeURI(href).replace(/%5B/ig, '[').replace(/%5D/ig, ']')
   }
   return '<a href="'
-    + (this.options.encodeURI ? encodeURI(href) : href)
+    + href
     + '"'
     + (title ? ' title="' + title + '"' : '')
     + '>'
@@ -1058,7 +1080,7 @@ Compiler.prototype.compile = function (src) {
 
       text = _trim(cap[1])
       link = _trim(cap[2] || cap[3])
-      title = _trim(cap[4] || cap[5] || cap[6])
+      title = cap[4] || cap[5] || cap[6] || ''
 
       out += this.link(cap[0][0] === '!', text, link, title)
 
@@ -1107,7 +1129,9 @@ Compiler.prototype.compile = function (src) {
       // No stripping occurs if the code span contains only spaces
       if (!/^ *$/.test(text)) {
         // The stripping only happens if the space is on both sides of the string
-        text = text.replace(/^( +)([\s\S]*?)\1$/, '$2')
+        text = text.replace(/^((?: |\n)+)([\s\S]*?)\1$/, '$2')
+          // replace line break to space
+          .replace(/\n/g, ' ')
       }
       out += renderer.code(_escape(text))
       continue
@@ -1302,7 +1326,7 @@ Parser.prototype.compile = function () {
       if (text) {
         if (this.options.headerIds) {
           id = this.slugger.get(text)
-          slug = ' id="' + (this.options.headerPrefix || '') + id + '"'
+          slug = (this.options.headerPrefix || '') + id
         } else {
           slug = ''
         }

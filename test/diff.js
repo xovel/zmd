@@ -53,3 +53,20 @@ gfm.forEach(item => {
 })
 
 write('diff.json', JSON.stringify(diff, null, '  '))
+
+const table = []
+
+table.push('> Test time: ' + new Date().toString())
+table.push('\n')
+
+table.push('| Section | Total | Pass | Diff | Percentage |')
+table.push('| ------- | ----- | ---- | ---- | ---------- |')
+
+for (let key in diff._) {
+  let v = diff._[key]
+  table.push(`| ${key} | ${v.total} | ${v.same} | ${v.diff} | ${v.percent} |`)
+}
+
+table.push('\n')
+
+write('coverage.md', table.join('\n'))

@@ -903,8 +903,15 @@ _each([
 })
 
 Renderer.prototype.link = function (href, text, title) {
+  href = _escape(href, true)
+  if (this.options.encodeURI) {
+    href = encodeURI(href)
+  } else if (this.options.rfc3986) {
+    // https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/encodeURI
+    href = encodeURI(href).replace(/%5B/ig, '[').replace(/%5D/ig, ']')
+  }
   return '<a href="'
-    + _escape(href, true)
+    + (this.options.encodeURI ? encodeURI(href) : href)
     + '"'
     + (title ? ' title="' + title + '"' : '')
     + '>'

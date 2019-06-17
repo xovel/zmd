@@ -54,8 +54,8 @@ function _back(text) {
     .replace(/→/g, '\t')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
     .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&')
 
   while (ret.indexOf('<span class="space"> </span>') !== -1) {
     ret = ret.replace('<span class="space"> </span>', ' ')

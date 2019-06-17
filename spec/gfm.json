@@ -361,7 +361,7 @@
   },
   {
     "markdown": "`Foo\n----\n`\n\n<a title=\"a lot\n---\nof dashes\"/>\n",
-    "html": "<h2>`Foo</h2>\n<p>`</p>\n<h2>&lt;a title=\"a lot</h2>\n<p>of dashes\"/&gt;</p>\n",
+    "html": "<h2>`Foo</h2>\n<p>`</p>\n<h2>&lt;a title=&quot;a lot</h2>\n<p>of dashes&quot;/&gt;</p>\n",
     "example": 61,
     "section": "Setext headings"
   },
@@ -1021,7 +1021,7 @@
   },
   {
     "markdown": "[foo]: /url\\bar\\*baz \"foo\\\"bar\\baz\"\n\n[foo]\n",
-    "html": "<p><a href=\"/url%5Cbar*baz\" title=\"foo\"bar\\baz\">foo</a></p>\n",
+    "html": "<p><a href=\"/url%5Cbar*baz\" title=\"foo&quot;bar\\baz\">foo</a></p>\n",
     "example": 171,
     "section": "Link reference definitions"
   },
@@ -1063,19 +1063,19 @@
   },
   {
     "markdown": "[foo]: /url \"title\" ok\n",
-    "html": "<p>[foo]: /url \"title\" ok</p>\n",
+    "html": "<p>[foo]: /url &quot;title&quot; ok</p>\n",
     "example": 178,
     "section": "Link reference definitions"
   },
   {
     "markdown": "[foo]: /url\n\"title\" ok\n",
-    "html": "<p>\"title\" ok</p>\n",
+    "html": "<p>&quot;title&quot; ok</p>\n",
     "example": 179,
     "section": "Link reference definitions"
   },
   {
     "markdown": "    [foo]: /url \"title\"\n\n[foo]\n",
-    "html": "<pre><code>[foo]: /url \"title\"\n</code></pre>\n<p>[foo]</p>\n",
+    "html": "<pre><code>[foo]: /url &quot;title&quot;\n</code></pre>\n<p>[foo]</p>\n",
     "example": 180,
     "section": "Link reference definitions"
   },
@@ -1843,7 +1843,7 @@
   },
   {
     "markdown": "\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~\n",
-    "html": "<p>!\"#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>\n",
+    "html": "<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>\n",
     "example": 308,
     "section": "Backslash escapes"
   },
@@ -1855,7 +1855,7 @@
   },
   {
     "markdown": "\\*not emphasized*\n\\<br/> not a tag\n\\[not a link](/foo)\n\\`not code`\n1\\. not a list\n\\* not a list\n\\# not a heading\n\\[foo]: /url \"not a reference\"\n\\&ouml; not a character entity\n",
-    "html": "<p>*not emphasized*\n&lt;br/&gt; not a tag\n[not a link](/foo)\n`not code`\n1. not a list\n* not a list\n# not a heading\n[foo]: /url \"not a reference\"\n&amp;ouml; not a character entity</p>\n",
+    "html": "<p>*not emphasized*\n&lt;br/&gt; not a tag\n[not a link](/foo)\n`not code`\n1. not a list\n* not a list\n# not a heading\n[foo]: /url &quot;not a reference&quot;\n&amp;ouml; not a character entity</p>\n",
     "example": 310,
     "section": "Backslash escapes"
   },
@@ -1933,7 +1933,7 @@
   },
   {
     "markdown": "&#X22; &#XD06; &#xcab;\n",
-    "html": "<p>\" ആ ಫ</p>\n",
+    "html": "<p>&quot; ആ ಫ</p>\n",
     "example": 323,
     "section": "Entity and numeric character references"
   },
@@ -2016,8 +2016,8 @@
     "section": "Entity and numeric character references"
   },
   {
-    "markdown": "[a](url \"tit\")\n",
-    "html": "<p>[a](url \"tit\")</p>\n",
+    "markdown": "[a](url &quot;tit&quot;)\n",
+    "html": "<p>[a](url &quot;tit&quot;)</p>\n",
     "example": 337,
     "section": "Entity and numeric character references"
   },
@@ -2113,7 +2113,7 @@
   },
   {
     "markdown": "`<a href=\"`\">`\n",
-    "html": "<p><code>&lt;a href=\"</code>\"&gt;`</p>\n",
+    "html": "<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>\n",
     "example": 353,
     "section": "Code spans"
   },
@@ -2167,7 +2167,7 @@
   },
   {
     "markdown": "a*\"foo\"*\n",
-    "html": "<p>a*\"foo\"*</p>\n",
+    "html": "<p>a*&quot;foo&quot;*</p>\n",
     "example": 362,
     "section": "Emphasis and strong emphasis"
   },
@@ -2203,7 +2203,7 @@
   },
   {
     "markdown": "a_\"foo\"_\n",
-    "html": "<p>a_\"foo\"_</p>\n",
+    "html": "<p>a_&quot;foo&quot;_</p>\n",
     "example": 368,
     "section": "Emphasis and strong emphasis"
   },
@@ -2227,7 +2227,7 @@
   },
   {
     "markdown": "aa_\"bb\"_cc\n",
-    "html": "<p>aa_\"bb\"_cc</p>\n",
+    "html": "<p>aa_&quot;bb&quot;_cc</p>\n",
     "example": 372,
     "section": "Emphasis and strong emphasis"
   },
@@ -2329,7 +2329,7 @@
   },
   {
     "markdown": "a**\"foo\"**\n",
-    "html": "<p>a**\"foo\"**</p>\n",
+    "html": "<p>a**&quot;foo&quot;**</p>\n",
     "example": 389,
     "section": "Emphasis and strong emphasis"
   },
@@ -2359,7 +2359,7 @@
   },
   {
     "markdown": "a__\"foo\"__\n",
-    "html": "<p>a__\"foo\"__</p>\n",
+    "html": "<p>a__&quot;foo&quot;__</p>\n",
     "example": 394,
     "section": "Emphasis and strong emphasis"
   },
@@ -2419,7 +2419,7 @@
   },
   {
     "markdown": "**foo \"*bar*\" foo**\n",
-    "html": "<p><strong>foo \"<em>bar</em>\" foo</strong></p>\n",
+    "html": "<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>\n",
     "example": 404,
     "section": "Emphasis and strong emphasis"
   },
@@ -3078,8 +3078,8 @@
     "section": "Links"
   },
   {
-    "markdown": "[link](/url \"title \\\"\"\")\n",
-    "html": "<p><a href=\"/url\" title=\"title \"\"\">link</a></p>\n",
+    "markdown": "[link](/url \"title \\\"&quot;\")\n",
+    "html": "<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>\n",
     "example": 514,
     "section": "Links"
   },
@@ -3091,13 +3091,13 @@
   },
   {
     "markdown": "[link](/url \"title \"and\" title\")\n",
-    "html": "<p>[link](/url \"title \"and\" title\")</p>\n",
+    "html": "<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>\n",
     "example": 516,
     "section": "Links"
   },
   {
     "markdown": "[link](/url 'title \"and\" title')\n",
-    "html": "<p><a href=\"/url\" title=\"title \"and\" title\">link</a></p>\n",
+    "html": "<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>\n",
     "example": 517,
     "section": "Links"
   },
@@ -3583,7 +3583,7 @@
   },
   {
     "markdown": "![[foo]]\n\n[[foo]]: /url \"title\"\n",
-    "html": "<p>![[foo]]</p>\n<p>[[foo]]: /url \"title\"</p>\n",
+    "html": "<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>\n",
     "example": 598,
     "section": "Images"
   },
@@ -3823,13 +3823,13 @@
   },
   {
     "markdown": "<a h*#ref=\"hi\">\n",
-    "html": "<p>&lt;a h*#ref=\"hi\"&gt;</p>\n",
+    "html": "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>\n",
     "example": 638,
     "section": "Raw HTML"
   },
   {
     "markdown": "<a href=\"hi'> <a href=hi'>\n",
-    "html": "<p>&lt;a href=\"hi'&gt; &lt;a href=hi'&gt;</p>\n",
+    "html": "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>\n",
     "example": 639,
     "section": "Raw HTML"
   },
@@ -3853,7 +3853,7 @@
   },
   {
     "markdown": "</a href=\"foo\">\n",
-    "html": "<p>&lt;/a href=\"foo\"&gt;</p>\n",
+    "html": "<p>&lt;/a href=&quot;foo&quot;&gt;</p>\n",
     "example": 643,
     "section": "Raw HTML"
   },
@@ -3907,7 +3907,7 @@
   },
   {
     "markdown": "<a href=\"\\\"\">\n",
-    "html": "<p>&lt;a href=\"\"\"&gt;</p>\n",
+    "html": "<p>&lt;a href=&quot;&quot;&quot;&gt;</p>\n",
     "example": 652,
     "section": "Raw HTML"
   },

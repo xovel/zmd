@@ -927,11 +927,15 @@ _each([
 
 Renderer.prototype.link = function (href, text, title) {
   href = _escape(href, true)
-  if (this.options.encodeURI) {
+  if (this.options.encodeURI || this.options.rfc3986) {
     href = encodeURI(href)
-  } else if (this.options.rfc3986) {
+      // recover `%`
+      .replace(/%25/g, '%')
+
     // https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/encodeURI
-    href = encodeURI(href).replace(/%5B/ig, '[').replace(/%5D/ig, ']')
+    if (this.options.rfc3986) {
+      href = href.replace(/%5B/ig, '[').replace(/%5D/ig, ']')
+    }
   }
   return '<a href="'
     + href

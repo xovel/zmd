@@ -3574,7 +3574,7 @@
     "html": "<p><a href=\"foo%20b%C3%A4\">link</a></p>\n",
     "example": 511,
     "section": "Links",
-    "zzmd": "<p><a href=\"foo%2520b&auml;\">link</a></p>\n"
+    "zzmd": "<p><a href=\"foo%20b&auml;\">link</a></p>\n"
   },
   {
     "markdown": "[link](\"title\")\n",

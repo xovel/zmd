@@ -781,6 +781,7 @@ Renderer.prototype.heading = function (text, level, slug) {
 }
 
 Renderer.prototype.codeblock = function (code) {
+  if (this.options.codeSuffixLine && code) code = code + '\n'
   return '<pre><code>' + _escape(code) + '</code></pre>\n'
 }
 
@@ -793,6 +794,8 @@ Renderer.prototype.fence = function (code, lang, meta, escaped) {
       code = out
       escaped = true
     }
+  } else if (this.options.codeSuffixLine && code) {
+    code = code + '\n'
   }
 
   out = '<pre><code'
@@ -1371,6 +1374,7 @@ Parser.prototype.compile = function () {
         body += !token.loose && this.token.type === 'text' ?
           this.parseText() :
           this.compile()
+          // this.compile().replace(/^\n?([\s\S])/, '\n$1')
       }
       return renderer.li(body, token.task)
     case 'html':

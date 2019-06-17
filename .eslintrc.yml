@@ -3,6 +3,7 @@ extends:
 
 env:
   amd: true
+  mocha: true
 
 globals:
   zmd: true

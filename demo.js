@@ -140,7 +140,7 @@ function parseMarkdown() {
     $preview.classList.remove('error')
     $html.classList.remove('error')
     $lexer.classList.remove('error')
-  } catch(e) {
+  } catch (e) {
     var msg = e.stack || e.message
     parsed = msg
     list = [msg]
@@ -246,6 +246,8 @@ function setParsed(parsed, lexed) {
   $lexer.value = lexed
 }
 
+/* eslint-disable */
+
 // Returns a function, that, when invoked, will only be triggered at most once
 // during a given window of time. Normally, the throttled function will run
 // as much as it can, without ever going more than once per `wait` duration;
@@ -291,3 +293,5 @@ function throttle(func, wait, options) {
 
   return throttled
 }
+
+/* eslint-enable */

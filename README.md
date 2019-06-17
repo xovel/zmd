@@ -71,75 +71,6 @@ zmd(text, options)
 
 > `options.renderer` 的说明见下面的 [`Renderer`](#renderer) 说明。
 
-## Renderer
-
-`renderer` 可以进行渲染器的自定义，以为代码示例演示了一个自定义标题渲染方法：
-
-```js
-const renderer = new zmd.Renderer()
-// const _heading = renderer.heading
-renderer.heading = function (text, level, slug) {
-  return '<h'
-    + level
-    + (slug ? ' id="' + slug + '"' : '')
-    + '>'
-    + (slug ? '<a href="#' + slug + '" class="header-link"></a>' : '')
-    + text
-    + '</h'
-    + level
-    + '>\n'
-}
-
-zmd('## demo', {renderer})
-zmd('###', {renderer})
-```
-
-```html
-<h2 id="demo"><a href="#demo" class="header-link"></a>demo</h2>
-
-<h3></h3>
-
-
-```
-
-当前的默认渲染器提供以下方法：
-
-| 方法名 | 说明 | 参数 | 备注 |
-| ------ | ---- | ---- | ---- |
-| hr | 水平线 | 无 |
-| br | 水平线 | 无 |
-| heading | `text, level, slug` | 标题文本、级别、唯一标识 |
-| codeblock | 块级代码块 | `code` | 代码文本 |
-| fence | fence 代码块 | `code, lang, meta, escaped` | 代码文本，语言、附加信息、是否已经转义 |
-| footnote | 脚注 | `footnotes` | 脚注的数组（详细说明见下方 [`脚注`](#脚注) 说明） |
-| raw | 原始文本 | `text` | 文本 |
-| text | 普通文本 | `text` | 文本 |
-| html | HTML 文本 | `text` | 文本 |
-| table | 表格 | `header, body` | 表格标题和表格主体 |
-| tablecell | 表格单元格 | `tag, content, align` | 单元格标签，单元格内容、对齐方式 |
-| tablerow | 表格行 | `content` | tr 的内容 |
-| div | 自定义 div | `content, kls` | 内容和类名 |
-| list | 列表 | `content, start` | 列表内容，列表开始标记（大于 0 表示为有序列表，值为起始值） |
-| li | 列表项 | `content, task` | 列表项内容，是否为任务列表 |
-| dl | 定义列表 | `content` | 内容 |
-| dt | 定义列表标题 | `content` | 内容 |
-| dd | 定义列表项 | `content` | 内容 |
-| p | 段落 | `content` | 内容 |
-| blockquote | 块引用 | `content` | 内容 |
-| strong | 着重强调 | `text` | 文本 |
-| em | 普通强调 | `text` | 文本 |
-| code | 定义列表 | `text` | 文本 |
-| ins | 插入 | `text` | 文本 |
-| mark | 标记 | `text` | 文本 |
-| del | 删除线 | `text` | 文本 |
-| sub | 下标 | `text` | 文本 |
-| sup | 上标 | `text` | 文本 |
-| link | 链接 | `href, text, title` | 链接目标，展示文本，标题 |
-| img | 图片 | `src, alt, title` | 图片源，辅助文本，标题 |
-| checkbox | 复选框 | `checked` | 是否选中 |
-| paragraph | 段落 | `p` 的别名 |
-| image | 图片 | `img` 的别名 |
-
 ## Markdown Extend Syntax
 
 ### raw 文本
@@ -211,6 +142,141 @@ zmd('###', {renderer})
 以 `==` 进行包裹的行内语法。渲染器采用 `mark` 标签进行输出。
 
 GFM 语法中的自动链接增强语法默认不开启。另外 HTML 代码块支持度不够理想，不建议在编写 `markdown` 的时候过度依赖此特性。可以通过 raw 语法进行替代。
+
+## Renderer
+
+`renderer` 可以进行渲染器的自定义，以下代码示例演示了一个自定义标题渲染方法：
+
+```js
+const renderer = new zmd.Renderer()
+// const _heading = renderer.heading
+renderer.heading = function (text, level, slug) {
+  return '<h'
+    + level
+    + (slug ? ' id="' + slug + '"' : '')
+    + '>'
+    + (slug ? '<a href="#' + slug + '" class="header-link"></a>' : '')
+    + text
+    + '</h'
+    + level
+    + '>\n'
+}
+
+zmd('## demo', {renderer})
+zmd('###', {renderer})
+```
+
+```html
+<h2 id="demo"><a href="#demo" class="header-link"></a>demo</h2>
+
+<h3></h3>
+
+
+```
+
+<details>
+<summary>#4 中提到的代码块行高亮解决方案</summary>
+
+```js
+const renderer = new zmd.Renderer()
+const _fence = renderer.fence
+renderer.fence = function (code, lang, meta, escaped) {
+  let out = _fence.call(renderer, code, lang, meta, escaped)
+  const match = meta.match(/^ *\{([^}]+)\}/) || []
+  const lines = getHLines(match[1], out.split('\n').length)
+  let wrap = ''
+
+  if (lines.length > 0) {
+    wrap = '<div class="code-hl">\n'
+    lines.forEach(item => {
+      wrap += '<div class="code-hl-item" style="top:'
+      wrap += ((item - 1) * 20 + 16)
+      wrap += 'px"></div>\n'
+    })
+    out = wrap + out + '</div>'
+  }
+
+  return out
+}
+
+function getHLines(text, lines) {
+  var ret = []
+  if (text) {
+    text.split(/ *, */).forEach(item => {
+      if (item.indexOf('-') === -1) {
+        var n = +item
+        if (n && n <= lines) {
+          ret.push(n)
+        }
+      } else {
+        var nn = item.split(/ *- */)
+        for (var i = +nn[0]; i <= +nn[1] && i <= lines; i++) {
+          ret.push(i)
+        }
+      }
+    })
+  }
+  return ret
+}
+```
+
+```js
+zmd('```js {1,2}\nvar a\nvar b\nvar c\n```', {renderer})
+```
+
+```html
+<div class="code-hl">
+<div class="code-hl-item" style="top:16px"></div>
+<div class="code-hl-item" style="top:36px"></div>
+<pre><code class="language-js">var a
+var b
+var c
+</code></pre>
+</div>
+```
+
+</details>
+
+<details>
+<summary>当前的默认渲染器提供的方法</summary>
+
+| 方法名 | 说明 | 参数 | 备注 |
+| ------ | ---- | ---- | ---- |
+| hr | 水平线 | 无 |
+| br | 水平线 | 无 |
+| heading | `text, level, slug` | 标题文本、级别、唯一标识 |
+| codeblock | 块级代码块 | `code` | 代码文本 |
+| fence | fence 代码块 | `code, lang, meta, escaped` | 代码文本，语言、附加信息、是否已经转义 |
+| footnote | 脚注 | `footnotes` | 脚注的数组（详细说明见下方 [`脚注`](#脚注) 说明） |
+| raw | 原始文本 | `text` | 文本 |
+| text | 普通文本 | `text` | 文本 |
+| html | HTML 文本 | `text` | 文本 |
+| table | 表格 | `header, body` | 表格标题和表格主体 |
+| tablecell | 表格单元格 | `tag, content, align` | 单元格标签，单元格内容、对齐方式 |
+| tablerow | 表格行 | `content` | tr 的内容 |
+| div | 自定义 div | `content, kls` | 内容和类名 |
+| list | 列表 | `content, start` | 列表内容，列表开始标记（大于 0 表示为有序列表，值为起始值） |
+| li | 列表项 | `content, task` | 列表项内容，是否为任务列表 |
+| dl | 定义列表 | `content` | 内容 |
+| dt | 定义列表标题 | `content` | 内容 |
+| dd | 定义列表项 | `content` | 内容 |
+| p | 段落 | `content` | 内容 |
+| blockquote | 块引用 | `content` | 内容 |
+| strong | 着重强调 | `text` | 文本 |
+| em | 普通强调 | `text` | 文本 |
+| code | 定义列表 | `text` | 文本 |
+| ins | 插入 | `text` | 文本 |
+| mark | 标记 | `text` | 文本 |
+| del | 删除线 | `text` | 文本 |
+| sub | 下标 | `text` | 文本 |
+| sup | 上标 | `text` | 文本 |
+| link | 链接 | `href, text, title` | 链接目标，展示文本，标题 |
+| img | 图片 | `src, alt, title` | 图片源，辅助文本，标题 |
+| checkbox | 复选框 | `checked` | 是否选中 |
+| paragraph | 段落 | `p` 的别名 |
+| image | 图片 | `img` 的别名 |
+
+</details>
 
 ## Special Thanks
 

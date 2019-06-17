@@ -1412,7 +1412,7 @@ function zmd(content, options) {
 }
 
 zmd.defaults = {
-  langPrefix: 'lang-',
+  langPrefix: 'language-',
   headerIds: true,
   headerPrefix: '',
   footnote: true,

@@ -24,10 +24,14 @@ gfm.forEach(item => {
     item.zzmd = zmd(item.markdown, {
       xhtml: true,
       headerIds: false,
-      autourl: true
+      autourl: true,
+      codeSuffixLine: true,
+      keepEmptyLine: true,
+      rfc3986: true
     })
   } catch (error) {
-    item.zmd = error.message
+    item.error = true
+    item.zzmd = error.message
     console.log(error, item)
   }
   result.push(item)

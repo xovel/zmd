@@ -241,6 +241,15 @@ blockRe.ref = _regex(
   ['destination', commonRe.destination],
   ['title', commonRe.title]
 )
+blockRe.blockquote = _regex(
+  blockRe.blockquote,
+  ['paragraph', blockRe.paragraph],
+  ['|sheading', ''],
+  ['hr', blockRe.hr],
+  ['\\1', '\\4'],
+  ['heading', blockRe.heading],
+  ['tag', commonRe.tag]
+)
 blockRe.paragraph = _regex(
   blockRe.paragraph,
   ['hr', blockRe.hr],
@@ -252,10 +261,6 @@ blockRe.paragraph = _regex(
 blockRe.table = _regex(
   blockRe.table,
   ['delimiter', commonRe.delimiter]
-)
-blockRe.blockquote = _regex(
-  blockRe.blockquote,
-  ['paragraph', blockRe.paragraph]
 )
 blockRe.list = _regex(
   blockRe.list,

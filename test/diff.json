@@ -2,49 +2,48 @@
   "_": {
     "Tabs": {
       "total": 11,
-      "diff": 8,
-      "same": 3,
+      "pass": 5,
+      "percent": "45.45%",
+      "diff": 6,
       "diffList": [
-        1,
         2,
-        3,
         4,
         5,
         6,
         7,
         9
-      ],
-      "percent": "27.27%"
+      ]
     },
     "Precedence": {
       "total": 1,
+      "pass": 1,
+      "percent": "100.00%",
       "diff": 0,
-      "same": 1,
-      "percent": "100.00%"
+      "diffList": []
     },
     "Thematic breaks": {
       "total": 19,
-      "diff": 1,
-      "same": 18,
+      "pass": 18,
       "percent": "94.74%",
+      "diff": 1,
       "diffList": [
         31
       ]
     },
     "ATX headings": {
       "total": 18,
-      "diff": 1,
-      "same": 17,
+      "pass": 17,
       "percent": "94.44%",
+      "diff": 1,
       "diffList": [
         49
       ]
     },
     "Setext headings": {
       "total": 27,
-      "diff": 3,
-      "same": 24,
+      "pass": 24,
       "percent": "88.89%",
+      "diff": 3,
       "diffList": [
         62,
         63,
@@ -53,9 +52,9 @@
     },
     "Indented code blocks": {
       "total": 12,
-      "diff": 2,
-      "same": 10,
+      "pass": 10,
       "percent": "83.33%",
+      "diff": 2,
       "diffList": [
         78,
         79
@@ -63,23 +62,22 @@
     },
     "Fenced code blocks": {
       "total": 29,
+      "pass": 29,
+      "percent": "100.00%",
       "diff": 0,
-      "same": 29,
-      "percent": "100.00%"
+      "diffList": []
     },
     "HTML blocks": {
       "total": 43,
-      "diff": 11,
-      "same": 32,
-      "percent": "74.42%",
+      "pass": 34,
+      "percent": "79.07%",
+      "diff": 9,
       "diffList": [
         123,
         124,
         126,
         127,
         128,
-        141,
-        142,
         144,
         146,
         148,
@@ -88,36 +86,39 @@
     },
     "Link reference definitions": {
       "total": 28,
-      "diff": 1,
-      "same": 27,
+      "pass": 27,
       "percent": "96.43%",
+      "diff": 1,
       "diffList": [
         166
       ]
     },
     "Paragraphs": {
       "total": 8,
+      "pass": 8,
+      "percent": "100.00%",
       "diff": 0,
-      "same": 8,
-      "percent": "100.00%"
+      "diffList": []
     },
     "Blank lines": {
       "total": 1,
+      "pass": 1,
+      "percent": "100.00%",
       "diff": 0,
-      "same": 1,
-      "percent": "100.00%"
+      "diffList": []
     },
     "Tables (extension)": {
       "total": 8,
+      "pass": 8,
+      "percent": "100.00%",
       "diff": 0,
-      "same": 8,
-      "percent": "100.00%"
+      "diffList": []
     },
     "Block quotes": {
       "total": 25,
-      "diff": 4,
-      "same": 21,
+      "pass": 21,
       "percent": "84.00%",
+      "diff": 4,
       "diffList": [
         212,
         214,
@@ -127,9 +128,9 @@
     },
     "List items": {
       "total": 48,
-      "diff": 32,
-      "same": 16,
+      "pass": 16,
       "percent": "33.33%",
+      "diff": 32,
       "diffList": [
         232,
         233,
@@ -167,19 +168,19 @@
     },
     "Task list items (extension)": {
       "total": 2,
+      "pass": 0,
+      "percent": "0.00%",
       "diff": 2,
-      "same": 0,
       "diffList": [
         279,
         280
-      ],
-      "percent": "0.00%"
+      ]
     },
     "Lists": {
       "total": 27,
-      "diff": 20,
-      "same": 7,
+      "pass": 7,
       "percent": "25.93%",
+      "diff": 20,
       "diffList": [
         286,
         287,
@@ -205,18 +206,16 @@
     },
     "Backslash escapes": {
       "total": 13,
-      "diff": 2,
-      "same": 11,
-      "diffList": [
-        308,
-        309
-      ],
-      "percent": "84.62%"
+      "pass": 13,
+      "percent": "100.00%",
+      "diff": 0,
+      "diffList": []
     },
     "Entity and numeric character references": {
       "total": 17,
-      "diff": 12,
-      "same": 5,
+      "pass": 8,
+      "percent": "47.06%",
+      "diff": 9,
       "diffList": [
         321,
         322,
@@ -226,20 +225,15 @@
         328,
         329,
         330,
-        333,
-        334,
-        335,
         336
-      ],
-      "percent": "29.41%"
+      ]
     },
     "Code spans": {
       "total": 22,
-      "diff": 4,
-      "same": 18,
-      "percent": "81.82%",
+      "pass": 19,
+      "percent": "86.36%",
+      "diff": 3,
       "diffList": [
-        341,
         343,
         351,
         352
@@ -247,9 +241,9 @@
     },
     "Emphasis and strong emphasis": {
       "total": 131,
-      "diff": 55,
-      "same": 76,
+      "pass": 76,
       "percent": "58.02%",
+      "diff": 55,
       "diffList": [
         363,
         371,
@@ -310,17 +304,17 @@
     },
     "Strikethrough (extension)": {
       "total": 2,
+      "pass": 2,
+      "percent": "100.00%",
       "diff": 0,
-      "same": 2,
-      "percent": "100.00%"
+      "diffList": []
     },
     "Links": {
       "total": 87,
-      "diff": 25,
-      "same": 62,
-      "percent": "71.26%",
+      "pass": 63,
+      "percent": "72.41%",
+      "diff": 24,
       "diffList": [
-        500,
         502,
         505,
         511,
@@ -349,9 +343,9 @@
     },
     "Images": {
       "total": 22,
-      "diff": 8,
-      "same": 14,
+      "pass": 14,
       "percent": "63.64%",
+      "diff": 8,
       "diffList": [
         581,
         582,
@@ -365,98 +359,71 @@
     },
     "Autolinks": {
       "total": 19,
-      "diff": 4,
-      "same": 15,
-      "percent": "78.95%",
-      "diffList": [
-        610,
-        616,
-        619,
-        620
-      ]
+      "pass": 19,
+      "percent": "100.00%",
+      "diff": 0,
+      "diffList": []
     },
     "Autolinks (extension)": {
       "total": 11,
-      "diff": 5,
-      "same": 6,
-      "percent": "54.55%",
+      "pass": 8,
+      "percent": "72.73%",
+      "diff": 3,
       "diffList": [
-        623,
         624,
         626,
-        628,
-        630
+        628
       ]
     },
     "Raw HTML": {
       "total": 21,
-      "diff": 5,
-      "same": 16,
-      "percent": "76.19%",
+      "pass": 20,
+      "percent": "95.24%",
+      "diff": 1,
       "diffList": [
-        634,
-        635,
-        639,
-        641,
         645
       ]
     },
     "Disallowed Raw HTML (extension)": {
       "total": 1,
+      "pass": 0,
+      "percent": "0.00%",
       "diff": 1,
-      "same": 0,
       "diffList": [
         653
-      ],
-      "percent": "0.00%"
+      ]
     },
     "Hard line breaks": {
       "total": 15,
-      "diff": 2,
-      "same": 13,
-      "percent": "86.67%",
-      "diffList": [
-        663,
-        664
-      ]
+      "pass": 15,
+      "percent": "100.00%",
+      "diff": 0,
+      "diffList": []
     },
     "Soft line breaks": {
       "total": 2,
-      "diff": 1,
-      "same": 1,
+      "pass": 1,
       "percent": "50.00%",
+      "diff": 1,
       "diffList": [
         670
       ]
     },
     "Textual content": {
       "total": 3,
-      "diff": 1,
-      "same": 2,
-      "diffList": [
-        671
-      ],
-      "percent": "66.67%"
+      "pass": 3,
+      "percent": "100.00%",
+      "diff": 0,
+      "diffList": []
     }
   },
   "Tabs": [
     {
-      "markdown": "\tfoo\tbaz\t\tbim\n",
-      "html": "<pre><code>foo\tbaz\t\tbim\n</code></pre>\n",
-      "example": 1,
-      "zzmd": "<pre><code>foo    baz        bim\n</code></pre>\n"
-    },
-    {
       "markdown": "  \tfoo\tbaz\t\tbim\n",
       "html": "<pre><code>foo\tbaz\t\tbim\n</code></pre>\n",
       "example": 2,
-      "zzmd": "<pre><code>  foo    baz        bim\n</code></pre>\n"
-    },
-    {
-      "markdown": "    a\ta\n    ὐ\ta\n",
-      "html": "<pre><code>a\ta\nὐ\ta\n</code></pre>\n",
-      "example": 3,
-      "zzmd": "<pre><code>a    a\nὐ    a\n</code></pre>\n"
+      "zzmd": "<pre><code>  foo    baz        bim\n</code></pre>\n",
+      "_html": "<pre><code>foo    baz        bim\n</code></pre>\n"
     },
     {
       "markdown": "  - foo\n\n\tbar\n",
@@ -544,13 +511,13 @@
       "markdown": "<div id=\"foo\"\n  class=\"bar\">\n</div>\n",
       "html": "<div id=\"foo\"\n  class=\"bar\">\n</div>\n",
       "example": 123,
-      "zzmd": "<p>&lt;div id=&quot;foo&quot;\nclass=&quot;bar&quot;&gt;</p>\n</div>\n"
+      "zzmd": "<p><div id=\"foo\"\nclass=\"bar\"></p>\n</div>\n"
     },
     {
       "markdown": "<div id=\"foo\" class=\"bar\n  baz\">\n</div>\n",
       "html": "<div id=\"foo\" class=\"bar\n  baz\">\n</div>\n",
       "example": 124,
-      "zzmd": "<p>&lt;div id=&quot;foo&quot; class=&quot;bar\nbaz&quot;&gt;</p>\n</div>\n"
+      "zzmd": "<p><div id=\"foo\" class=\"bar\nbaz\"></p>\n</div>\n"
     },
     {
       "markdown": "<div id=\"foo\"\n*hi*\n",
@@ -569,18 +536,6 @@
       "html": "<div *???-&&&-<---\n*foo*\n",
       "example": 128,
       "zzmd": "<p>&lt;div <em>???-&amp;&amp;&amp;-&lt;---\n*foo</em></p>\n"
-    },
-    {
-      "markdown": "<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\nokay\n",
-      "html": "<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\n<p>okay</p>\n",
-      "example": 141,
-      "zzmd": "<p>&lt;style\ntype=&quot;text/css&quot;&gt;\nh1 {color:red;}</p>\n<p>p {color:blue;}\n</style>\nokay</p>\n"
-    },
-    {
-      "markdown": "<style\n  type=\"text/css\">\n\nfoo\n",
-      "html": "<style\n  type=\"text/css\">\n\nfoo\n",
-      "example": 142,
-      "zzmd": "<p>&lt;style\ntype=&quot;text/css&quot;&gt;</p>\n<p>foo</p>\n"
     },
     {
       "markdown": "- <div>\n- foo\n",
@@ -971,20 +926,6 @@
       "zzmd": "<ul>\n<li><p>a</p>\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li><p>d</p>\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>\n"
     }
   ],
-  "Backslash escapes": [
-    {
-      "markdown": "\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~\n",
-      "html": "<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>\n",
-      "example": 308,
-      "zzmd": "<p>!&quot;#$%&amp;&#39;()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>\n"
-    },
-    {
-      "markdown": "\\\t\\A\\a\\ \\3\\φ\\«\n",
-      "html": "<p>\\\t\\A\\a\\ \\3\\φ\\«</p>\n",
-      "example": 309,
-      "zzmd": "<p>\\    \\A\\a\\ \\3\\φ\\«</p>\n"
-    }
-  ],
   "Entity and numeric character references": [
     {
       "markdown": "&nbsp; &amp; &copy; &AElig; &Dcaron;\n&frac34; &HilbertSpace; &DifferentialD;\n&ClockwiseContourIntegral; &ngE;\n",
@@ -996,19 +937,22 @@
       "markdown": "&#35; &#1234; &#992; &#0;\n",
       "html": "<p># Ӓ Ϡ �</p>\n",
       "example": 322,
-      "zzmd": "<p>&#35; &#1234; &#992; &#0;</p>\n"
+      "zzmd": "<p>&#35; &#1234; &#992; &#0;</p>\n",
+      "_zzmd": "<p># Ӓ Ϡ \u0000</p>\n"
     },
     {
       "markdown": "&#X22; &#XD06; &#xcab;\n",
       "html": "<p>&quot; ആ ಫ</p>\n",
       "example": 323,
-      "zzmd": "<p>&#X22; &#XD06; &#xcab;</p>\n"
+      "zzmd": "<p>&#X22; &#XD06; &#xcab;</p>\n",
+      "_zzmd": "<p>\" ആ ಫ</p>\n"
     },
     {
       "markdown": "&nbsp &x; &#; &#x;\n&#87654321;\n&#abcdef0;\n&ThisIsNotDefined; &hi?;\n",
       "html": "<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;</p>\n",
       "example": 324,
-      "zzmd": "<p>&amp;nbsp &x; &amp;#; &#x;\n&#87654321;\n&#abcdef0;\n&ThisIsNotDefined; &amp;hi?;</p>\n"
+      "zzmd": "<p>&amp;nbsp &x; &amp;#; &#x;\n&#87654321;\n&#abcdef0;\n&ThisIsNotDefined; &amp;hi?;</p>\n",
+      "_zzmd": "<p>&amp;nbsp &x; &amp;#; &#x;\n羱\n&#abcdef0;\n&ThisIsNotDefined; &amp;hi?;</p>\n"
     },
     {
       "markdown": "&MadeUpEntity;\n",
@@ -1035,37 +979,15 @@
       "zzmd": "<pre><code class=\"language-f&ouml;&ouml;\">foo\n</code></pre>\n"
     },
     {
-      "markdown": "&#42;foo&#42;\n*foo*\n",
-      "html": "<p>*foo*\n<em>foo</em></p>\n",
-      "example": 333,
-      "zzmd": "<p>&#42;foo&#42;\n<em>foo</em></p>\n"
-    },
-    {
-      "markdown": "&#42; foo\n\n* foo\n",
-      "html": "<p>* foo</p>\n<ul>\n<li>foo</li>\n</ul>\n",
-      "example": 334,
-      "zzmd": "<p>&#42; foo</p>\n<ul>\n<li>foo</li>\n</ul>\n"
-    },
-    {
-      "markdown": "foo&#10;&#10;bar\n",
-      "html": "<p>foo\n\nbar</p>\n",
-      "example": 335,
-      "zzmd": "<p>foo&#10;&#10;bar</p>\n"
-    },
-    {
       "markdown": "&#9;foo\n",
       "html": "<p>\tfoo</p>\n",
       "example": 336,
-      "zzmd": "<p>&#9;foo</p>\n"
+      "zzmd": "<p>&#9;foo</p>\n",
+      "_html": "<p>    foo</p>\n",
+      "_zzmd": "<p>\tfoo</p>\n"
     }
   ],
   "Code spans": [
-    {
-      "markdown": "`  ``  `\n",
-      "html": "<p><code> `` </code></p>\n",
-      "example": 341,
-      "zzmd": "<p><code>``</code></p>\n"
-    },
     {
       "markdown": "` b `\n",
       "html": "<p><code> b </code></p>\n",
@@ -1408,22 +1330,16 @@
       "markdown": "**a<http://foo.bar/?q=**>\n",
       "html": "<p>**a<a href=\"http://foo.bar/?q=**\">http://foo.bar/?q=**</a></p>\n",
       "example": 489,
-      "zzmd": "<p><strong>a&lt;<a href=\"http://foo.bar/?q=\">http://foo.bar/?q=</a></strong>&gt;</p>\n"
+      "zzmd": "<p><strong>a&lt;http://foo.bar/?q=</strong>&gt;</p>\n"
     },
     {
       "markdown": "__a<http://foo.bar/?q=__>\n",
       "html": "<p>__a<a href=\"http://foo.bar/?q=__\">http://foo.bar/?q=__</a></p>\n",
       "example": 490,
-      "zzmd": "<p><strong>a&lt;<a href=\"http://foo.bar/?q=\">http://foo.bar/?q=</a></strong>&gt;</p>\n"
+      "zzmd": "<p><strong>a&lt;http://foo.bar/?q=</strong>&gt;</p>\n"
     }
   ],
   "Links": [
-    {
-      "markdown": "[link](<foo\nbar>)\n",
-      "html": "<p>[link](<foo\nbar>)</p>\n",
-      "example": 500,
-      "zzmd": "<p>[link](&lt;foo\nbar&gt;)</p>\n"
-    },
     {
       "markdown": "[link](<foo\\>)\n",
       "html": "<p>[link](&lt;foo&gt;)</p>\n",
@@ -1619,39 +1535,7 @@
       "zzmd": "<p><img src=\"/url\" alt=\"*foo* bar\" title=\"title\" /></p>\n"
     }
   ],
-  "Autolinks": [
-    {
-      "markdown": "<http://foo.bar/baz bim>\n",
-      "html": "<p>&lt;http://foo.bar/baz bim&gt;</p>\n",
-      "example": 610,
-      "zzmd": "<p>&lt;<a href=\"http://foo.bar/baz\">http://foo.bar/baz</a> bim&gt;</p>\n"
-    },
-    {
-      "markdown": "< http://foo.bar >\n",
-      "html": "<p>&lt; http://foo.bar &gt;</p>\n",
-      "example": 616,
-      "zzmd": "<p>&lt; <a href=\"http://foo.bar\">http://foo.bar</a> &gt;</p>\n"
-    },
-    {
-      "markdown": "http://example.com\n",
-      "html": "<p>http://example.com</p>\n",
-      "example": 619,
-      "zzmd": "<p><a href=\"http://example.com\">http://example.com</a></p>\n"
-    },
-    {
-      "markdown": "foo@bar.example.com\n",
-      "html": "<p>foo@bar.example.com</p>\n",
-      "example": 620,
-      "zzmd": "<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>\n"
-    }
-  ],
   "Autolinks (extension)": [
-    {
-      "markdown": "Visit www.commonmark.org.\n\nVisit www.commonmark.org/a.b.\n",
-      "html": "<p>Visit <a href=\"http://www.commonmark.org\">www.commonmark.org</a>.</p>\n<p>Visit <a href=\"http://www.commonmark.org/a.b\">www.commonmark.org/a.b</a>.</p>\n",
-      "example": 623,
-      "zzmd": "<p>Visit <a href=\"http://www.commonmark.org.\">www.commonmark.org.</a></p>\n<p>Visit <a href=\"http://www.commonmark.org/a.b.\">www.commonmark.org/a.b.</a></p>\n"
-    },
     {
       "markdown": "www.google.com/search?q=Markup+(business)\n\nwww.google.com/search?q=Markup+(business)))\n\n(www.google.com/search?q=Markup+(business))\n\n(www.google.com/search?q=Markup+(business)\n",
       "html": "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>))</p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n",
@@ -1668,40 +1552,10 @@
       "markdown": "http://commonmark.org\n\n(Visit https://encrypted.google.com/search?q=Markup+(business))\n\nAnonymous FTP is available at ftp://foo.bar.baz.\n",
       "html": "<p><a href=\"http://commonmark.org\">http://commonmark.org</a></p>\n<p>(Visit <a href=\"https://encrypted.google.com/search?q=Markup+(business)\">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>\n<p>Anonymous FTP is available at <a href=\"ftp://foo.bar.baz\">ftp://foo.bar.baz</a>.</p>\n",
       "example": 628,
-      "zzmd": "<p><a href=\"http://commonmark.org\">http://commonmark.org</a></p>\n<p>(Visit <a href=\"https://encrypted.google.com/search?q=Markup+(business))\">https://encrypted.google.com/search?q=Markup+(business))</a></p>\n<p>Anonymous FTP is available at <a href=\"ftp://foo.bar.baz.\">ftp://foo.bar.baz.</a></p>\n"
-    },
-    {
-      "markdown": "hello@mail+xyz.example isn't valid, but hello+xyz@mail.example is.\n",
-      "html": "<p>hello@mail+xyz.example isn't valid, but <a href=\"mailto:hello+xyz@mail.example\">hello+xyz@mail.example</a> is.</p>\n",
-      "example": 630,
-      "zzmd": "<p>hello@mail+xyz.example isn&#39;t valid, but <a href=\"mailto:hello+xyz@mail.example\">hello+xyz@mail.example</a> is.</p>\n"
+      "zzmd": "<p><a href=\"http://commonmark.org\">http://commonmark.org</a></p>\n<p>(Visit <a href=\"https://encrypted.google.com/search?q=Markup+(business))\">https://encrypted.google.com/search?q=Markup+(business))</a></p>\n<p>Anonymous FTP is available at <a href=\"ftp://foo.bar.baz\">ftp://foo.bar.baz</a>.</p>\n"
     }
   ],
   "Raw HTML": [
-    {
-      "markdown": "<a  /><b2\ndata=\"foo\" >\n",
-      "html": "<p><a  /><b2\ndata=\"foo\" ></p>\n",
-      "example": 634,
-      "zzmd": "<p><a  />&lt;b2\ndata=&quot;foo&quot; &gt;</p>\n"
-    },
-    {
-      "markdown": "<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />\n",
-      "html": "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>\n",
-      "example": 635,
-      "zzmd": "<p>&lt;a foo=&quot;bar&quot; bam = &#39;baz <em>&quot;</em>&#39;\n_boolean zoop:33=zoop:33 /&gt;</p>\n"
-    },
-    {
-      "markdown": "<a href=\"hi'> <a href=hi'>\n",
-      "html": "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>\n",
-      "example": 639,
-      "zzmd": "<p>&lt;a href=&quot;hi&#39;&gt; &lt;a href=hi&#39;&gt;</p>\n"
-    },
-    {
-      "markdown": "<a href='bar'title=title>\n",
-      "html": "<p>&lt;a href='bar'title=title&gt;</p>\n",
-      "example": 641,
-      "zzmd": "<p>&lt;a href=&#39;bar&#39;title=title&gt;</p>\n"
-    },
     {
       "markdown": "foo <!-- not a comment -- two hyphens -->\n",
       "html": "<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>\n",
@@ -1717,34 +1571,12 @@
       "zzmd": "<p><strong> <title> <style> <em></p>\n<blockquote>\n  <xmp> is disallowed.  <XMP> is also disallowed.\n</blockquote>\n"
     }
   ],
-  "Hard line breaks": [
-    {
-      "markdown": "<a href=\"foo  \nbar\">\n",
-      "html": "<p><a href=\"foo  \nbar\"></p>\n",
-      "example": 663,
-      "zzmd": "<p>&lt;a href=&quot;foo<br />\nbar&quot;&gt;</p>\n"
-    },
-    {
-      "markdown": "<a href=\"foo\\\nbar\">\n",
-      "html": "<p><a href=\"foo\\\nbar\"></p>\n",
-      "example": 664,
-      "zzmd": "<p>&lt;a href=&quot;foo<br />\nbar&quot;&gt;</p>\n"
-    }
-  ],
   "Soft line breaks": [
     {
       "markdown": "foo \n baz\n",
       "html": "<p>foo\nbaz</p>\n",
       "example": 670,
       "zzmd": "<p>foo \nbaz</p>\n"
-    }
-  ],
-  "Textual content": [
-    {
-      "markdown": "hello $.;'there\n",
-      "html": "<p>hello $.;'there</p>\n",
-      "example": 671,
-      "zzmd": "<p>hello $.;&#39;there</p>\n"
     }
   ]
 }

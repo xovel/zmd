@@ -17,39 +17,37 @@ function write(filepath, content) {
   fs.writeFileSync(path.join(__dirname, filepath), content)
 }
 
-function _set(name, value, same) {
+function _set(name, value, pass) {
   const count = diff._
   if (count[name]) {
     count[name].total++
   } else {
     count[name] = {
       total: 1,
+      pass: 0,
+      percent: 0,
       diff: 0,
-      same: 0
+      diffList: []
     }
   }
-  if (same) {
-    count[name].same++
+  if (pass) {
+    count[name].pass++
   } else {
     count[name].diff++
-    if (count[name].diffList) {
-      count[name].diffList.push(value.example)
-    } else {
-      count[name].diffList = [value.example]
-    }
+    count[name].diffList.push(value.example)
     if (diff[name]) {
       diff[name].push(value)
     } else {
       diff[name] = [value]
     }
   }
-  count[name].percent = ((count[name].same / count[name].total) * 100).toFixed(2) + '%'
+  count[name].percent = ((count[name].pass / count[name].total) * 100).toFixed(2) + '%'
 
 }
 
 gfm.forEach(item => {
   const {section, ...value} = item
-  _set(section, value, item.html === item.zzmd)
+  _set(section, value, (item._html || item.html) === (item._zzmd || item.zzmd))
 })
 
 write('diff.json', JSON.stringify(diff, null, '  '))
@@ -64,7 +62,7 @@ table.push('| ------- | ----- | ---- | ---- | ---------- |')
 
 for (let key in diff._) {
   let v = diff._[key]
-  table.push(`| ${key} | ${v.total} | ${v.same} | ${v.diff} | ${v.percent} |`)
+  table.push(`| ${key} | ${v.total} | ${v.pass} | ${v.diff} | ${v.percent} |`)
 }
 
 table.push('\n')

@@ -128,9 +128,21 @@ function parseMarkdown() {
   var parsed
   var list = []
 
+  var curOptions = Object.assign({}, zmdOptions, {
+    highlight: function (code, lang) {
+      var ret = ''
+      try {
+        ret = hljs.highlight(lang, code).value
+      } catch (e) {
+        //
+      }
+      return ret
+    }
+  })
+
   try {
-    lexed = zmd.Lexer.lex(value, zmdOptions)
-    parsed = zmd.Parser.parse(lexed, zmdOptions)
+    lexed = zmd.Lexer.lex(value, curOptions)
+    parsed = zmd.Parser.parse(lexed, curOptions)
     setResponseTime(Date.now() - startTime)
 
     for (var i = 0; i < lexed.length; i++) {

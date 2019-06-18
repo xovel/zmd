@@ -545,6 +545,7 @@ Lexer.prototype.parse = function (src, top) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'heading',
+        mode: 'atx',
         level: cap[1].length,
         text: cap[2] ? _trim(cap[2]) : ''
       })
@@ -718,6 +719,7 @@ Lexer.prototype.parse = function (src, top) {
       src = src.substring(cap[0].length)
       this.tokens.push({
         type: 'heading',
+        mode: 'setext',
         level: cap[2][0] === '-' ? 2 : 1,
         text: _trim(cap[1])
       })

@@ -149,7 +149,7 @@ var commonRe = {
 var blockRe = {
   // Leaf blocks
   hr: /^ {0,3}([*_-])(?: *\1){2,} *(?:\n+|$)/,
-  heading: /^ {0,3}(#{1,6})(?: ([^\n]*?)(?: #* *)?)?(?:\n+|$)/,
+  heading: /^ {0,3}(#{1,6})(?: ([^\n]*?)(?: (#*) *)?)?(?:\n+|$)/,
   // setext heading
   sheading: /^( {0,3}[^ \n][^\n]*(?:\n[^\n]+)*?)\n {0,3}(=+|-+) *(?:\n+|$)/,
   code: /^ {4}[^\n]*((?: {4}[^\n]*| {0,3})(?:\n|$))+/,
@@ -543,11 +543,16 @@ Lexer.prototype.parse = function (src, top) {
     // heading
     if (cap = rules.heading.exec(src)) {
       src = src.substring(cap[0].length)
+      text = cap[2] ? _trim(cap[2]) : ''
+      // ATX headings can be empty with closing sequence
+      if (!cap[3] && /^#+$/.test(text)) {
+        text = ''
+      }
       this.tokens.push({
         type: 'heading',
         mode: 'atx',
         level: cap[1].length,
-        text: cap[2] ? _trim(cap[2]) : ''
+        text: text
       })
       continue
     }
@@ -776,7 +781,7 @@ function splitTableRow(text, limit) {
     // .replace(/\\\|/g, '\t')     // replace \|
     // .replace(/\n/g, '\\\\')     // recover \\
     .replace(/((?:^|[^\\])(?:\\\\)*)\\\|/g, '$1\t')
-    .replace(/^\||\|$/g, '')    // remove inital or trailing |
+    .replace(/^\||\|$/g, '')    // remove initial or trailing pipe `|`
     .split('|')
   var result = []
   var length = limit || text.length

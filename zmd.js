@@ -162,7 +162,7 @@ var blockRe = {
   footnote: /^ {0,3}(?:label): *([^ \n][^\n]*(?:\n|$))/,
 
   paragraph: /^([^\n]+(?:\n(?!hr|heading|sheading| {0,3}(>|[*+-] +[^ \n]|1[.)] +[^ \n]|(`{3}|~{3})([^\n]*)(?:\n|$))|<\/?(?:tag)(?: +|\n|\/?>)|<(?:script|pre|style|!--))[^\n]+)*)/,
-  newline: /^(?: *\n)+/,
+  blankline: /^(?: *\n)+/,
   text: /^[^\n]+/,
   table: /^([^\n]+)\n(delimiter)(?: *\n((?:(?!\n| {4,}| {0,3}(?:>|`{3}|~{3}|([_*-]) *\4{2,} *(?:\n|$)|(?:#{1,6}|[*+-]|\d{1,9}[.)])(?: |\n|$)))[^\n]*(?:\n|$))*)|$)/,
 
@@ -400,11 +400,11 @@ Lexer.prototype.parse = function (src, top) {
   var listType
 
   while (src) {
-    // newline
-    if (cap = rules.newline.exec(src)) {
+    // blankline
+    if (cap = rules.blankline.exec(src)) {
       src = src.substring(cap[0].length)
       this.tokens.push({
-        type: 'newline',
+        type: 'blankline',
         lines: cap[0].split('\n').length - 1
       })
     }
@@ -1323,7 +1323,7 @@ Parser.prototype.compile = function () {
   }
 
   switch (type) {
-    case 'newline':
+    case 'blankline':
       return ''
     case 'hr':
       return renderer.hr()

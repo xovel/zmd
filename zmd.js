@@ -817,10 +817,14 @@ Renderer.prototype.fence = function (code, lang, meta, escaped) {
   var out
 
   if (this.options.highlight) {
-    out = this.options.highlight(code, lang)
-    if (out && out !== code) {
-      code = out
-      escaped = true
+    try {
+      out = this.options.highlight(code, lang)
+      if (out && out !== code) {
+        code = out
+        escaped = true
+      }
+    } catch (e) {
+      //
     }
   }
 
@@ -1460,7 +1464,6 @@ zmd.defaults = {
   headerIds: true,
   headerPrefix: '',
   footnote: true,
-  highlight: null,
   xhtml: false,
   autourl: false,
   divClass: 'diy'

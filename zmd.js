@@ -115,7 +115,7 @@ var commonRe = {
   // {, |, }, or ~ (U+007B–007E)
 
   tagname: /[a-zA-Z][\w-]*/, // A tag name consists of an ASCII letter followed by zero or more ASCII letters, digits, or hyphens (-).
-  attribute: /\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*([^\s"'=<>`]+|'[^']*'|"[^"]*"))?/,
+  attribute: / *[ \n] *[a-zA-Z:_][\w.:-]*(?: *[ \n]? *= *[ \n]? *([^\s"'=<>`]+|'[^']*'|"[^"]*"))?/,
   // inline attribute
   _attribute: / +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/,
   opentag: /<tagname(?:attribute)*?\s*\/?>/,
@@ -155,7 +155,7 @@ var blockRe = {
   code: /^ {4}[^\n]*((?: {4}[^\n]*| {0,3})(?:\n|$))+/,
   fence: /^( {0,3})(([~`])\3{2,})([^\n]*)([\s\S]*?)(\n {0,3}\2\3* *(?:\n+|$)|$)/,
   // [^>\n]*> -> [\s>] to support linebreak
-  html: /^ {0,3}(?:<(script|pre|style)[^>\n]*>[\s\S]*?(?:<\/\1>[^\n]*\n+|$)|<!--[\s\S]*?-->|(?:processing|<![\s\S]*?>|cdata)\n*|<\/?(tag)(?: +|\n|\/?)>[\s\S]*?(?:\n{2,}|$)|(?:<(?!script|pre|style)(?:tagname)(?:attribute)*? *\/?>|<\/(?!script|pre|style)(?:tagname)\s*>)(?= *(?:\n|$))[\s\S]*?(?:\n{2,}|$))/i,
+  html: /^ {0,3}(?:<(script|pre|style)[^>\n]*\n?[^>\n]*>[\s\S]*?(?:<\/\1>[^\n]*\n+|$)|<!--[\s\S]*?-->|(?:processing|<![\s\S]*?>|cdata)\n*|<\/?(tag)(?: +|\n|\/?)>[\s\S]*?(?:\n{2,}|$)|(?:<(?!script|pre|style)(?:tagname)(?:attribute)*? *\/?>|<\/(?!script|pre|style)(?:tagname)\s*>)(?= *(?:\n|$))[\s\S]*?(?:\n{2,}|$))/i,
 
   ref: /^ {0,3}(?:label): *\n? *(?:destination) *\n? *(?:\s(?:title))? *(?:\n+|$)/,
   // footnote: /^ {0,3}(?:label): ?([\S\s]+?)(?=(?:label)|\n{2,}|$)/,
@@ -185,7 +185,8 @@ var inlineRe = {
   code: /^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/,
 
   autolink: /^<(uri|email)>/,
-  autourl: /^((?:(?:ht|f)tps?:\/\/|www\.)(?:[\w-]+\.?)+[^\s<]*|email)/i,
+  // ?, !, ., ,, :, *, _, and ~
+  autourl: /^((?:(?:ht|f)tps?:\/\/|www\.)(?:[\w-]+\.?)+[^\s<]*[^\s?!.,:*_~<>]|email)/i,
 
   strong: /^__([^\s_])__(?!_)|^\*\*([^\s*])\*\*(?!\*)|^__([^\s][\s\S]*?[^\s])__(?!_)|^\*\*([^\s][\s\S]*?[^\s])\*\*(?!\*)/,
   em: /^_([^\s_])_(?!_)|^\*([^\s*<[])\*(?!\*)|^_([^\s<][\s\S]*?[^\s_])_(?!_|[^\spunctuation])|^_([^\s_<][\s\S]*?[^\s])_(?!_|[^\spunctuation])|^\*([^\s<"][\s\S]*?[^\s*])\*(?!\*|[^\spunctuation])|^\*([^\s*"<[][\s\S]*?[^\s])\*(?!\*)/,
@@ -327,7 +328,7 @@ inlineRe.footnote = _regex(
 inlineRe.html = _regex(
   inlineRe.html,
   ['tagname', commonRe.tagname],
-  ['attribute', commonRe._attribute],
+  ['attribute', commonRe.attribute],
   ['closingtag', commonRe.closingtag],
   ['comment', commonRe.comment],
   ['processing', commonRe.processing],
@@ -1134,7 +1135,8 @@ Compiler.prototype.compile = function (src) {
       // No stripping occurs if the code span contains only spaces
       if (!/^ *$/.test(text)) {
         // The stripping only happens if the space is on both sides of the string
-        text = text.replace(/^((?: |\n)+)([\s\S]*?)\1$/, '$2')
+        // Note that only one space is stripped
+        text = text.replace(/^([ \n])([\s\S]*?)\1$/, '$2')
           // replace line break to space
           .replace(/\n/g, ' ')
       }

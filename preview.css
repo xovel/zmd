@@ -149,7 +149,7 @@ pre {
   border-left: 0.25em solid #dfe2e5;
 }
 .md-github blockquote > :first-child {
-  margin-top: 0;
+  margin-top: 10px;
 }
 .md-github blockquote > :last-child {
   margin-bottom: 0;

@@ -32,22 +32,18 @@
     },
     "ATX headings": {
       "total": 18,
-      "pass": 17,
-      "percent": "94.44%",
-      "diff": 1,
-      "diffList": [
-        49
-      ]
+      "pass": 18,
+      "percent": "100.00%",
+      "diff": 0,
+      "diffList": []
     },
     "Setext headings": {
       "total": 27,
-      "pass": 24,
-      "percent": "88.89%",
-      "diff": 3,
+      "pass": 26,
+      "percent": "96.30%",
+      "diff": 1,
       "diffList": [
-        62,
-        63,
-        71
+        63
       ]
     },
     "Indented code blocks": {
@@ -116,14 +112,12 @@
     },
     "Block quotes": {
       "total": 25,
-      "pass": 21,
-      "percent": "84.00%",
-      "diff": 4,
+      "pass": 23,
+      "percent": "92.00%",
+      "diff": 2,
       "diffList": [
-        212,
         214,
-        215,
-        224
+        215
       ]
     },
     "List items": {
@@ -464,32 +458,12 @@
       "zzmd": "<ul>\n<li>Foo</li>\n<li><hr />\n</li>\n</ul>\n"
     }
   ],
-  "ATX headings": [
-    {
-      "markdown": "## \n#\n### ###\n",
-      "html": "<h2></h2>\n<h1></h1>\n<h3></h3>\n",
-      "example": 49,
-      "zzmd": "<h2></h2>\n<h1></h1>\n<h3>###</h3>\n"
-    }
-  ],
   "Setext headings": [
-    {
-      "markdown": "> Foo\n---\n",
-      "html": "<blockquote>\n<p>Foo</p>\n</blockquote>\n<hr />\n",
-      "example": 62,
-      "zzmd": "<blockquote>\n<h2>Foo</h2>\n</blockquote>\n"
-    },
     {
       "markdown": "> foo\nbar\n===\n",
       "html": "<blockquote>\n<p>foo\nbar\n===</p>\n</blockquote>\n",
       "example": 63,
-      "zzmd": "<blockquote>\n<p>foo</p>\n</blockquote>\n<h1>bar</h1>\n"
-    },
-    {
-      "markdown": "> foo\n-----\n",
-      "html": "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />\n",
-      "example": 71,
-      "zzmd": "<blockquote>\n<h2>foo</h2>\n</blockquote>\n"
+      "zzmd": "<blockquote>\n<h1>foo\nbar</h1>\n</blockquote>\n"
     }
   ],
   "Indented code blocks": [
@@ -572,12 +546,6 @@
   ],
   "Block quotes": [
     {
-      "markdown": "> foo\n---\n",
-      "html": "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />\n",
-      "example": 212,
-      "zzmd": "<blockquote>\n<h2>foo</h2>\n</blockquote>\n"
-    },
-    {
       "markdown": ">     foo\n    bar\n",
       "html": "<blockquote>\n<pre><code>foo\n</code></pre>\n</blockquote>\n<pre><code>bar\n</code></pre>\n",
       "example": 214,
@@ -588,12 +556,6 @@
       "html": "<blockquote>\n<pre><code></code></pre>\n</blockquote>\n<p>foo</p>\n<pre><code></code></pre>\n",
       "example": 215,
       "zzmd": "<blockquote>\n<pre><code>foo\n</code></pre>\n</blockquote>\n<pre><code></code></pre>\n"
-    },
-    {
-      "markdown": "> aaa\n***\n> bbb\n",
-      "html": "<blockquote>\n<p>aaa</p>\n</blockquote>\n<hr />\n<blockquote>\n<p>bbb</p>\n</blockquote>\n",
-      "example": 224,
-      "zzmd": "<blockquote>\n<p>aaa</p>\n<hr />\n<p>bbb</p>\n</blockquote>\n"
     }
   ],
   "List items": [

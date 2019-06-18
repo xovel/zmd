@@ -1,4 +1,4 @@
-> Test time: Tue Jun 18 2019 10:26:26 GMT+0800 (GMT+08:00)
+> Test time: Tue Jun 18 2019 14:25:33 GMT+0800 (GMT+08:00)
 
 
 | Section | Total | Pass | Diff | Percentage |
@@ -6,8 +6,8 @@
 | Tabs | 11 | 5 | 6 | 45.45% |
 | Precedence | 1 | 1 | 0 | 100.00% |
 | Thematic breaks | 19 | 18 | 1 | 94.74% |
-| ATX headings | 18 | 17 | 1 | 94.44% |
-| Setext headings | 27 | 24 | 3 | 88.89% |
+| ATX headings | 18 | 18 | 0 | 100.00% |
+| Setext headings | 27 | 26 | 1 | 96.30% |
 | Indented code blocks | 12 | 10 | 2 | 83.33% |
 | Fenced code blocks | 29 | 29 | 0 | 100.00% |
 | HTML blocks | 43 | 34 | 9 | 79.07% |
@@ -15,7 +15,7 @@
 | Paragraphs | 8 | 8 | 0 | 100.00% |
 | Blank lines | 1 | 1 | 0 | 100.00% |
 | Tables (extension) | 8 | 8 | 0 | 100.00% |
-| Block quotes | 25 | 21 | 4 | 84.00% |
+| Block quotes | 25 | 23 | 2 | 92.00% |
 | List items | 48 | 16 | 32 | 33.33% |
 | Task list items (extension) | 2 | 0 | 2 | 0.00% |
 | Lists | 27 | 7 | 20 | 25.93% |

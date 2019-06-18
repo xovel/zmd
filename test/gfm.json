@@ -343,7 +343,7 @@
     "html": "<h2></h2>\n<h1></h1>\n<h3></h3>\n",
     "example": 49,
     "section": "ATX headings",
-    "zzmd": "<h2></h2>\n<h1></h1>\n<h3>###</h3>\n"
+    "zzmd": "<h2></h2>\n<h1></h1>\n<h3></h3>\n"
   },
   {
     "markdown": "Foo *bar*\n=========\n\nFoo *bar*\n---------\n",
@@ -434,14 +434,14 @@
     "html": "<blockquote>\n<p>Foo</p>\n</blockquote>\n<hr />\n",
     "example": 62,
     "section": "Setext headings",
-    "zzmd": "<blockquote>\n<h2>Foo</h2>\n</blockquote>\n"
+    "zzmd": "<blockquote>\n<p>Foo</p>\n</blockquote>\n<hr />\n"
   },
   {
     "markdown": "> foo\nbar\n===\n",
     "html": "<blockquote>\n<p>foo\nbar\n===</p>\n</blockquote>\n",
     "example": 63,
     "section": "Setext headings",
-    "zzmd": "<blockquote>\n<p>foo</p>\n</blockquote>\n<h1>bar</h1>\n"
+    "zzmd": "<blockquote>\n<h1>foo\nbar</h1>\n</blockquote>\n"
   },
   {
     "markdown": "- Foo\n---\n",
@@ -497,7 +497,7 @@
     "html": "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />\n",
     "example": 71,
     "section": "Setext headings",
-    "zzmd": "<blockquote>\n<h2>foo</h2>\n</blockquote>\n"
+    "zzmd": "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />\n"
   },
   {
     "markdown": "\\> foo\n------\n",
@@ -1484,7 +1484,7 @@
     "html": "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />\n",
     "example": 212,
     "section": "Block quotes",
-    "zzmd": "<blockquote>\n<h2>foo</h2>\n</blockquote>\n"
+    "zzmd": "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />\n"
   },
   {
     "markdown": "> - foo\n- bar\n",
@@ -1568,7 +1568,7 @@
     "html": "<blockquote>\n<p>aaa</p>\n</blockquote>\n<hr />\n<blockquote>\n<p>bbb</p>\n</blockquote>\n",
     "example": 224,
     "section": "Block quotes",
-    "zzmd": "<blockquote>\n<p>aaa</p>\n<hr />\n<p>bbb</p>\n</blockquote>\n"
+    "zzmd": "<blockquote>\n<p>aaa</p>\n</blockquote>\n<hr />\n<blockquote>\n<p>bbb</p>\n</blockquote>\n"
   },
   {
     "markdown": "> bar\nbaz\n",

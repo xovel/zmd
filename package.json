@@ -4,10 +4,11 @@
   "description": "Just a markdown parser",
   "main": "zmd.js",
   "scripts": {
-    "test": "npm run test:slug && npm run test:gfm && npm run test:diff",
+    "test": "npm run test:slug && npm run test:gfm && npm run test:diff && node test/coverage",
     "test:slug": "mocha test/slug",
     "test:gfm": "node test/gfm",
     "test:diff": "node test/diff",
+    "test:coverage": "node test/coverage",
     "dev": "http-server -p 2000 -s",
     "prepublishOnly": "uglifyjs zmd.js --compress --mangle --comments --output zmd.min.js"
   },

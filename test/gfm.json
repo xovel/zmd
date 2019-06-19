@@ -1831,7 +1831,7 @@
   },
   {
     "markdown": "*\n",
-    "html": "<lt;ul>\n<li></li>\n</ul>\n",
+    "html": "<ul>\n<li></li>\n</ul>\n",
     "example": 262,
     "section": "List items",
     "zzmd": "<p>*</p>\n"

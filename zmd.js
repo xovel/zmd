@@ -152,7 +152,7 @@ var blockRe = {
   heading: /^ {0,3}(#{1,6})(?: ([^\n]*?)(?: (#*) *)?)?(?:\n+|$)/,
   // setext heading
   sheading: /^( {0,3}[^ \n][^\n]*(?:\n[^\n]+)*?)\n {0,3}(=+|-+) *(?:\n+|$)/,
-  code: /^ {4}[^\n]*((?: {4}[^\n]*| {0,3})(?:\n|$))+/,
+  codeblock: /^( {4} *[^ \n][^\n]*(?:\n(?: *| {4} *[^ \n][^\n]*))*)(?:\n|$)/,
   fence: /^( {0,3})(([~`])\3{2,})([^\n]*)([\s\S]*?)(\n {0,3}\2\3* *(?:\n+|$)|$)/,
   // [^>\n]*> -> [\s>] to support linebreak
   html: /^ {0,3}(?:<(script|pre|style)[^>\n]*\n?[^>\n]*>[\s\S]*?(?:<\/\1>[^\n]*\n+|$)|<!--[\s\S]*?-->|(?:processing|<![\s\S]*?>|cdata)\n*|<\/?(tag)(?: +|\n|\/?)>[\s\S]*?(?:\n{2,}|$)|(?:<(?!script|pre|style)(?:tagname)(?:attribute)*? *\/?>|<\/(?!script|pre|style)(?:tagname)\s*>)(?= *(?:\n|$))[\s\S]*?(?:\n{2,}|$))/i,
@@ -174,7 +174,7 @@ var blockRe = {
   blockquote: /^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/,
   list: /^( {0,3})(marker) [\s\S]+?(?:\n+(?=\1?hr)|\n+(?=ref)|\n{2,}(?! )(?!\1(?:marker) )\n*|\s*$)/,
   item: /^( *)(?:marker) ?[^\n]*(?:\n(?!\1 ?(?:marker) ?)[^\n]*)*/gm,
-  _list: /^( {0,3})([*+-]|\d{1,9}[.)])(?: *|(?: {4}[^ \n]| {0,3}(?:`{3}|~{3}))[^\n]*|( {0,3}[^ `~][^\n]*(\n)?))(?: *\n|$)/,
+  _list: /^(( {0,3})([*+-]|\d{1,9}[.)]))(?: *| (?:((?: {4,} *[^ \n]|( {0,3}(?:`{3}|~{3})))[^\n]*)|(( {0,3})[^ `~][^\n]*(?:\n(?!\2?(?:([*_-])(?: *\8){2,}| {0,3}(>|#{1,6}|`{3}|~{3}|(?:[*+-]|1[.)])(?: +[^ \n]| *(?:\n|$)))))[^\n]+)*)))(?:\n|$)/,
   _rest: /^(?:(?: {5,}[^ \n][^\n]*| *)(?:\n+|$))+/,
 
   raw: /^ {0,3}\{(%)? *raw *\1\} *\n([\s\S]*?) {0,3}\{\1 *endraw *\1\} *(?:\n+|$)/
@@ -426,8 +426,8 @@ Lexer.prototype.parse = function (src, top) {
       continue
     }
 
-    // code
-    if (cap = rules.code.exec(src)) {
+    // codeblock
+    if (cap = rules.codeblock.exec(src)) {
       src = src.substring(cap[0].length)
       // cannot interrupt a paragraph
       var prevToken = this.tokens.slice(-1)[0]
@@ -435,13 +435,13 @@ Lexer.prototype.parse = function (src, top) {
         prevToken.text += '\n' + cap[0].replace(/\s+$/, '')
         // cap[0].trimEnd()
       } else {
-        text = cap[0].replace(/^ {0,4}/gm, '').replace(/^\n+/, '').replace(/\n+$/, '\n')
+        text = cap[1].replace(/^ {0,4}/gm, '').replace(/^\n+/, '').replace(/\n+$/, '')
         // ignore empty line
         if (/^\n+$/.test(text)) {
           text = ''
         }
         this.tokens.push({
-          type: 'code',
+          type: 'codeblock',
           text: text
         })
       }
@@ -461,17 +461,6 @@ Lexer.prototype.parse = function (src, top) {
         text = ''
       } else if (cap[1]) {
         text = text.replace(cap[1].length === 1 ? /^ /gm : new RegExp('^ {1,' + cap[1].length + '}', 'gm'), '')
-        // switch (cap[1].length) {
-        //   case 1:
-        //     text = text.replace(/^ /gm, '')
-        //     break;
-        //   case 2:
-        //     text = text.replace(/^ {2}/gm, '')
-        //     break;
-        //   default:
-        //     text = text.replace(/^ {3}/gm, '')
-        //     break;
-        // }
       }
 
       // Info strings for backtick code blocks cannot contain backticks
@@ -822,7 +811,7 @@ Renderer.prototype.heading = function (text, level, slug) {
 }
 
 Renderer.prototype.codeblock = function (code) {
-  return '<pre><code>' + _escape(code) + '</code></pre>\n'
+  return '<pre><code>' + _escape(code) + '\n</code></pre>\n'
 }
 
 Renderer.prototype.fence = function (code, lang, meta, escaped) {
@@ -1362,7 +1351,7 @@ Parser.prototype.compile = function () {
         )
       }
       return renderer.heading('', token.level, '')
-    case 'code':
+    case 'codeblock':
       return renderer.codeblock(text)
     case 'fence':
       return renderer.fence(text, token.lang, token.meta)

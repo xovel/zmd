@@ -2,24 +2,25 @@
   "_": {
     "Tabs": {
       "total": 11,
-      "pass": 5,
-      "percent": "45.45%",
-      "diff": 6,
+      "pass": 6,
+      "percent": "54.55%",
+      "diff": 5,
       "diffList": [
         2,
         4,
         5,
         6,
-        7,
-        9
+        7
       ]
     },
     "Precedence": {
       "total": 1,
-      "pass": 1,
-      "percent": "100.00%",
-      "diff": 0,
-      "diffList": []
+      "pass": 0,
+      "percent": "0.00%",
+      "diff": 1,
+      "diffList": [
+        12
+      ]
     },
     "Thematic breaks": {
       "total": 19,
@@ -122,39 +123,24 @@
     },
     "List items": {
       "total": 48,
-      "pass": 16,
-      "percent": "33.33%",
-      "diff": 32,
+      "pass": 31,
+      "percent": "64.58%",
+      "diff": 17,
       "diffList": [
-        232,
-        233,
         234,
-        235,
         236,
         237,
-        240,
-        241,
-        242,
         245,
         248,
         249,
-        251,
-        252,
-        254,
         255,
         256,
+        257,
         258,
-        262,
-        264,
-        265,
-        266,
-        268,
-        269,
+        261,
         270,
         271,
-        272,
         274,
-        275,
         276,
         277,
         278
@@ -172,15 +158,15 @@
     },
     "Lists": {
       "total": 27,
-      "pass": 7,
-      "percent": "25.93%",
-      "diff": 20,
+      "pass": 13,
+      "percent": "48.15%",
+      "diff": 14,
       "diffList": [
+        282,
         286,
         287,
         288,
         289,
-        290,
         291,
         292,
         293,
@@ -188,13 +174,7 @@
         295,
         296,
         297,
-        298,
         299,
-        300,
-        301,
-        303,
-        304,
-        305,
         306
       ]
     },
@@ -423,13 +403,13 @@
       "markdown": "  - foo\n\n\tbar\n",
       "html": "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>\n",
       "example": 4,
-      "zzmd": "<ul>\n<li><p>foo</p>\n<p>bar</p>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>foo\n<p>bar</p>\n</li>\n</ul>\n"
     },
     {
       "markdown": "- foo\n\n\t\tbar\n",
       "html": "<ul>\n<li>\n<p>foo</p>\n<pre><code>  bar\n</code></pre>\n</li>\n</ul>\n",
       "example": 5,
-      "zzmd": "<ul>\n<li><p>foo</p>\n<pre><code>  bar\n</code></pre>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>foo\n<pre><code>  bar\n</code></pre>\n</li>\n</ul>\n"
     },
     {
       "markdown": ">\t\tfoo\n",
@@ -441,13 +421,15 @@
       "markdown": "-\t\tfoo\n",
       "html": "<ul>\n<li>\n<pre><code>  foo\n</code></pre>\n</li>\n</ul>\n",
       "example": 7,
-      "zzmd": "<ul>\n<li>foo</li>\n</ul>\n"
-    },
+      "zzmd": "<ul>\n<li>\n<pre><code>   foo\n</code></pre>\n</li>\n</ul>\n"
+    }
+  ],
+  "Precedence": [
     {
-      "markdown": " - foo\n   - bar\n\t - baz\n",
-      "html": "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n",
-      "example": 9,
-      "zzmd": "<ul>\n<li>foo<ul>\n<li>bar<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n"
+      "markdown": "- `one\n- two`\n",
+      "html": "<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>\n",
+      "example": 12,
+      "zzmd": "<p>- `one</p>\n<ul>\n<li>two`</li>\n</ul>\n"
     }
   ],
   "Thematic breaks": [
@@ -455,7 +437,7 @@
       "markdown": "- Foo\n- * * *\n",
       "html": "<ul>\n<li>Foo</li>\n<li>\n<hr />\n</li>\n</ul>\n",
       "example": 31,
-      "zzmd": "<ul>\n<li>Foo</li>\n<li><hr />\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>Foo</li>\n<li>* * *</li>\n</ul>\n"
     }
   ],
   "Setext headings": [
@@ -471,13 +453,13 @@
       "markdown": "  - foo\n\n    bar\n",
       "html": "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>\n",
       "example": 78,
-      "zzmd": "<ul>\n<li><p>foo</p>\n<p>bar</p>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>foo\n<p>bar</p>\n</li>\n</ul>\n"
     },
     {
       "markdown": "1.  foo\n\n    - bar\n",
       "html": "<ol>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>\n",
       "example": 79,
-      "zzmd": "<ol>\n<li><p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>\n"
+      "zzmd": "<ol>\n<li>foo\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>\n"
     }
   ],
   "HTML blocks": [
@@ -560,58 +542,22 @@
   ],
   "List items": [
     {
-      "markdown": "1.  A paragraph\n    with two lines.\n\n        indented code\n\n    > A block quote.\n",
-      "html": "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>\n",
-      "example": 232,
-      "zzmd": "<ol>\n<li><p>A paragraph</p>\n<p>with two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>\n"
-    },
-    {
-      "markdown": "- one\n\n two\n",
-      "html": "<ul>\n<li>one</li>\n</ul>\n<p>two</p>\n",
-      "example": 233,
-      "zzmd": "<ul>\n<li><p>one</p>\n<p>two</p>\n</li>\n</ul>\n"
-    },
-    {
       "markdown": "- one\n\n  two\n",
       "html": "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>\n",
       "example": 234,
-      "zzmd": "<ul>\n<li><p>one</p>\n<p>two</p>\n</li>\n</ul>\n"
-    },
-    {
-      "markdown": " -    one\n\n     two\n",
-      "html": "<ul>\n<li>one</li>\n</ul>\n<pre><code> two\n</code></pre>\n",
-      "example": 235,
-      "zzmd": "<ul>\n<li><p>one</p>\n<p>two</p>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>one\n<p>two</p>\n</li>\n</ul>\n"
     },
     {
       "markdown": " -    one\n\n      two\n",
       "html": "<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>\n",
       "example": 236,
-      "zzmd": "<ul>\n<li><p>one</p>\n<p>two</p>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>one\n<p>two</p>\n</li>\n</ul>\n"
     },
     {
       "markdown": "   > > 1.  one\n>>\n>>     two\n",
       "html": "<blockquote>\n<blockquote>\n<ol>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ol>\n</blockquote>\n</blockquote>\n",
       "example": 237,
-      "zzmd": "<blockquote>\n<blockquote>\n<ol>\n<li><p>one</p>\n<p>two</p>\n</li>\n</ol>\n</blockquote>\n</blockquote>\n"
-    },
-    {
-      "markdown": "- foo\n\n\n  bar\n",
-      "html": "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>\n",
-      "example": 240,
-      "zzmd": "<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>\n"
-    },
-    {
-      "markdown": "1.  foo\n\n    ```\n    bar\n    ```\n\n    baz\n\n    > bam\n",
-      "html": "<ol>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>\n<blockquote>\n<p>bam</p>\n</blockquote>\n</li>\n</ol>\n",
-      "example": 241,
-      "zzmd": "<ol>\n<li><p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>\n<blockquote>\n<p>bam</p>\n</blockquote>\n</li>\n</ol>\n"
-    },
-    {
-      "markdown": "- Foo\n\n      bar\n\n\n      baz\n",
-      "html": "<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n\n\nbaz\n</code></pre>\n</li>\n</ul>\n",
-      "example": 242,
-      "zzmd": "<ul>\n<li><p>Foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>\n<pre><code>  baz\n</code></pre>\n"
+      "zzmd": "<blockquote>\n<blockquote>\n<ol>\n<li>one\n<p>two</p>\n</li>\n</ol>\n</blockquote>\n</blockquote>\n"
     },
     {
       "markdown": "0. ok\n",
@@ -623,133 +569,79 @@
       "markdown": "- foo\n\n      bar\n",
       "html": "<ul>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>\n",
       "example": 248,
-      "zzmd": "<ul>\n<li><p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>foo\n<pre><code>bar\n</code></pre>\n</li>\n</ul>\n"
     },
     {
       "markdown": "  10.  foo\n\n           bar\n",
       "html": "<ol start=\"10\">\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ol>\n",
       "example": 249,
-      "zzmd": "<ol start=\"10\">\n<li><p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ol>\n"
-    },
-    {
-      "markdown": "1.     indented code\n\n   paragraph\n\n       more code\n",
-      "html": "<ol>\n<li>\n<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>\n",
-      "example": 251,
-      "zzmd": "<ol>\n<li><p>indented code</p>\n<p>paragraph</p>\n<p>more code</p>\n</li>\n</ol>\n"
-    },
-    {
-      "markdown": "1.      indented code\n\n   paragraph\n\n       more code\n",
-      "html": "<ol>\n<li>\n<pre><code> indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>\n",
-      "example": 252,
-      "zzmd": "<ol>\n<li><p>indented code</p>\n<p>paragraph</p>\n<p>more code</p>\n</li>\n</ol>\n"
-    },
-    {
-      "markdown": "-    foo\n\n  bar\n",
-      "html": "<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>\n",
-      "example": 254,
-      "zzmd": "<ul>\n<li><p>foo</p>\n<p>bar</p>\n</li>\n</ul>\n"
+      "zzmd": "<ol start=\"10\">\n<li>foo\n<pre><code>bar\n</code></pre>\n</li>\n</ol>\n"
     },
     {
       "markdown": "-  foo\n\n   bar\n",
       "html": "<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>\n",
       "example": 255,
-      "zzmd": "<ul>\n<li><p>foo</p>\n<p>bar</p>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>foo\n<p>bar</p>\n</li>\n</ul>\n"
     },
     {
       "markdown": "-\n  foo\n-\n  ```\n  bar\n  ```\n-\n      baz\n",
       "html": "<ul>\n<li>foo</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>\n",
       "example": 256,
-      "zzmd": "<h2>-\n  foo</h2>\n<pre><code>bar\n</code></pre>\n<p>-\nbaz</p>\n"
+      "zzmd": "<ul>\n<li>foo\n</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>\n"
+    },
+    {
+      "markdown": "-   \n  foo\n",
+      "html": "<ul>\n<li>foo</li>\n</ul>\n",
+      "example": 257,
+      "zzmd": "<ul>\n<li>foo\n</li>\n</ul>\n"
     },
     {
       "markdown": "-\n\n  foo\n",
       "html": "<ul>\n<li></li>\n</ul>\n<p>foo</p>\n",
       "example": 258,
-      "zzmd": "<p>-</p>\n<p>foo</p>\n"
+      "zzmd": "<ul>\n<li>\nfoo</li>\n</ul>\n"
     },
     {
-      "markdown": "*\n",
-      "html": "<ul>\n<li></li>\n</ul>\n",
-      "example": 262,
-      "zzmd": "<p>*</p>\n"
-    },
-    {
-      "markdown": " 1.  A paragraph\n     with two lines.\n\n         indented code\n\n     > A block quote.\n",
-      "html": "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>\n",
-      "example": 264,
-      "zzmd": "<ol>\n<li><p>A paragraph</p>\n<p>with two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>\n"
-    },
-    {
-      "markdown": "  1.  A paragraph\n      with two lines.\n\n          indented code\n\n      > A block quote.\n",
-      "html": "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>\n",
-      "example": 265,
-      "zzmd": "<ol>\n<li><p>A paragraph</p>\n<p>with two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>\n"
-    },
-    {
-      "markdown": "   1.  A paragraph\n       with two lines.\n\n           indented code\n\n       > A block quote.\n",
-      "html": "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>\n",
-      "example": 266,
-      "zzmd": "<ol>\n<li><p>A paragraph</p>\n<p>with two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>\n"
-    },
-    {
-      "markdown": "  1.  A paragraph\nwith two lines.\n\n          indented code\n\n      > A block quote.\n",
-      "html": "<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>\n",
-      "example": 268,
-      "zzmd": "<ol>\n<li><p>A paragraph</p>\n<p>with two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>\n"
-    },
-    {
-      "markdown": "  1.  A paragraph\n    with two lines.\n",
-      "html": "<ol>\n<li>A paragraph\nwith two lines.</li>\n</ol>\n",
-      "example": 269,
-      "zzmd": "<ol>\n<li>A paragraphwith two lines.</li>\n</ol>\n"
+      "markdown": "1. foo\n2.\n3. bar\n",
+      "html": "<ol>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ol>\n",
+      "example": 261,
+      "zzmd": "<ol>\n<li>foo\n2.\n3. bar</li>\n</ol>\n"
     },
     {
       "markdown": "> 1. > Blockquote\ncontinued here.\n",
       "html": "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>\n",
       "example": 270,
-      "zzmd": "<blockquote>\n<ol>\n<li><blockquote>\n<p>Blockquote</p>\n<p>continued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>\n"
+      "zzmd": "<blockquote>\n<ol>\n<li>&gt; Blockquote\ncontinued here.</li>\n</ol>\n</blockquote>\n"
     },
     {
       "markdown": "> 1. > Blockquote\n> continued here.\n",
       "html": "<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>\n",
       "example": 271,
-      "zzmd": "<blockquote>\n<ol>\n<li><blockquote>\n<p>Blockquote</p>\n<p>continued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>\n"
-    },
-    {
-      "markdown": "- foo\n  - bar\n    - baz\n      - boo\n",
-      "html": "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz\n<ul>\n<li>boo</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n",
-      "example": 272,
-      "zzmd": "<ul>\n<li>foo<ul>\n<li>bar<ul>\n<li>baz<ul>\n<li>boo</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n"
+      "zzmd": "<blockquote>\n<ol>\n<li>&gt; Blockquote\ncontinued here.</li>\n</ol>\n</blockquote>\n"
     },
     {
       "markdown": "10) foo\n    - bar\n",
       "html": "<ol start=\"10\">\n<li>foo\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>\n",
       "example": 274,
-      "zzmd": "<ol start=\"10\">\n<li>foo<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>\n"
-    },
-    {
-      "markdown": "10) foo\n   - bar\n",
-      "html": "<ol start=\"10\">\n<li>foo</li>\n</ol>\n<ul>\n<li>bar</li>\n</ul>\n",
-      "example": 275,
-      "zzmd": "<ol start=\"10\">\n<li>foo<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>\n"
+      "zzmd": "<ol start=\"10\">\n<li>foo\n- bar</li>\n</ol>\n"
     },
     {
       "markdown": "- - foo\n",
       "html": "<ul>\n<li>\n<ul>\n<li>foo</li>\n</ul>\n</li>\n</ul>\n",
       "example": 276,
-      "zzmd": "<ul>\n<li><ul>\n<li>foo</li>\n</ul>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>- foo</li>\n</ul>\n"
     },
     {
       "markdown": "1. - 2. foo\n",
       "html": "<ol>\n<li>\n<ul>\n<li>\n<ol start=\"2\">\n<li>foo</li>\n</ol>\n</li>\n</ul>\n</li>\n</ol>\n",
       "example": 277,
-      "zzmd": "<ol>\n<li><ul>\n<li><ol start=\"2\">\n<li>foo</li>\n</ol>\n</li>\n</ul>\n</li>\n</ol>\n"
+      "zzmd": "<ol>\n<li>- 2. foo</li>\n</ol>\n"
     },
     {
       "markdown": "- # Foo\n- Bar\n  ---\n  baz\n",
       "html": "<ul>\n<li>\n<h1>Foo</h1>\n</li>\n<li>\n<h2>Bar</h2>\nbaz</li>\n</ul>\n",
       "example": 278,
-      "zzmd": "<ul>\n<li><h1>Foo</h1>\n</li>\n<li><h2>Bar</h2>\nbaz</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li># Foo</li>\n<li>Bar\n---\nbaz</li>\n</ul>\n"
     }
   ],
   "Task list items (extension)": [
@@ -763,21 +655,27 @@
       "markdown": "- [x] foo\n  - [ ] bar\n  - [x] baz\n- [ ] bim\n",
       "html": "<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> foo\n<ul>\n<li><input disabled=\"\" type=\"checkbox\"> bar</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> baz</li>\n</ul>\n</li>\n<li><input disabled=\"\" type=\"checkbox\"> bim</li>\n</ul>\n",
       "example": 280,
-      "zzmd": "<ul>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> foo<ul>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bar</li>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> baz</li>\n</ul>\n</li>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bim</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> foo\n<ul>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bar</li>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> baz</li>\n</ul>\n</li>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bim</li>\n</ul>\n"
     }
   ],
   "Lists": [
     {
+      "markdown": "1. foo\n2. bar\n3) baz\n",
+      "html": "<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>\n<ol start=\"3\">\n<li>baz</li>\n</ol>\n",
+      "example": 282,
+      "zzmd": "<ol>\n<li>foo\n2. bar\n3) baz</li>\n</ol>\n"
+    },
+    {
       "markdown": "- foo\n\n- bar\n\n\n- baz\n",
       "html": "<ul>\n<li>\n<p>foo</p>\n</li>\n<li>\n<p>bar</p>\n</li>\n<li>\n<p>baz</p>\n</li>\n</ul>\n",
       "example": 286,
-      "zzmd": "<ul>\n<li><p>foo</p>\n</li>\n<li><p>bar</p>\n</li>\n</ul>\n<ul>\n<li>baz</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n</ul>\n"
     },
     {
       "markdown": "- foo\n  - bar\n    - baz\n\n\n      bim\n",
       "html": "<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>\n<p>baz</p>\n<p>bim</p>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n",
       "example": 287,
-      "zzmd": "<ul>\n<li>foo<ul>\n<li>bar<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n<pre><code>  bim\n</code></pre>\n"
+      "zzmd": "<ul>\n<li>\n<p>foo</p>\n<ul>\n<li>\n<p>bar</p>\n<ul>\n<li>\n<p>baz</p>\n<p>bim</p>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n"
     },
     {
       "markdown": "- foo\n- bar\n\n<!-- -->\n\n- baz\n- bim\n",
@@ -789,103 +687,61 @@
       "markdown": "-   foo\n\n    notcode\n\n-   foo\n\n<!-- -->\n\n    code\n",
       "html": "<ul>\n<li>\n<p>foo</p>\n<p>notcode</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<!-- -->\n<pre><code>code\n</code></pre>\n",
       "example": 289,
-      "zzmd": "<ul>\n<li><p>foo</p>\n<p>notcode</p>\n</li>\n<li><p>foo</p>\n</li>\n</ul>\n<!-- --><pre><code>code\n</code></pre>\n"
-    },
-    {
-      "markdown": "- a\n - b\n  - c\n   - d\n  - e\n - f\n- g\n",
-      "html": "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n<li>e</li>\n<li>f</li>\n<li>g</li>\n</ul>\n",
-      "example": 290,
-      "zzmd": "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d<ul>\n<li>e</li>\n<li>f</li>\n<li>g</li>\n</ul>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>foo\n<p>notcode</p>\n</li>\n<li>foo</li>\n</ul>\n<!-- --><pre><code>code\n</code></pre>\n"
     },
     {
       "markdown": "1. a\n\n  2. b\n\n   3. c\n",
       "html": "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ol>\n",
       "example": 291,
-      "zzmd": "<ol>\n<li><p>a</p>\n<ol start=\"2\">\n<li><p>b</p>\n</li>\n<li><p>c</p>\n</li>\n</ol>\n</li>\n</ol>\n"
+      "zzmd": "<ol>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n</ol>\n"
     },
     {
       "markdown": "- a\n - b\n  - c\n   - d\n    - e\n",
       "html": "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d\n- e</li>\n</ul>\n",
       "example": 292,
-      "zzmd": "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n<li>e</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n</ul>\n<pre><code>- e\n</code></pre>\n"
     },
     {
       "markdown": "1. a\n\n  2. b\n\n    3. c\n",
       "html": "<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n</ol>\n<pre><code>3. c\n</code></pre>\n",
       "example": 293,
-      "zzmd": "<ol>\n<li><p>a</p>\n<ol start=\"2\">\n<li><p>b</p>\n</li>\n<li><p>c</p>\n</li>\n</ol>\n</li>\n</ol>\n"
+      "zzmd": "<ol>\n<li>a</li>\n<li>b</li>\n</ol>\n<pre><code>3. c\n</code></pre>\n"
     },
     {
       "markdown": "- a\n- b\n\n- c\n",
       "html": "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ul>\n",
       "example": 294,
-      "zzmd": "<ul>\n<li><p>a</p>\n</li>\n<li><p>b</p>\n</li>\n<li><p>c</p>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n</ul>\n"
     },
     {
       "markdown": "* a\n*\n\n* c\n",
       "html": "<ul>\n<li>\n<p>a</p>\n</li>\n<li></li>\n<li>\n<p>c</p>\n</li>\n</ul>\n",
       "example": 295,
-      "zzmd": "<ul>\n<li><p>a</p>\n</li>\n<li></li>\n<li><p>c</p>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>a</li>\n<li></li>\n<li>c</li>\n</ul>\n"
     },
     {
       "markdown": "- a\n- b\n\n  c\n- d\n",
       "html": "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>\n",
       "example": 296,
-      "zzmd": "<ul>\n<li><p>a</p>\n</li>\n<li><p>b</p>\n<p>c</p>\n</li>\n<li><p>d</p>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>a</li>\n<li>b\n<p>c</p>\n</li>\n<li>d</li>\n</ul>\n"
     },
     {
       "markdown": "- a\n- b\n\n  [ref]: /url\n- d\n",
       "html": "<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>\n",
       "example": 297,
-      "zzmd": "<ul>\n<li><p>a</p>\n</li>\n<li><p>b</p>\n<p>[ref]: /url</p>\n</li>\n<li><p>d</p>\n</li>\n</ul>\n"
-    },
-    {
-      "markdown": "- a\n- ```\n  b\n\n\n  ```\n- c\n",
-      "html": "<ul>\n<li>a</li>\n<li>\n<pre><code>b\n\n\n</code></pre>\n</li>\n<li>c</li>\n</ul>\n",
-      "example": 298,
-      "zzmd": "<ul>\n<li>a</li>\n<li><pre><code>b\n\n\n</code></pre>\n</li>\n</ul>\n<pre><code>- c\n</code></pre>\n"
+      "zzmd": "<ul>\n<li>a</li>\n<li>b\n<p>[ref]: /url</p>\n</li>\n<li>d</li>\n</ul>\n"
     },
     {
       "markdown": "- a\n  - b\n\n    c\n- d\n",
       "html": "<ul>\n<li>a\n<ul>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n</ul>\n</li>\n<li>d</li>\n</ul>\n",
       "example": 299,
-      "zzmd": "<ul>\n<li><p>a</p>\n<ul>\n<li><p>b</p>\n<p>c</p>\n</li>\n</ul>\n</li>\n<li><p>d</p>\n</li>\n</ul>\n"
-    },
-    {
-      "markdown": "* a\n  > b\n  >\n* c\n",
-      "html": "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n</li>\n<li>c</li>\n</ul>\n",
-      "example": 300,
-      "zzmd": "<ul>\n<li>a<blockquote>\n<p>b</p>\n</blockquote>\n</li>\n<li>c</li>\n</ul>\n"
-    },
-    {
-      "markdown": "- a\n  > b\n  ```\n  c\n  ```\n- d\n",
-      "html": "<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n<pre><code>c\n</code></pre>\n</li>\n<li>d</li>\n</ul>\n",
-      "example": 301,
-      "zzmd": "<ul>\n<li>a<blockquote>\n<p>b</p>\n</blockquote>\n<pre><code>c\n</code></pre>\n</li>\n<li>d</li>\n</ul>\n"
-    },
-    {
-      "markdown": "- a\n  - b\n",
-      "html": "<ul>\n<li>a\n<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>\n",
-      "example": 303,
-      "zzmd": "<ul>\n<li>a<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>\n"
-    },
-    {
-      "markdown": "1. ```\n   foo\n   ```\n\n   bar\n",
-      "html": "<ol>\n<li>\n<pre><code>foo\n</code></pre>\n<p>bar</p>\n</li>\n</ol>\n",
-      "example": 304,
-      "zzmd": "<ol>\n<li><pre><code>foo\n</code></pre>\n<p>bar</p>\n</li>\n</ol>\n"
-    },
-    {
-      "markdown": "* foo\n  * bar\n\n  baz\n",
-      "html": "<ul>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n<p>baz</p>\n</li>\n</ul>\n",
-      "example": 305,
-      "zzmd": "<ul>\n<li><p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n<p>baz</p>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>\n<p>a</p>\n<ul>\n<li>b\n<p>c</p>\n</li>\n</ul>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>\n"
     },
     {
       "markdown": "- a\n  - b\n  - c\n\n- d\n  - e\n  - f\n",
       "html": "<ul>\n<li>\n<p>a</p>\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li>\n<p>d</p>\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>\n",
       "example": 306,
-      "zzmd": "<ul>\n<li><p>a</p>\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li><p>d</p>\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li>a\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li>d\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>\n"
     }
   ],
   "Entity and numeric character references": [

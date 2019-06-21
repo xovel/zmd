@@ -395,16 +395,10 @@ Lexer.prototype.parse = function (src, top) {
   var match
   var item
   var i
-  var j
-  var n
   var count
   var text
-  var loose
   var next
   var prefix
-  var listOpen
-  var listItems
-  var listType
 
   while (src) {
     // blankline
@@ -584,101 +578,71 @@ Lexer.prototype.parse = function (src, top) {
     }
 
     // list
-    if (cap = rules.list.exec(src)) {
+    if (cap = rules._list.exec(src)) {
       src = src.substring(cap[0].length)
-      listOpen = {
-        type: 'list_open',
-        start: parseInt(cap[2], 10) || 0,
-        loose: false
+
+      prefix = cap[1].length + 1
+
+      text = ''
+      next = ''
+
+      if (cap[4]) {
+        if (cap[5]) {
+          prefix += cap[5].length - 3
+        }
+        next = cap[4] + '\n'
+      } else if (cap[6]) {
+        text = _trim(cap[6])
+
+        if (cap[7]) {
+          prefix += cap[7].length
+        }
       }
-      this.tokens.push(listOpen)
 
-      cap = cap[0].match(rules.item)
-      n = cap.length
-      listItems = []
-      next = false
-      listType = []
+      item = {
+        type: 'item_open',
+        start: parseInt(cap[3], 10) || 0,
+        mode: cap[3].slice(-1),
+        task: /^\[[ x]\] [^ \n]/i.test(text)
+      }
 
-      for (i = 0; i < n; i++) {
-        text = cap[i]
-        prefix = text.length
-        text = text.replace(blockRe.bullet, function (_, bullet) {
-          listType.bullet = bullet
-          listType[i] = bullet[bullet.length - 1]
-          return ''
-        })
+      if (item.task) {
+        item.checked = text[1] !== ' '
+        text = text.replace(/^\[[ x]\] +/i, '')
+      }
 
-        // Changing the bullet or ordered list delimiter starts a new list
-        if (
-          i > 0
-          && listType[i - 1] !== listType[i]
-        ) {
+      if (
+        src
+        && (cap = _regex(rules._rest, ['5', prefix + '']).exec(src))
+      ) {
+        src = src.substring(cap[0].length)
+        next += cap[0].replace(new RegExp('^ {' + prefix + '}', 'gm'), '')
+      }
 
-          if (listOpen.loose) {
-            for (j = 0; j < listItems.length; j++) {
-              listItems[j].loose = true
-            }
-          }
-          this.tokens.push({
-            type: 'list_close'
-          })
-          listOpen = {
-            type: 'list_open',
-            start: parseInt(listType.bullet, 10) || 0,
-            loose: false
-          }
-          this.tokens.push(listOpen)
-          listItems = []
-          next = false
-        }
+      this.tokens.push(item)
 
-        // TODO: Lists
-        if (~text.indexOf('\n ')) {
-          prefix -= text.length
-          text = text.replace(new RegExp('^ {1,' + prefix + '}', 'gm'), '')
-        }
-
-        // loose or tight
-        loose = next || /\n\n(?!\s*$)/.test(text)
-        if (i !== n - 1) {
-          next = text.charAt(text.length - 1) === '\n'
-          if (!loose) loose = next
-        }
-
-        if (loose) {
-          listOpen.loose = true
-        }
-
-        item = {
-          type: 'item_open',
-          task: /^\[[ x]\] [^ ]/i.test(text)
-        }
-
-        if (item.task) {
-          item.checked = text[1] !== ' '
-          text = text.replace(/^\[[ x]\] +/i, '')
-        }
-
-        listItems.push(item)
-        this.tokens.push(item)
-
-        // recurse
-        this.parse(text, false)
-
+      if (text) {
         this.tokens.push({
-          type: 'item_close'
+          type: 'text',
+          text: text.replace(/\s+$/, '').replace(/^\s+/gm, '')
         })
       }
 
-      if (listOpen.loose) {
-        for (i = 0; i < listItems.length; i++) {
-          listItems[i].loose = true
+      if (next) {
+        // TODO: codeblock & fence
+        if (/\n\n(?!\s*$)/.test(next)) {
+          item.loose = true
+        }
+        // ignore blank line
+        if (!/^(?: *\n)+$/.test(next)) {
+          this.parse(next, false)
         }
       }
 
       this.tokens.push({
-        type: 'list_close'
+        type: 'item_close'
       })
+
       continue
     }
 
@@ -1317,6 +1281,8 @@ Parser.prototype.compile = function () {
   var i
   var j
   var dl
+  var next
+  var li
 
   var renderer = this.renderer
   var compiler = this.compiler
@@ -1404,24 +1370,26 @@ Parser.prototype.compile = function () {
         body += this.compile()
       }
       return renderer.div(body, _escape(token.kls))
-    case 'list_open':
-      body = ''
-      while (this.next().type !== 'list_close') {
-        body += this.compile()
-      }
-      return renderer.list(body, token.start)
     case 'item_open':
       body = ''
-      if (token.task) {
-        body += renderer.checkbox(token.checked)
+
+      body += this.renderLi(token, token.loose)
+
+      while (true) {
+        next = this.peek()
+
+        if (
+          next.type
+          && next.type === type
+          && next.mode === token.mode
+        ) {
+          body += this.renderLi(this.next(), token.loose)
+        } else {
+          break
+        }
       }
-      while (this.next().type !== 'item_close') {
-        body += !token.loose && this.token.type === 'text' ?
-          this.parseText() :
-          this.compile()
-          // this.compile().replace(/^\n?([\s\S])/, '\n$1')
-      }
-      return renderer.li(body, token.task)
+
+      return renderer.list(body, token.start)
     case 'html':
       return renderer.html(text)
     case 'paragraph':
@@ -1432,6 +1400,30 @@ Parser.prototype.compile = function () {
     default:
       _error('Unknown type:' + type)
   }
+}
+
+Parser.prototype.renderLi = function (token, loose) {
+  var li = ''
+  var firstText
+  var insertLine
+
+  if (token.task) {
+    li += this.renderer.checkbox(token.checked)
+  }
+
+  while (this.next().type !== 'item_close') {
+    if (!loose && !firstText && this.token.type === 'text') {
+      firstText = true
+      li += this.parseText()
+    } else {
+      if (!insertLine) {
+        insertLine = true
+        li += '\n'
+      }
+      li += this.compile()
+    }
+  }
+  return this.renderer.li(li, token.task)
 }
 
 Parser.prototype.parseText = function () {

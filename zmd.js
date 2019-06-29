@@ -588,7 +588,7 @@ Lexer.prototype.parse = function (src, top) {
       src = src.substring(cap[0].length)
       listOpen = {
         type: 'list_open',
-        start: parseInt(cap[2], 10) || 0,
+        start: parseInt(cap[2], 10),
         loose: false
       }
       this.tokens.push(listOpen)
@@ -624,7 +624,7 @@ Lexer.prototype.parse = function (src, top) {
           })
           listOpen = {
             type: 'list_open',
-            start: parseInt(listType.bullet, 10) || 0,
+            start: parseInt(listType.bullet, 10),
             loose: false
           }
           this.tokens.push(listOpen)
@@ -892,7 +892,7 @@ Renderer.prototype.div = function (content, kls) {
 }
 
 Renderer.prototype.list = function (content, start) {
-  var tag = start > 0 ? 'ol' : 'ul'
+  var tag = isNaN(start) ? 'ul' : 'ol'
   var order = start > 1 ? (' start="' + start + '"') : ''
   return '<' + tag + order + '>\n' + content + '</' + tag + '>\n'
 }

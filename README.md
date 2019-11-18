@@ -243,8 +243,8 @@ var c
 | 方法名 | 说明 | 参数 | 备注 |
 | ------ | ---- | ---- | ---- |
 | hr | 水平线 | 无 |
-| br | 水平线 | 无 |
-| heading | `text, level, slug` | 标题文本、级别、唯一标识 |
+| br | 换行 | 无 |
+| heading | 标题 | `text, level, slug` | 标题文本、级别、唯一标识 |
 | codeblock | 块级代码块 | `code` | 代码文本 |
 | fence | fence 代码块 | `code, lang, meta, escaped` | 代码文本，语言、附加信息、是否已经转义 |
 | footnote | 脚注 | `footnotes` | 脚注的数组（详细说明见下方 [`脚注`](#脚注) 说明） |

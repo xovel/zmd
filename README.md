@@ -264,7 +264,7 @@ var c
 | blockquote | 块引用 | `content` | 内容 |
 | strong | 着重强调 | `text` | 文本 |
 | em | 普通强调 | `text` | 文本 |
-| code | 定义列表 | `text` | 文本 |
+| code | 行内代码块 | `text` | 文本 |
 | ins | 插入 | `text` | 文本 |
 | mark | 标记 | `text` | 文本 |
 | del | 删除线 | `text` | 文本 |

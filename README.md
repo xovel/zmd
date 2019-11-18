@@ -1,6 +1,6 @@
 # zmd
 
-怎么的，假装自己是 `markdown` 编译工具不行吗？
+怎么的，假装自己是 `markdown` 解析工具不行吗？
 
 ## Overview
 

@@ -130,6 +130,9 @@ function parseMarkdown() {
 
   var curOptions = Object.assign({}, zmdOptions, {
     highlight: function (code, lang) {
+      if (!lang) {
+        return code
+      }
       var ret = ''
       try {
         ret = hljs.highlight(lang, code).value

@@ -13,27 +13,27 @@ describe('Slugger', function () {
   })
 
   it('It should return a lowercase string', function () {
-    assert.equal(slugger.get('Test'), 'test')
+    assert.strictEqual(slugger.get('Test'), 'test')
   })
 
   it('It should support collisons', function () {
-    assert.equal(slugger.get('test'), 'test')
-    assert.equal(slugger.get('test'), 'test-1')
-    assert.equal(slugger.get('test'), 'test-2')
+    assert.strictEqual(slugger.get('test'), 'test')
+    assert.strictEqual(slugger.get('test'), 'test-1')
+    assert.strictEqual(slugger.get('test'), 'test-2')
   })
 
   it('It should support number collisions', function () {
-    assert.equal(slugger.get('test 1'), 'test-1')
-    assert.equal(slugger.get('test'), 'test')
-    assert.equal(slugger.get('test'), 'test-2')
+    assert.strictEqual(slugger.get('test 1'), 'test-1')
+    assert.strictEqual(slugger.get('test'), 'test')
+    assert.strictEqual(slugger.get('test'), 'test-2')
   })
 
   it('It should remove punctuation character', function () {
-    assert.equal(slugger.get('demo.html'), 'demohtml')
-    assert.equal(slugger.get('test#section'), 'testsection')
+    assert.strictEqual(slugger.get('demo.html'), 'demohtml')
+    assert.strictEqual(slugger.get('test#section'), 'testsection')
   })
 
   it('It should replace space to -', function () {
-    assert.equal(slugger.get('space between'), 'space-between')
+    assert.strictEqual(slugger.get('space between'), 'space-between')
   })
 })

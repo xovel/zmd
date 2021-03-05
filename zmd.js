@@ -349,6 +349,7 @@ function Slugger() {
 
 Slugger.prototype.get = function (value) {
   var id = _unescape(_trim(value)).toLowerCase()
+    .replace(/<[/!a-zA-Z].*?>/g, '')
     .replace(commonRe.punctuation, '')
     .replace(/\s/g, '-')
   var slug = id
@@ -525,6 +526,7 @@ Lexer.prototype.parse = function (src, top) {
       this.tokens.push({
         type: 'div_close'
       })
+      continue
     }
 
     // hr
@@ -588,6 +590,7 @@ Lexer.prototype.parse = function (src, top) {
       src = src.substring(cap[0].length)
       listOpen = {
         type: 'list_open',
+        order: cap[2].length > 1,
         start: parseInt(cap[2], 10),
         loose: false
       }
@@ -624,6 +627,7 @@ Lexer.prototype.parse = function (src, top) {
           })
           listOpen = {
             type: 'list_open',
+            order: listType.bullet.length > 1,
             start: parseInt(listType.bullet, 10),
             loose: false
           }
@@ -651,10 +655,11 @@ Lexer.prototype.parse = function (src, top) {
 
         item = {
           type: 'item_open',
-          task: /^\[[ x]\] [^ ]/i.test(text)
+          task: /^\[[ x]\] +[^\s]/i.test(text)
         }
 
         if (item.task) {
+          listOpen.task = true
           item.checked = text[1] !== ' '
           text = text.replace(/^\[[ x]\] +/i, '')
         }
@@ -888,13 +893,13 @@ Renderer.prototype.tablerow = function (content) {
 }
 
 Renderer.prototype.div = function (content, kls) {
-  return '<div class="' + (this.options.divClass || '') + ' ' + kls + '">\n' + content + '</div>\n'
+  return '<div class="' + (this.options.divClass || '') + (kls ? ' ' + kls : '') + '">\n' + content + '</div>\n'
 }
 
-Renderer.prototype.list = function (content, start) {
-  var tag = isNaN(start) ? 'ul' : 'ol'
-  var order = start > 1 ? (' start="' + start + '"') : ''
-  return '<' + tag + order + '>\n' + content + '</' + tag + '>\n'
+Renderer.prototype.list = function (content, order, start, task) {
+  var tag = order ? 'ol' : 'ul'
+  var prop = (order && (start > 1 || start === 0)) ? (' start="' + start + '"') : ''
+  return '<' + tag + prop + '>\n' + content + '</' + tag + '>\n'
 }
 
 Renderer.prototype.li = function (content, task) {
@@ -965,9 +970,10 @@ Renderer.prototype.img = function (src, alt, title) {
 }
 
 Renderer.prototype.checkbox = function (checked) {
-  return '<input '
-    + (checked ? 'checked="" ' : '')
-    + 'disabled="" type="checkbox"'
+  return '<input'
+    + (checked ? (' checked' + (this.options.xhtml ? '=""' : '')) : '')
+    + ' disabled' + (this.options.xhtml ? '=""' : '')
+    + ' type="checkbox"'
     + (this.options.xhtml ? ' /' : '')
     + '> '
 }
@@ -1338,6 +1344,7 @@ Parser.prototype.compile = function () {
       return renderer.raw(text)
     case 'heading':
       if (text) {
+        text = compiler.compile(text)
         if (this.options.headerIds) {
           id = this.slugger.get(text)
           slug = (this.options.headerPrefix || '') + id
@@ -1345,7 +1352,7 @@ Parser.prototype.compile = function () {
           slug = ''
         }
         return renderer.heading(
-          compiler.compile(text),
+          text,
           token.level,
           slug
         )
@@ -1409,7 +1416,7 @@ Parser.prototype.compile = function () {
       while (this.next().type !== 'list_close') {
         body += this.compile()
       }
-      return renderer.list(body, token.start)
+      return renderer.list(body, token.order, token.start, token.task)
     case 'item_open':
       body = ''
       if (token.task) {
@@ -1467,7 +1474,7 @@ zmd.defaults = {
   footnote: true,
   xhtml: false,
   autourl: false,
-  divClass: 'diy'
+  divClass: ''
 }
 
 zmd.Slugger = Slugger

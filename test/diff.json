@@ -122,9 +122,9 @@
     },
     "List items": {
       "total": 48,
-      "pass": 16,
-      "percent": "33.33%",
-      "diff": 32,
+      "pass": 17,
+      "percent": "35.42%",
+      "diff": 31,
       "diffList": [
         232,
         233,
@@ -135,7 +135,6 @@
         240,
         241,
         242,
-        245,
         248,
         249,
         251,
@@ -162,11 +161,10 @@
     },
     "Task list items (extension)": {
       "total": 2,
-      "pass": 0,
-      "percent": "0.00%",
-      "diff": 2,
+      "pass": 1,
+      "percent": "50.00%",
+      "diff": 1,
       "diffList": [
-        279,
         280
       ]
     },
@@ -614,12 +612,6 @@
       "zzmd": "<ul>\n<li><p>Foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>\n<pre><code>  baz\n</code></pre>\n"
     },
     {
-      "markdown": "0. ok\n",
-      "html": "<ol start=\"0\">\n<li>ok</li>\n</ol>\n",
-      "example": 245,
-      "zzmd": "<ul>\n<li>ok</li>\n</ul>\n"
-    },
-    {
       "markdown": "- foo\n\n      bar\n",
       "html": "<ul>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>\n",
       "example": 248,
@@ -754,16 +746,11 @@
   ],
   "Task list items (extension)": [
     {
-      "markdown": "- [ ] foo\n- [x] bar\n",
-      "html": "<ul>\n<li><input disabled=\"\" type=\"checkbox\"> foo</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> bar</li>\n</ul>\n",
-      "example": 279,
-      "zzmd": "<ul>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> foo</li>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> bar</li>\n</ul>\n"
-    },
-    {
       "markdown": "- [x] foo\n  - [ ] bar\n  - [x] baz\n- [ ] bim\n",
       "html": "<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> foo\n<ul>\n<li><input disabled=\"\" type=\"checkbox\"> bar</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> baz</li>\n</ul>\n</li>\n<li><input disabled=\"\" type=\"checkbox\"> bim</li>\n</ul>\n",
       "example": 280,
-      "zzmd": "<ul>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> foo<ul>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bar</li>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> baz</li>\n</ul>\n</li>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bim</li>\n</ul>\n"
+      "zzmd": "<ul>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> foo<ul>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bar</li>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> baz</li>\n</ul>\n</li>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bim</li>\n</ul>\n",
+      "_zzmd": "<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> foo<ul>\n<li><input disabled=\"\" type=\"checkbox\"> bar</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> baz</li>\n</ul>\n</li>\n<li><input disabled=\"\" type=\"checkbox\"> bim</li>\n</ul>\n"
     }
   ],
   "Lists": [

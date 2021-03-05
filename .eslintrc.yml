@@ -7,6 +7,7 @@ env:
 
 globals:
   zmd: true
+  hljs: true
 
 rules:
   semi: 0

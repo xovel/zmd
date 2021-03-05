@@ -64,7 +64,7 @@ zmd(text, options)
 | highlight | Function | null | fence 代码块高亮方法 |
 | xhtml | Boolean | false | 使用 XHTML 语法 |
 | autourl | Boolean | false | 是否开启链接自动识别 |
-| divClass | String | diy | 自定义 div 的类名 |
+| divClass | String | '' | 自定义 div 的类名 |
 | ignoreBlankLine | Boolean | false | 忽略空行 |
 | encodeURI | Boolean | false | 是否对链接的 href 开启 encodeURI 转义 |
 | rfc3986 | Boolean | false | 是否对链接的 href 开启 encodeURI 转义并遵循 RFC3986 |

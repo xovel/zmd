@@ -1715,7 +1715,7 @@
     "html": "<ol start=\"0\">\n<li>ok</li>\n</ol>\n",
     "example": 245,
     "section": "List items",
-    "zzmd": "<ul>\n<li>ok</li>\n</ul>\n"
+    "zzmd": "<ol start=\"0\">\n<li>ok</li>\n</ol>\n"
   },
   {
     "markdown": "003. ok\n",
@@ -1953,14 +1953,16 @@
     "html": "<ul>\n<li><input disabled=\"\" type=\"checkbox\"> foo</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> bar</li>\n</ul>\n",
     "example": 279,
     "section": "Task list items (extension)",
-    "zzmd": "<ul>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> foo</li>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> bar</li>\n</ul>\n"
+    "zzmd": "<ul>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> foo</li>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> bar</li>\n</ul>\n",
+    "_zzmd": "<ul>\n<li><input disabled=\"\" type=\"checkbox\"> foo</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> bar</li>\n</ul>\n"
   },
   {
     "markdown": "- [x] foo\n  - [ ] bar\n  - [x] baz\n- [ ] bim\n",
     "html": "<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> foo\n<ul>\n<li><input disabled=\"\" type=\"checkbox\"> bar</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> baz</li>\n</ul>\n</li>\n<li><input disabled=\"\" type=\"checkbox\"> bim</li>\n</ul>\n",
     "example": 280,
     "section": "Task list items (extension)",
-    "zzmd": "<ul>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> foo<ul>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bar</li>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> baz</li>\n</ul>\n</li>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bim</li>\n</ul>\n"
+    "zzmd": "<ul>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> foo<ul>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bar</li>\n<li class=\"task-list-item\"><input checked=\"\" disabled=\"\" type=\"checkbox\" /> baz</li>\n</ul>\n</li>\n<li class=\"task-list-item\"><input disabled=\"\" type=\"checkbox\" /> bim</li>\n</ul>\n",
+    "_zzmd": "<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> foo<ul>\n<li><input disabled=\"\" type=\"checkbox\"> bar</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> baz</li>\n</ul>\n</li>\n<li><input disabled=\"\" type=\"checkbox\"> bim</li>\n</ul>\n"
   },
   {
     "markdown": "- foo\n- bar\n+ baz\n",

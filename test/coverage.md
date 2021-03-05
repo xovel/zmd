@@ -1,4 +1,4 @@
-> Test time: Tue Jun 18 2019 14:25:33 GMT+0800 (GMT+08:00)
+> Test time: Fri Mar 05 2021 15:14:15 GMT+0800 (GMT+08:00)
 
 
 | Section | Total | Pass | Diff | Percentage |
@@ -16,8 +16,8 @@
 | Blank lines | 1 | 1 | 0 | 100.00% |
 | Tables (extension) | 8 | 8 | 0 | 100.00% |
 | Block quotes | 25 | 23 | 2 | 92.00% |
-| List items | 48 | 16 | 32 | 33.33% |
-| Task list items (extension) | 2 | 0 | 2 | 0.00% |
+| List items | 48 | 17 | 31 | 35.42% |
+| Task list items (extension) | 2 | 1 | 1 | 50.00% |
 | Lists | 27 | 7 | 20 | 25.93% |
 | Backslash escapes | 13 | 13 | 0 | 100.00% |
 | Entity and numeric character references | 17 | 8 | 9 | 47.06% |

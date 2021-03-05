@@ -1,6 +1,6 @@
 # 更新记录
 
-## [v0.3.0](https://github.com/xovel/zmd/compare/v0.2.1...v0.2.1)
+## [v0.3.0](https://github.com/xovel/zmd/compare/v0.2.1...v0.3.0)
 
 - 添加规范覆盖率的测试脚本。
 - 代码块 `code` 重命名为 `codeblock`。

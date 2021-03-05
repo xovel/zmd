@@ -255,7 +255,7 @@ var c
 | tablecell | 表格单元格 | `tag, content, align` | 单元格标签，单元格内容、对齐方式 |
 | tablerow | 表格行 | `content` | tr 的内容 |
 | div | 自定义 div | `content, kls` | 内容和类名 |
-| list | 列表 | `content, start` | 列表内容，列表开始标记（大于 0 表示为有序列表，值为起始值） |
+| list | 列表 | `content, order, start, task` | 列表内容，是否为有序列表，列表开始值，是否包含任务列表 |
 | li | 列表项 | `content, task` | 列表项内容，是否为任务列表 |
 | dl | 定义列表 | `content` | 内容 |
 | dt | 定义列表标题 | `content` | 内容 |

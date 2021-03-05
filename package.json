@@ -1,10 +1,10 @@
 {
   "name": "zmdjs",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Just a markdown parser",
   "main": "zmd.js",
   "scripts": {
-    "test": "npm run test:slug && npm run test:gfm && npm run test:diff && node test/coverage",
+    "test": "npm run test:slug && npm run test:gfm && npm run test:diff && npm run test:coverage",
     "test:slug": "mocha test/slug",
     "test:gfm": "node test/gfm",
     "test:diff": "node test/diff",
